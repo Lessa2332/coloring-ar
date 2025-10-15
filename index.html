@@ -1,46 +1,77 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Розмальовка AR</title>
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mindar-image@1.1.1/dist/mindar-image-aframe.prod.js"></script>
+
+  <!-- A-Frame + MindAR -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
   <style>
-    body { margin: 0; overflow: hidden; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    a-scene {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
     #music-btn {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
-      background: #ffcc00;
+      background: #d4af37;
+      color: #000;
       border: none;
       border-radius: 30px;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    #music-btn:active {
+      transform: translateX(-50%) scale(0.95);
     }
   </style>
 </head>
 <body>
+
+  <!-- AR Scene -->
   <a-scene
-    mindar-image="imageTargetSrc: assets/markers/markers.mind; maxTrack: 15;"
-    renderer="colorManagement: true;"
+    mindar-image="imageTargetSrc: ./assets/markers/markers.mind; autoStart: true; uiLoading: no; uiError: no; maxTrack: 15;"
+    embedded
+    color-space="sRGB"
     vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    style="background: transparent;"
   >
     <a-assets>
       <!-- 4 унікальні зображення -->
-      <img id="img01" src="assets/images/img01.png" />
-      <img id="img02" src="assets/images/img02.png" />
-      <img id="img03" src="assets/images/img03.png" />
-      <img id="img04" src="assets/images/img04.png" />
-
+      <img id="img01" src="./assets/images/img01.png" />
+      <img id="img02" src="./assets/images/img02.png" />
+      <img id="img03" src="./assets/images/img03.png" />
+      <img id="img04" src="./assets/images/img04.png" />
       <!-- Аудіо -->
-      <audio id="bg-audio" src="assets/audio/background.mp3" preload="auto"></audio>
+      <audio id="bg-audio" src="./assets/audio/background.mp3" preload="auto"></audio>
     </a-assets>
 
-    <!-- Група 1: img01.png -->
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <!-- Група 1: img01.png (маркери 0, 4, 8, 12) -->
     <a-entity mindar-image-target="targetIndex: 0">
       <a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01"
         animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound"
@@ -62,7 +93,7 @@
         animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
     </a-entity>
 
-    <!-- Група 2: img02.png -->
+    <!-- Група 2: img02.png (маркери 1, 5, 9, 13) -->
     <a-entity mindar-image-target="targetIndex: 1">
       <a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01"
         animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound"
@@ -84,7 +115,7 @@
         animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
     </a-entity>
 
-    <!-- Група 3: img03.png -->
+    <!-- Група 3: img03.png (маркери 2, 6, 10, 14) -->
     <a-entity mindar-image-target="targetIndex: 2">
       <a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01"
         animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound"
@@ -106,7 +137,7 @@
         animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
     </a-entity>
 
-    <!-- Група 4: img04.png -->
+    <!-- Група 4: img04.png (маркери 3, 7, 11) -->
     <a-entity mindar-image-target="targetIndex: 3">
       <a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01"
         animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound"
@@ -125,12 +156,13 @@
 
   </a-scene>
 
+  <!-- Кнопка музики -->
   <button id="music-btn" onclick="playMusic()">Увімкнути музику</button>
 
   <script>
     function playMusic() {
       const audio = document.getElementById('bg-audio');
-      audio.play().catch(e => console.log("Автовідтворення заблоковано:", e));
+      audio.play().catch(e => console.warn("Автовідтворення заблоковано:", e));
       document.getElementById('music-btn').style.display = 'none';
     }
   </script>
