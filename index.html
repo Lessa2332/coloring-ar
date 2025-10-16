@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>👻 Привид із Картинки! ✨</title>
+  <title>Магія Розмальовки! ✨</title>
 
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
@@ -13,22 +13,38 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      background: transparent; /* 🔑 обов’язково для відеопотоку */
+      /* 🔑 КРИТИЧНО: фон має бути ПРОЗОРИМ, щоб бачити відео з камери */
+      background: transparent;
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
-    .loader {
+    /* Лоадер */
+    .arjs-loader {
+      height: 100%;
+      width: 100%;
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      color: #ffcc00;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 9999;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 9999;
+      color: #ffcc00;
+      font-size: 1.8em;
       text-align: center;
       padding: 20px;
+      box-sizing: border-box;
+    }
+
+    a-scene {
+      width: 100% !important;
+      height: 100% !important;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: transparent;
     }
 
     #hint {
@@ -45,6 +61,7 @@
       text-align: center;
       z-index: 100;
       max-width: 90%;
+      backdrop-filter: blur(8px);
       border: 2px solid #ffcc00;
       animation: pulse 2s infinite;
       display: none;
@@ -71,14 +88,17 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(255, 107, 107, 0.6);
     }
-    #music-btn.playing { background: #4CAF50; }
+    #music-btn.playing {
+      background: #4CAF50;
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6);
+    }
   </style>
 </head>
 <body>
 
-  <div class="loader" id="loader">
-    <div>👻 Привид із Картинки! ✨</div>
-    <div style="margin-top: 20px; font-size: 1.3em;">Завантаження... Наведи камеру на малюнок! 🎨</div>
+  <div class="arjs-loader" id="loader">
+    <div>🪄 Магія Розмальовки! ✨</div>
+    <div style="margin-top: 20px; font-size: 1.2em;">Завантаження... Наведи камеру на картинку! 🎨</div>
   </div>
 
   <a-scene
@@ -87,7 +107,7 @@
     device-orientation-permission-ui="enabled: false"
     loading-screen="enabled: false"
     embedded
-    renderer="colorManagement: true;"
+    renderer="colorManagement: true; logarithmicDepthBuffer: true;"
   >
     <a-assets>
       <img id="img01" src="./assets/images/img01.png" />
@@ -97,33 +117,113 @@
       <audio id="bg-audio" src="./assets/audio/background.mp3" preload="auto"></audio>
     </a-assets>
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <!-- Камера без look-controls (AR-режим) -->
+    <a-camera
+      id="camera"
+      position="0 0 0"
+      look-controls="enabled: false"
+    ></a-camera>
 
     <!-- Група 1: img01.png -->
-    <a-entity mindar-image-target="targetIndex: 0"><a-image src="#img01" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 4"><a-image src="#img01" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 8"><a-image src="#img01" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 12"><a-image src="#img01" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 4">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 8">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 12">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
 
     <!-- Група 2: img02.png -->
-    <a-entity mindar-image-target="targetIndex: 1"><a-image src="#img02" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 5"><a-image src="#img02" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 9"><a-image src="#img02" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 13"><a-image src="#img02" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 5">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 9">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 13">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
 
     <!-- Група 3: img03.png -->
-    <a-entity mindar-image-target="targetIndex: 2"><a-image src="#img03" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 6"><a-image src="#img03" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 10"><a-image src="#img03" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 14"><a-image src="#img03" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 2">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 6">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 10">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 14">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
 
     <!-- Група 4: img04.png -->
-    <a-entity mindar-image-target="targetIndex: 3"><a-image src="#img04" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 7"><a-image src="#img04" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 11"><a-image src="#img04" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 3">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 7">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 11">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
+        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
+        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
+      </a-image>
+    </a-entity>
   </a-scene>
 
-  <div id="hint">🪄 Наведи камеру на малюнок — привид з’явиться!</div>
+  <div id="hint">🪄 Наведи камеру на свою картинку!</div>
   <button id="music-btn">🎵 Увімкнути музичку!</button>
 
   <script>
@@ -131,65 +231,44 @@
     const musicBtn = document.getElementById('music-btn');
     const hint = document.getElementById('hint');
     const loader = document.getElementById('loader');
-    const scene = document.querySelector('a-scene');
 
-    const fixHeight = () => document.body.style.height = `${window.innerHeight}px`;
+    // Адаптація висоти
+    function fixHeight() {
+      document.body.style.height = window.innerHeight + 'px';
+    }
     fixHeight();
     window.addEventListener('resize', fixHeight);
 
-    scene.addEventListener('renderstart', () => {
+    // Події завантаження
+    document.querySelector('a-scene').addEventListener('renderstart', () => {
       setTimeout(() => {
         loader.style.display = 'none';
         hint.style.display = 'block';
       }, 800);
     });
 
-    // 🎭 Ефект: привид вилазить із картинки (5 секунд)
-    function animateGhostAppear(el) {
-      el.setAttribute('visible', true);
-      const duration = 5000; // 5 секунд
-      const start = performance.now();
-
-      function step(time) {
-        const elapsed = time - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-
-        const scale = 2.0 * ease;          // до 30 см (бо targetSize=0.15)
-        const y = -0.6 * (1 - ease);       // піднімається з-під маркера
-
-        el.setAttribute('scale', `${scale} ${scale} ${scale}`);
-        el.setAttribute('position', `0 ${y} 0`);
-
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    // Обробка всіх 15 маркерів
-    scene.addEventListener('targetFound', (evt) => {
-      hint.style.display = 'none';
-      const targetIndex = evt.detail.targetIndex;
-      const img = document.querySelector(`a-entity[mindar-image-target="targetIndex: ${targetIndex}"] a-image`);
-      if (img) animateGhostAppear(img);
-    });
-
-    scene.addEventListener('targetLost', (evt) => {
-      hint.style.display = 'block';
-    });
-
     // Музика
     musicBtn.addEventListener('click', () => {
       if (audio.paused) {
-        audio.play().then(() => {
-          musicBtn.textContent = '🔊 Музичка грає!';
-          musicBtn.classList.add('playing');
-        }).catch(() => alert('Натисни ще раз для звуку!'));
+        audio.play()
+          .then(() => {
+            musicBtn.textContent = '🔊 Музичка грає!';
+            musicBtn.classList.add('playing');
+          })
+          .catch(() => {
+            alert('Будь ласка, натисни ще раз для звуку!');
+          });
       } else {
         audio.pause();
         musicBtn.textContent = '🎵 Увімкнути музичку!';
         musicBtn.classList.remove('playing');
       }
+    });
+
+    // Події маркерів
+    document.querySelectorAll('[mindar-image-target]').forEach(entity => {
+      entity.addEventListener('targetFound', () => hint.style.display = 'none');
+      entity.addEventListener('targetLost', () => hint.style.display = 'block');
     });
   </script>
 </body>
