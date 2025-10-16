@@ -13,7 +13,7 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      background: transparent; /* 🔑 обов’язково! */
+      background: transparent; /* 🔑 обов’язково для відеопотоку */
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
@@ -99,12 +99,28 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-    <!-- Привиди: початковий стан — прихований під маркером -->
-    <a-entity mindar-image-target="targetIndex: 0"><a-image id="ghost-0" src="#img01" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 1"><a-image id="ghost-1" src="#img02" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 2"><a-image id="ghost-2" src="#img03" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 3"><a-image id="ghost-3" src="#img04" rotation="0 180 0" transparent="true" visible="false"></a-image></a-entity>
-    <!-- Повторіть для інших targetIndex, якщо потрібно -->
+    <!-- Група 1: img01.png -->
+    <a-entity mindar-image-target="targetIndex: 0"><a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 4"><a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 8"><a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 12"><a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+
+    <!-- Група 2: img02.png -->
+    <a-entity mindar-image-target="targetIndex: 1"><a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 5"><a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 9"><a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 13"><a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+
+    <!-- Група 3: img03.png -->
+    <a-entity mindar-image-target="targetIndex: 2"><a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 6"><a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 10"><a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 14"><a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+
+    <!-- Група 4: img04.png -->
+    <a-entity mindar-image-target="targetIndex: 3"><a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 7"><a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 11"><a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.1 0.1 0.1" transparent="true" visible="false"></a-image></a-entity>
   </a-scene>
 
   <div id="hint">🪄 Наведи камеру на малюнок — привид з’явиться!</div>
@@ -117,12 +133,10 @@
     const loader = document.getElementById('loader');
     const scene = document.querySelector('a-scene');
 
-    // Адаптація висоти
     const fixHeight = () => document.body.style.height = `${window.innerHeight}px`;
     fixHeight();
     window.addEventListener('resize', fixHeight);
 
-    // Після завантаження сцени
     scene.addEventListener('renderstart', () => {
       setTimeout(() => {
         loader.style.display = 'none';
@@ -130,44 +144,35 @@
       }, 800);
     });
 
-    // Анімація "привид вилазить із картинки"
+    // 🎭 Проста анімація: миттєво з’являється і трохи збільшується
     function animateGhostAppear(el) {
       el.setAttribute('visible', true);
-      const duration = 5000; // 5 секунд
-      const start = performance.now();
-
-      function step(time) {
-        const elapsed = time - start;
-        const progress = Math.min(elapsed / duration, 1);
-        // easeOutCubic
-        const ease = 1 - Math.pow(1 - progress, 3);
-
-        // Масштаб: від 0 до 2.0 (30 см при маркері 15 см)
-        const scale = 2.0 * ease;
-        // Позиція Y: від -0.5 (під маркером) до 0 (повністю видимий)
-        const y = -0.5 * (1 - ease);
-
-        el.setAttribute('scale', `${scale} ${scale} ${scale}`);
-        el.setAttribute('position', `0 ${y} 0`);
-
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
+      el.setAttribute('scale', '4 4 4'); // ~20–30 см при маркері 5–15 см
+      // Опціонально: додати легку пульсацію
+      setTimeout(() => {
+        if (el.getAttribute('visible') === 'true') {
+          el.setAttribute('scale', '4.2 4.2 4.2');
+          setTimeout(() => {
+            if (el.getAttribute('visible') === 'true') {
+              el.setAttribute('scale', '4 4 4');
+            }
+          }, 300);
+        }
+      }, 200);
     }
 
-    // Події відстеження маркерів
     scene.addEventListener('targetFound', (evt) => {
       hint.style.display = 'none';
       const targetIndex = evt.detail.targetIndex;
-      const ghost = document.querySelector(`a-entity[mindar-image-target="targetIndex: ${targetIndex}"] a-image`);
-      if (ghost) animateGhostAppear(ghost);
+      const img = document.querySelector(`a-entity[mindar-image-target="targetIndex: ${targetIndex}"] a-image`);
+      if (img) animateGhostAppear(img);
     });
 
     scene.addEventListener('targetLost', (evt) => {
       hint.style.display = 'block';
       const targetIndex = evt.detail.targetIndex;
-      const ghost = document.querySelector(`a-entity[mindar-image-target="targetIndex: ${targetIndex}"] a-image`);
-      if (ghost) ghost.setAttribute('visible', false);
+      const img = document.querySelector(`a-entity[mindar-image-target="targetIndex: ${targetIndex}"] a-image`);
+      if (img) img.setAttribute('visible', false);
     });
 
     // Музика
