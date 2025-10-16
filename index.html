@@ -14,7 +14,8 @@
     html, body {
       height: 100%;
       overflow: hidden;
-      background: #000;
+      /* 🔑 ГОЛОВНЕ: фон має бути ПРОЗОРИМ, щоб бачити відео з камери */
+      background: transparent;
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
     a-scene {
@@ -26,7 +27,7 @@
       background: transparent;
     }
 
-    /* Велика підказка для дитини */
+    /* Підказка */
     #hint {
       position: fixed;
       bottom: 30px;
@@ -79,14 +80,12 @@
 </head>
 <body>
 
-  <!-- AR Scene -->
   <a-scene
     mindar-image="imageTargetSrc: ./assets/markers/markers.mind; autoStart: true; uiLoading: no; uiError: no; maxTrack: 15;"
     embedded
     color-space="sRGB"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
-    renderer="logarithmicDepthBuffer: true;"
   >
     <a-assets>
       <img id="img01" src="./assets/images/img01.png" />
@@ -96,31 +95,91 @@
       <audio id="bg-audio" src="./assets/audio/background.mp3" preload="auto"></audio>
     </a-assets>
 
-    <!-- Камера з відеопотоком -->
+    <!-- Камера (без id — не потрібна для look-at у цьому випадку) -->
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <!-- Група 1: img01.png -->
-    <a-entity mindar-image-target="targetIndex: 0"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 4"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 8"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 12"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 4">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 8">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 12">
+      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
 
     <!-- Група 2: img02.png -->
-    <a-entity mindar-image-target="targetIndex: 1"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 5"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 9"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 13"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 5">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 9">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 13">
+      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
 
     <!-- Група 3: img03.png -->
-    <a-entity mindar-image-target="targetIndex: 2"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 6"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 10"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 14"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 2">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 6">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 10">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 14">
+      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
 
     <!-- Група 4: img04.png -->
-    <a-entity mindar-image-target="targetIndex: 3"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 7"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 11"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 3">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 7">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 11">
+      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.01 0.01 0.01" transparent="true"
+        animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound"
+        animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image>
+    </a-entity>
   </a-scene>
 
   <!-- Підказка -->
