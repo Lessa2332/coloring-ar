@@ -51,7 +51,7 @@
       50% { opacity: 0.7; }
     }
 
-    /* Кнопка музики — велика, яскрава, не зникає */
+    /* Кнопка музики */
     #music-btn {
       position: fixed;
       top: 20px;
@@ -86,6 +86,7 @@
     color-space="sRGB"
     vr-mode-ui="enabled: false"
     device-orientation-permission-ui="enabled: false"
+    renderer="logarithmicDepthBuffer: true;"
   >
     <a-assets>
       <img id="img01" src="./assets/images/img01.png" />
@@ -95,59 +96,70 @@
       <audio id="bg-audio" src="./assets/audio/background.mp3" preload="auto"></audio>
     </a-assets>
 
+    <!-- Камера з відеопотоком -->
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <!-- Група 1: img01.png -->
-    <a-entity mindar-image-target="targetIndex: 0"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 4"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 8"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 12"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 0"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 4"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 8"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 12"><a-image src="#img01" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
 
     <!-- Група 2: img02.png -->
-    <a-entity mindar-image-target="targetIndex: 1"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 5"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 9"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 13"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 1"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 5"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 9"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 13"><a-image src="#img02" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
 
     <!-- Група 3: img03.png -->
-    <a-entity mindar-image-target="targetIndex: 2"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 6"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 10"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 14"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 2"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 6"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 10"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 14"><a-image src="#img03" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
 
     <!-- Група 4: img04.png -->
-    <a-entity mindar-image-target="targetIndex: 3"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 7"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
-    <a-entity mindar-image-target="targetIndex: 11"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" animation__appear="property: scale; to: 2 2 2; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 3"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 7"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
+    <a-entity mindar-image-target="targetIndex: 11"><a-image src="#img04" position="0 0 0" scale="0.01 0.01 0.01" transparent="true" animation__appear="property: scale; to: 67 67 67; dur: 1200; easing: easeOutBack; startEvents: targetFound" animation__disappear="property: scale; to: 0.01 0.01 0.01; dur: 300; startEvents: targetLost"></a-image></a-entity>
   </a-scene>
 
-  <!-- Підказка для дитини -->
+  <!-- Підказка -->
   <div id="hint">🪄 Наведи камеру на свою картинку!</div>
 
   <!-- Кнопка музики -->
-  <button id="music-btn" onclick="playMusic()">🎵 Увімкнути музичку!</button>
+  <button id="music-btn">🎵 Увімкнути музичку!</button>
 
   <script>
-    function playMusic() {
-      const btn = document.getElementById('music-btn');
-      const audio = document.getElementById('bg-audio');
-      audio.play().then(() => {
-        btn.textContent = '✅ Музичка грає!';
-        btn.classList.add('playing');
-        btn.disabled = true;
-      }).catch(e => {
-        alert('Будь ласка, натисни на екран ще раз!');
-      });
-    }
+    const audio = document.getElementById('bg-audio');
+    const musicBtn = document.getElementById('music-btn');
+    const hint = document.getElementById('hint');
+    const scene = document.querySelector('a-scene');
 
-    // Приховати підказку, коли знайдено маркер
-    document.querySelector('a-scene').addEventListener('targetFound', () => {
-      document.getElementById('hint').style.display = 'none';
+    // Увімкнути/вимкнути музику
+    musicBtn.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.play()
+          .then(() => {
+            musicBtn.textContent = '🔊 Музичка грає!';
+            musicBtn.classList.add('playing');
+          })
+          .catch(e => {
+            alert('Будь ласка, натисни ще раз, щоб дозволити звук!');
+          });
+      } else {
+        audio.pause();
+        musicBtn.textContent = '🎵 Увімкнути музичку!';
+        musicBtn.classList.remove('playing');
+      }
     });
 
-    // Показати підказку, якщо маркер зник
-    document.querySelector('a-scene').addEventListener('targetLost', () => {
-      document.getElementById('hint').style.display = 'block';
+    // Керування підказкою
+    scene.addEventListener('targetFound', () => {
+      hint.style.display = 'none';
+    });
+
+    scene.addEventListener('targetLost', () => {
+      hint.style.display = 'block';
     });
   </script>
 </body>
