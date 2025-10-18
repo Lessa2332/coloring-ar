@@ -74,6 +74,12 @@
             background: linear-gradient(45deg, #8b0000, #ff4500);
             color: white;
         }
+        #backBtn {
+            bottom: 200px;
+            background: linear-gradient(45deg, #4b0082, #8b00ff);
+            color: white;
+            display: none;
+        }
         #resetBtn {
             bottom: 100px;
             background: linear-gradient(45deg, #4b0082, #8b00ff);
@@ -229,6 +235,13 @@
         .logo-float {
             animation: logoFloat 4s ease-in-out infinite;
         }
+        @keyframes arSceneAppear {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        a-scene {
+            animation: arSceneAppear 1s ease-in forwards;
+        }
         @media (max-width: 480px) {
             .ui-btn {
                 padding: 10px 20px;
@@ -293,6 +306,7 @@
 
     <div id="canvasGameContainer">
         <canvas id="gameCanvas"></canvas>
+        <button id="backBtn" class="ui-btn">🔙 НАЗАД ДО АР</button>
         <button id="endBtn" class="ui-btn">🛑 ЗУПИНИТИ</button>
     </div>
 
@@ -311,6 +325,7 @@
             <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="success-sound" src="./success-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
         </a-assets>
@@ -365,6 +380,7 @@
         const logoImage = document.querySelector('#logo-image');
         const playBtn = document.querySelector('#playBtn');
         const stopBtn = document.querySelector('#stopBtn');
+        const backBtn = document.querySelector('#backBtn');
         const resetBtn = document.querySelector('#resetBtn');
         const soundBtn = document.querySelector('#soundBtn');
         const youtubeBtn = document.querySelector('#youtubeBtn');
@@ -376,9 +392,11 @@
         const bgMusic = document.querySelector('#bg-music');
         const logoSound = document.querySelector('#logo-sound');
         const clickSound = document.querySelector('#click-sound');
+        const booSound = document.querySelector('#boo-sound');
         const successSound = document.querySelector('#success-sound');
         const endMessage = document.getElementById('endMessage');
         const feedbackMessage = document.getElementById('feedbackMessage');
+        const aScene = document.querySelector('a-scene');
 
         let isGameRunning = false;
         let arStarted = false;
@@ -389,9 +407,10 @@
         let selectedEmojis = [];
         let animationFrameId = null;
         let logoAppearTimeout = null;
+        let particles = [];
 
         function stopAllAudio() {
-            [bgMusic, logoSound, clickSound, successSound].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) {
                     audio.pause();
                     audio.currentTime = 0;
@@ -408,7 +427,7 @@
         });
 
         soundBtn.addEventListener('click', () => {
-            [bgMusic, logoSound, clickSound, successSound].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) audio.muted = false;
             });
             soundBtn.style.display = 'none';
@@ -463,7 +482,15 @@
             arStarted = true;
             loader.style.display = 'none';
             instruction.style.display = 'none';
+            aScene.style.display = 'block';
+            aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
             showLogo();
+            
+            if (booSound && !booSound.muted) {
+                booSound.currentTime = 0;
+                booSound.play().catch(e => console.log("🔇 Звук появи AR не запустився:", e));
+            }
+            
             if (!isGameRunning) {
                 playBtn.style.display = 'block';
                 soundBtn.style.display = 'block';
@@ -487,6 +514,7 @@
 
         playBtn.addEventListener('click', startCanvasGame);
         stopBtn.addEventListener('click', stopGame);
+        backBtn.addEventListener('click', stopGame);
         resetBtn.addEventListener('click', resetGame);
 
         youtubeBtn.addEventListener('click', () => {
@@ -504,6 +532,7 @@
             soundBtn.style.display = 'none';
             youtubeBtn.style.display = 'none';
             stopBtn.style.display = 'block';
+            backBtn.style.display = 'block';
             resetBtn.style.display = 'none';
             hideAllAR();
             document.getElementById('canvasGameContainer').style.display = 'block';
@@ -514,12 +543,14 @@
             if (!isGameRunning) return;
             isGameRunning = false;
             stopBtn.style.display = 'none';
+            backBtn.style.display = 'none';
             resetBtn.style.display = 'none';
             playBtn.style.display = 'block';
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
             document.getElementById('canvasGameContainer').style.display = 'none';
-            document.querySelector('a-scene').style.display = 'block';
+            aScene.style.display = 'block';
+            aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
             taskText.style.display = 'none';
             timerText.style.display = 'none';
             scoreText.style.display = 'none';
@@ -529,7 +560,7 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
-            hideAllAR();
+            showLogo();
         }
 
         function resetGame() {
@@ -537,6 +568,7 @@
             score = 0;
             emojis = [];
             selectedEmojis = [];
+            particles = [];
             startTime = null;
             scoreText.textContent = `🎯 ОЧКИ: 0`;
             timerText.textContent = `⏳ ЧАС: 60`;
@@ -557,22 +589,36 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈', '🍬', '🕸️'];
-            const maxEmojisOnScreen = 6;
+            const emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈'];
+            const maxEmojisOnScreen = 4; // Зменшено для простоти
 
             function createEmoji() {
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 35 + Math.random() * 20,
-                    vx: (Math.random() - 0.5) * 5,
-                    vy: (Math.random() - 0.5) * 5,
+                    size: 50 + Math.random() * 30, // Збільшено розмір
+                    vx: (Math.random() - 0.5) * 3, // Повільніший рух
+                    vy: (Math.random() - 0.5) * 3,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
                     isClicked: false,
                     fadeOut: 0,
                     shake: 0,
+                    wiggle: Math.random() * Math.PI * 2,
                     creationTime: Date.now(),
-                    lifetime: 4000 + Math.random() * 3000
+                    lifetime: 5000 + Math.random() * 3000 // Подовжено життя
+                };
+            }
+
+            function createParticle(x, y) {
+                return {
+                    x: x,
+                    y: y,
+                    size: 5 + Math.random() * 10,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    color: ['#ff4500', '#32cd32', '#ffd700', '#8b00ff'][Math.floor(Math.random() * 4)],
+                    alpha: 1,
+                    life: 30
                 };
             }
 
@@ -649,6 +695,9 @@
                             if (selectedEmojis[0].value === selectedEmojis[1].value) {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.fadeOut = 1;
+                                    for (let i = 0; i < 15; i++) { // Збільшено кількість частинок
+                                        particles.push(createParticle(emoji.x, emoji.y));
+                                    }
                                 });
                                 score += 2;
                                 scoreText.textContent = `🎯 ОЧКИ: ${score}`;
@@ -696,7 +745,7 @@
             canvas.addEventListener('touchstart', inputHandler, { passive: false });
 
             let lastGeneration = Date.now();
-            const generationInterval = 1500;
+            const generationInterval = 1000; // Прискорено для динаміки
 
             function animate() {
                 if (!isGameRunning) return;
@@ -708,6 +757,18 @@
                     generateEmojis();
                     lastGeneration = now;
                 }
+
+                particles = particles.filter(p => p.life > 0);
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life--;
+                    p.alpha = p.life / 30;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${parseInt(p.color.slice(1, 3), 16)}, ${parseInt(p.color.slice(3, 5), 16)}, ${parseInt(p.color.slice(5, 7), 16)}, ${p.alpha})`;
+                    ctx.fill();
+                });
 
                 emojis.forEach(emoji => {
                     if (emoji.fadeOut > 0) {
@@ -722,6 +783,7 @@
                         emoji.y += emoji.vy;
                         if (emoji.x < 0 || emoji.x > canvas.width) emoji.vx *= -1;
                         if (emoji.y < 0 || emoji.y > canvas.height) emoji.vy *= -1;
+                        emoji.wiggle += 0.1;
                     }
 
                     ctx.font = `bold ${emoji.size}px Arial`;
@@ -734,13 +796,15 @@
                         '🕷️': '#8B4513',
                         '🦇': '#4B0082',
                         '💀': '#808080',
-                        '😈': '#FF0000',
-                        '🍬': '#FF6B6B',
-                        '🕸️': '#696969'
+                        '😈': '#FF0000'
                     };
                     
+                    ctx.save();
+                    ctx.translate(emoji.x, emoji.y);
+                    ctx.rotate(Math.sin(emoji.wiggle) * 0.1);
                     ctx.fillStyle = emoji.isClicked ? '#ff8c00' : (colors[emoji.value] || '#ffffff');
-                    ctx.fillText(emoji.value, emoji.x, emoji.y);
+                    ctx.fillText(emoji.value, 0, 0);
+                    ctx.restore();
                     ctx.globalAlpha = 1;
                 });
 
@@ -758,6 +822,7 @@
             function endCanvasGame() {
                 isGameRunning = false;
                 stopBtn.style.display = 'none';
+                backBtn.style.display = 'none';
                 resetBtn.style.display = 'block';
                 taskText.style.display = 'none';
                 timerText.style.display = 'none';
