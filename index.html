@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎃 Хелловін: Лови монстрів! 👻</title>
+    <title>🎃 Хелловін: Гонка за цукерками! 🍬</title>
 
     <!-- A-Frame + MindAR -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -198,7 +198,6 @@
         .ghost-float {
             animation: ghostFloat 2s ease-out forwards;
         }
-        /* Медіа-запити для адаптації */
         @media (max-width: 480px) {
             .ui-btn {
                 padding: 12px 25px;
@@ -228,20 +227,20 @@
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse">🎃 ЛОВИ МОНСТРІВ НА ХЕЛЛОВІН! 👻</div>
+        <div class="pulse">🎃 ГОНКА ЗА ЦУКЕРКАМИ! 🍬</div>
         <div style="margin-top: 20px; font-size: 1em;">
-            ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ! 🕷️
+            ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ! 🎃
         </div>
     </div>
 
     <div id="instruction">
-        🎃 ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ, ЩОБ ПОЧАТИ! 👻
+        🎃 ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ, ЩОБ ПОЧАТИ! 🍬
     </div>
 
-    <p id="taskText" class="ui-info-text">ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃</p>
-    <p id="timerText" class="ui-info-text">⏳ ЧАС: 60</p>
+    <p id="taskText" class="ui-info-text">ЗБЕРИ ОДНАКОВІ ЦУКЕРКИ! 🍬</p>
+    <p id="timerText" class="ui-info-text">⏳ ЧАС: 90</p>
     <p id="scoreText" class="ui-info-text">🕸️ ОЧКИ: 0</p>
-    <p id="feedbackMessage">МОЛОДЕЦЬ! 🎃</p>
+    <p id="feedbackMessage">МОЛОДЕЦЬ! 🍬</p>
 
     <div id="canvasGameContainer">
         <canvas id="gameCanvas"></canvas>
@@ -264,7 +263,7 @@
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський гарбуз">
+            <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
             <img id="ghost-img" src="./ghost.png" crossorigin="anonymous" alt="Привид">
         </a-assets>
 
@@ -290,8 +289,6 @@
                 scale="2.5 2.5 2.5"
                 visible="true"
             ></a-image>
-            
-            <!-- Привид, який з'являється при знаходженні маркера -->
             <a-entity 
                 id="ghost"
                 position="0 0.5 0.1"
@@ -305,15 +302,14 @@
                     alpha-test="0.5"
                 ></a-image>
             </a-entity>
-            
             <a-entity id="game-elements" visible="false">
             </a-entity>
         </a-entity>
     </a-scene>
 
-    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ЛОВИТИ! 🎃</button>
+    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ЗБИРАТИ ЦУКЕРКИ! 🍬</button>
     <button id="stopBtn" class="ui-btn" style="display: none;">🛑 ЗУПИНИТИ</button>
-    <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 👻</button>
+    <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
     <button id="soundBtn" class="ui-btn" style="display: none;">🔊 УВІМКНУТИ ЗВУКИ!</button>
     <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ АВТОР ГРИ</a>
 
@@ -351,7 +347,6 @@
         let emojis = [];
         let startTime = null;
         let inputHandler = null;
-        let targetSum = 0;
         let selectedEmojis = [];
         let animationFrameId = null;
         let ghostTimeout = null;
@@ -400,16 +395,12 @@
 
         function showGhost() {
             if (!ghost) return;
-            
             ghost.setAttribute('visible', 'true');
-            
             if (booSound && !booSound.muted) {
                 booSound.currentTime = 0;
                 booSound.play().catch(e => console.log("🔇 Звук привида не запустився:", e));
             }
-            
             ghost.classList.add('ghost-float');
-            
             ghostTimeout = setTimeout(() => {
                 hideGhost();
             }, 2000);
@@ -437,9 +428,7 @@
             arStarted = true;
             loader.style.display = 'none';
             instruction.style.display = 'none';
-            
             showGhost();
-            
             if (!isGameRunning) {
                 playBtn.style.display = 'block';
                 soundBtn.style.display = 'block';
@@ -450,7 +439,6 @@
 
         targetEntity.addEventListener('targetLost', () => {
             hideGhost();
-            
             if (isGameRunning) return;
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
@@ -508,12 +496,10 @@
             scoreText.style.display = 'none';
             feedbackMessage.style.display = 'none';
             stopAllAudio();
-            
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
-            
             hideGhost();
         }
 
@@ -522,11 +508,10 @@
             score = 0;
             emojis = [];
             selectedEmojis = [];
-            targetSum = 0;
             startTime = null;
             scoreText.textContent = `🕸️ ОЧКИ: 0`;
-            timerText.textContent = `⏳ ЧАС: 60`;
-            taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃`;
+            timerText.textContent = `⏳ ЧАС: 90`;
+            taskText.textContent = `ЗБЕРИ ОДНАКОВІ ЦУКЕРКИ! 🍬`;
             playBtn.style.display = 'block';
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
@@ -544,78 +529,39 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['👻', '🕷️', '🦇', '🎃', '💀', '😈', '🍬', '🕸️'];
-            const maxEmojisOnScreen = 6; // Більше елементів на екрані
-
-            function generateTargetSum() {
-                // Більше варіантів сум, включаючи 5
-                const possibleSums = [2, 3, 4, 5, 6];
-                return possibleSums[Math.floor(Math.random() * possibleSums.length)];
-            }
+            const emojiTypes = ['🍬', '🎃'];
+            const maxEmojisOnScreen = 2;
 
             function createEmoji() {
-                const number = Math.floor(Math.random() * 4) + 1; // 1, 2, 3 або 4
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 35 + Math.random() * 25, // Менші елементи
-                    vx: (Math.random() - 0.5) * 6, // Швидший рух
-                    vy: (Math.random() - 0.5) * 6,
+                    size: 50 + Math.random() * 30,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
-                    number: number,
                     isClicked: false,
                     fadeOut: 0,
-                    shake: 0,
-                    creationTime: Date.now(),
-                    lifetime: 5000 + Math.random() * 5000 // Елементи зникають через 5-10 секунд
+                    shake: 0
                 };
             }
 
             function generateEmojis() {
-                // Додаємо нові елементи, але не видаляємо старі
-                const needed = maxEmojisOnScreen - emojis.length;
-                for (let i = 0; i < needed; i++) {
+                emojis = [];
+                for (let i = 0; i < maxEmojisOnScreen; i++) {
                     emojis.push(createEmoji());
                 }
-                
-                // Генеруємо нову цільову суму
-                targetSum = generateTargetSum();
-                taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ${targetSum} 🎃`;
-                
-                // Перевіряємо, чи є можливі комбінації для поточної суми
-                setTimeout(checkPossibleCombinations, 100);
+                taskText.textContent = `ЗБЕРИ ОДНАКОВІ ЦУКЕРКИ! 🍬`;
             }
 
-            function checkPossibleCombinations() {
-                const numbers = emojis.map(e => e.number);
-                let hasCombination = false;
-                
-                // Шукаємо пару, що дає потрібну суму
-                for (let i = 0; i < numbers.length; i++) {
-                    for (let j = i + 1; j < numbers.length; j++) {
-                        if (numbers[i] + numbers[j] === targetSum) {
-                            hasCombination = true;
-                            break;
-                        }
-                    }
-                    if (hasCombination) break;
-                }
-                
-                // Якщо немає можливих комбінацій, генеруємо нові елементи
-                if (!hasCombination) {
-                    console.log("🔄 Немає можливих комбінацій, генеруємо нові елементи");
-                    emojis = [];
-                    generateEmojis();
-                }
+            if (emojis.length === 0) {
+                generateEmojis();
             }
-
-            // Початкова генерація
-            generateEmojis();
 
             startTime = Date.now();
             taskText.style.display = 'block';
             timerText.style.display = 'block';
-            timerText.textContent = `⏳ ЧАС: 60`;
+            timerText.textContent = `⏳ ЧАС: 90`;
             scoreText.style.display = 'block';
             scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
 
@@ -644,30 +590,28 @@
                         }
 
                         if (selectedEmojis.length === 2) {
-                            const sum = selectedEmojis[0].number + selectedEmojis[1].number;
-                            if (sum === targetSum) {
+                            if (selectedEmojis[0].value === selectedEmojis[1].value) {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.fadeOut = 1;
                                 });
                                 score += 2;
                                 scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
-                                feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ОЧКИ! 🎃`;
+                                feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ЦУКЕРКИ! 🍬`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
                                     generateEmojis();
-                                }, 800); // Коротша затримка
+                                }, 800);
                             } else {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.shake = 8;
                                     emoji.isClicked = false;
                                 });
-                                const needed = targetSum - selectedEmojis[0].number;
-                                feedbackMessage.textContent = `СПРОБУЙ ${needed} + ${selectedEmojis[0].number} 🎃`;
+                                feedbackMessage.textContent = `СПРОБУЙ ОДНАКОВІ ЦУКЕРКИ! 🍬`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
-                                }, 1500); // Коротша затримка
+                                }, 1500);
                             }
                             selectedEmojis = [];
                         }
@@ -678,9 +622,6 @@
             canvas.addEventListener('click', inputHandler);
             canvas.addEventListener('touchstart', inputHandler, { passive: false });
 
-            let lastEmojiGeneration = Date.now();
-            const emojiGenerationInterval = 2000; // Нові елементи кожні 2 секунди
-
             let lastTime = Date.now();
             function animate() {
                 if (!isGameRunning) return;
@@ -690,21 +631,10 @@
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Видаляємо старі елементи
-                emojis = emojis.filter(emoji => 
-                    (emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked) && 
-                    (now - emoji.creationTime < emoji.lifetime)
-                );
-
-                // Генеруємо нові елементи кожні 2 секунди
-                if (now - lastEmojiGeneration > emojiGenerationInterval) {
-                    generateEmojis();
-                    lastEmojiGeneration = now;
-                }
-
+                emojis = emojis.filter(emoji => emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked);
                 emojis.forEach(emoji => {
                     if (emoji.fadeOut > 0) {
-                        emoji.fadeOut -= 0.15; // Швидше зникання
+                        emoji.fadeOut -= 0.15;
                         ctx.globalAlpha = emoji.fadeOut;
                     } else if (emoji.shake > 0) {
                         emoji.shake -= 1;
@@ -720,17 +650,13 @@
                     ctx.font = `bold ${emoji.size}px Arial`;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    
-                    // Різні кольори для різних чисел
-                    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
-                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : colors[emoji.number - 1] || 'white';
-                    
-                    ctx.fillText(`${emoji.value} ${emoji.number}`, emoji.x, emoji.y);
+                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : '#ffffff';
+                    ctx.fillText(emoji.value, emoji.x, emoji.y);
                     ctx.globalAlpha = 1;
                 });
 
                 const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const remaining = 60 - elapsed; // Зменшено час гри до 60 секунд
+                const remaining = 90 - elapsed;
                 if (remaining <= 0) {
                     endCanvasGame();
                     return;
@@ -748,22 +674,19 @@
                 timerText.style.display = 'none';
                 scoreText.style.display = 'none';
                 feedbackMessage.style.display = 'none';
-                endMessage.textContent = `СУПЕР! ТИ ЗЛОВИВ ${score / 2} МОНСТРІВ! 🎃 ГРАТИ ЩЕ? 👻`;
+                endMessage.textContent = `СУПЕР! ТИ ЗІБРАВ ${score / 2} ЦУКЕРОК! 🎃 ГРАТИ ЩЕ? 🍬`;
                 endMessage.style.display = 'block';
                 stopAllAudio();
-                
                 if (animationFrameId) {
                     cancelAnimationFrame(animationFrameId);
                     animationFrameId = null;
                 }
-                
                 if (navigator.share) {
                     navigator.share({
-                        title: 'Хелловін: Лови монстрів!',
-                        text: `Я зловив ${score / 2} пар монстрів! #HalloweenFun`
-                    }).catch(e => console.log("🔗 Шаринг не підтримуються:", e));
+                        title: 'Хелловін: Гонка за цукерками!',
+                        text: `Я зібрав ${score / 2} цукерок! #HalloweenFun`
+                    }).catch(e => console.log("🔗 Шаринг не підтримується:", e));
                 }
-                
                 setTimeout(() => {
                     endMessage.style.display = 'none';
                     stopGame();
