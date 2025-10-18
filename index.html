@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎃 Хелловін: Гонка за цукерками! 🍬</title>
+    <title>🎃 Хелловін: Лови монстрів! 👻</title>
 
     <!-- A-Frame + MindAR -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -270,20 +270,20 @@
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse">🎃 ГОНКА ЗА ЦУКЕРКАМИ! 🍬</div>
+        <div class="pulse">🎃 ЛОВИ ОДНАКОВИХ МОНСТРІВ! 👻</div>
         <div style="margin-top: 15px; font-size: 0.9em;">
             ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ! 🎃
         </div>
     </div>
 
     <div id="instruction">
-        🎃 ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ, ЩОБ ПОЧАТИ! 🍬
+        🎃 ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ, ЩОБ ПОЧАТИ! 👻
     </div>
 
-    <p id="taskText" class="ui-info-text">ЗБЕРИ ОДНАКОВІ ЦУКЕРКИ! 🍬</p>
+    <p id="taskText" class="ui-info-text">ЛОВИ ОДНАКОВІ МОНСТРИ! 👻</p>
     <p id="timerText" class="ui-info-text">⏳ ЧАС: 60</p>
-    <p id="scoreText" class="ui-info-text">🍬 ЦУКЕРКИ: 0</p>
-    <p id="feedbackMessage">МОЛОДЕЦЬ! 🍬</p>
+    <p id="scoreText" class="ui-info-text">🎯 ОЧКИ: 0</p>
+    <p id="feedbackMessage">МОЛОДЕЦЬ! 👻</p>
 
     <div id="canvasGameContainer">
         <canvas id="gameCanvas"></canvas>
@@ -306,7 +306,7 @@
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="candy-sound" src="./candy-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="success-sound" src="./success-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
             <img id="ghost-img" src="./ghost.png" crossorigin="anonymous" alt="Привид">
         </a-assets>
@@ -355,7 +355,7 @@
         </a-entity>
     </a-scene>
 
-    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ГРУ! 🍬</button>
+    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ГРУ! 👻</button>
     <button id="stopBtn" class="ui-btn" style="display: none;">🛑 ЗУПИНИТИ</button>
     <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
     <button id="soundBtn" class="ui-btn" style="display: none;">🔊 УВІМКНУТИ ЗВУКИ!</button>
@@ -386,7 +386,7 @@
         const logoSound = document.querySelector('#logo-sound');
         const clickSound = document.querySelector('#click-sound');
         const booSound = document.querySelector('#boo-sound');
-        const candySound = document.querySelector('#candy-sound');
+        const successSound = document.querySelector('#success-sound');
         const endMessage = document.getElementById('endMessage');
         const feedbackMessage = document.getElementById('feedbackMessage');
 
@@ -402,7 +402,7 @@
         let ghostAppearTimeout = null;
 
         function stopAllAudio() {
-            [bgMusic, logoSound, clickSound, booSound, candySound].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) {
                     audio.pause();
                     audio.currentTime = 0;
@@ -419,7 +419,7 @@
         });
 
         soundBtn.addEventListener('click', () => {
-            [bgMusic, logoSound, clickSound, booSound, candySound].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) audio.muted = false;
             });
             soundBtn.style.display = 'none';
@@ -566,9 +566,9 @@
             emojis = [];
             selectedEmojis = [];
             startTime = null;
-            scoreText.textContent = `🍬 ЦУКЕРКИ: 0`;
+            scoreText.textContent = `🎯 ОЧКИ: 0`;
             timerText.textContent = `⏳ ЧАС: 60`;
-            taskText.textContent = `ЗБЕРИ ОДНАКОВІ ЦУКЕРКИ! 🍬`;
+            taskText.textContent = `ЛОВИ ОДНАКОВІ МОНСТРИ! 👻`;
             playBtn.style.display = 'block';
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
@@ -586,7 +586,7 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['🍬', '🎃', '👻', '🕷️', '🦇'];
+            const emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈', '🍬', '🕸️'];
             const maxEmojisOnScreen = 6;
 
             function createEmoji() {
@@ -645,7 +645,7 @@
             timerText.style.display = 'block';
             timerText.textContent = `⏳ ЧАС: 60`;
             scoreText.style.display = 'block';
-            scoreText.textContent = `🍬 ЦУКЕРКИ: ${score}`;
+            scoreText.textContent = `🎯 ОЧКИ: ${score}`;
 
             if (inputHandler) {
                 canvas.removeEventListener('click', inputHandler);
@@ -679,19 +679,20 @@
                         }
 
                         if (selectedEmojis.length === 2) {
+                            // УМОВА: ловимо будь-які однакові елементи
                             if (selectedEmojis[0].value === selectedEmojis[1].value) {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.fadeOut = 1;
                                 });
                                 score += 2;
-                                scoreText.textContent = `🍬 ЦУКЕРКИ: ${score}`;
+                                scoreText.textContent = `🎯 ОЧКИ: ${score}`;
                                 
-                                if (candySound && !candySound.muted) {
-                                    candySound.currentTime = 0;
-                                    candySound.play().catch(e => console.log("🔇 Звук цукерки не запустився:", e));
+                                if (successSound && !successSound.muted) {
+                                    successSound.currentTime = 0;
+                                    successSound.play().catch(e => console.log("🔇 Звук успіху не запустився:", e));
                                 }
                                 
-                                feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ЦУКЕРКИ! 🍬`;
+                                feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ОЧКИ! ${selectedEmojis[0].value}`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
@@ -706,7 +707,7 @@
                                         emoji.shake = 0;
                                     }, 600);
                                 });
-                                feedbackMessage.textContent = `СПРОБУЙ ОДНАКОВІ! 🍬`;
+                                feedbackMessage.textContent = `ЛОВИ ОДНАКОВІ ЕЛЕМЕНТИ! 👻`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
@@ -714,7 +715,7 @@
                                 }, 1000);
                             }
                         } else {
-                            feedbackMessage.textContent = `ОБЕРИ ЩЕ ОДИН! 🍬`;
+                            feedbackMessage.textContent = `ОБЕРИ ЩЕ ОДИН ЕЛЕМЕНТ! 👻`;
                             feedbackMessage.style.display = 'block';
                             setTimeout(() => {
                                 feedbackMessage.style.display = 'none';
@@ -763,11 +764,14 @@
                     ctx.textBaseline = 'middle';
                     
                     const colors = {
-                        '🍬': '#FF6B6B',
-                        '🎃': '#FFA500', 
                         '👻': '#FFFFFF',
+                        '🎃': '#FFA500',
                         '🕷️': '#8B4513',
-                        '🦇': '#4B0082'
+                        '🦇': '#4B0082',
+                        '💀': '#808080',
+                        '😈': '#FF0000',
+                        '🍬': '#FF6B6B',
+                        '🕸️': '#696969'
                     };
                     
                     ctx.fillStyle = emoji.isClicked ? '#ff8c00' : (colors[emoji.value] || '#ffffff');
@@ -794,7 +798,7 @@
                 timerText.style.display = 'none';
                 scoreText.style.display = 'none';
                 feedbackMessage.style.display = 'none';
-                endMessage.textContent = `СУПЕР! ТИ ЗІБРАВ ${score} ЦУКЕРОК! 🎃 ГРАТИ ЩЕ? 🍬`;
+                endMessage.textContent = `СУПЕР! ТИ ЗЛАПАВ ${score / 2} ПАР МОНСТРІВ! 🎃 ГРАТИ ЩЕ? 👻`;
                 endMessage.style.display = 'block';
                 stopAllAudio();
                 
@@ -805,8 +809,8 @@
                 
                 if (navigator.share) {
                     navigator.share({
-                        title: 'Хелловін: Гонка за цукерками!',
-                        text: `Я зібрав ${score} цукерок! #HalloweenFun`
+                        title: 'Хелловін: Лови монстрів!',
+                        text: `Я злапав ${score / 2} пар монстрів! #HalloweenFun`
                     }).catch(e => console.log("🔗 Шаринг не підтримується:", e));
                 }
                 
