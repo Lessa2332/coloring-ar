@@ -184,6 +184,45 @@
         .pulse {
             animation: pulse 1.5s infinite;
         }
+        @keyframes logoAppear {
+            0% { 
+                transform: translateY(0) scale(0.1); 
+                opacity: 0;
+                filter: blur(10px);
+            }
+            20% { 
+                transform: translateY(-5px) scale(0.3); 
+                opacity: 0.2;
+                filter: blur(8px);
+            }
+            40% { 
+                transform: translateY(-10px) scale(0.5); 
+                opacity: 0.4;
+                filter: blur(6px);
+            }
+            60% { 
+                transform: translateY(-15px) scale(0.8); 
+                opacity: 0.7;
+                filter: blur(4px);
+            }
+            80% { 
+                transform: translateY(-20px) scale(1.1); 
+                opacity: 0.9;
+                filter: blur(2px);
+            }
+            100% { 
+                transform: translateY(-25px) scale(1); 
+                opacity: 1;
+                filter: blur(0);
+            }
+        }
+        @keyframes logoFloat {
+            0% { transform: translateY(-25px) scale(1) rotate(0deg); }
+            25% { transform: translateY(-30px) scale(1.02) rotate(2deg); }
+            50% { transform: translateY(-35px) scale(1.05) rotate(0deg); }
+            75% { transform: translateY(-30px) scale(1.02) rotate(-2deg); }
+            100% { transform: translateY(-25px) scale(1) rotate(0deg); }
+        }
         @keyframes ghostAppear {
             0% { 
                 transform: translateY(0) scale(0.3); 
@@ -217,40 +256,17 @@
             75% { transform: translateY(-80px) scale(1.05); opacity: 0.7; }
             100% { transform: translateY(-90px) scale(1); opacity: 0.6; }
         }
+        .logo-appear {
+            animation: logoAppear 3s ease-out forwards;
+        }
+        .logo-float {
+            animation: logoFloat 4s ease-in-out infinite;
+        }
         .ghost-appear {
             animation: ghostAppear 3s ease-out forwards;
         }
         .ghost-float {
             animation: ghostFloat 2s ease-in-out infinite;
-        }
-        @keyframes logoAppear {
-            0% { 
-                transform: translateY(0) scale(0.3); 
-                opacity: 0; 
-            }
-            20% { 
-                transform: translateY(-5px) scale(0.5); 
-                opacity: 0.3; 
-            }
-            40% { 
-                transform: translateY(-10px) scale(0.7); 
-                opacity: 0.6; 
-            }
-            60% { 
-                transform: translateY(-15px) scale(0.9); 
-                opacity: 0.8; 
-            }
-            80% { 
-                transform: translateY(-20px) scale(1.1); 
-                opacity: 0.9; 
-            }
-            100% { 
-                transform: translateY(-25px) scale(1); 
-                opacity: 1; 
-            }
-        }
-        .logo-appear {
-            animation: logoAppear 3s ease-out forwards;
         }
         @media (max-width: 480px) {
             .ui-btn {
@@ -354,21 +370,15 @@
         </a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
-            <!-- Логотип з анімацією появи -->
-            <a-entity 
+            <!-- Логотип з анімацією появи як привид -->
+            <a-image
                 id="logo-image"
+                src="#logo-img"
                 position="0 0 0.03"
+                rotation="30 0 0"
                 scale="1.5 1.5 1.5"
                 visible="false"
-            >
-                <a-image
-                    src="#logo-img"
-                    position="0 0 0"
-                    rotation="30 0 0"
-                    transparent="true"
-                    alpha-test="0.5"
-                ></a-image>
-            </a-entity>
+            ></a-image>
             
             <!-- Привид з анімацією появи -->
             <a-entity 
@@ -435,7 +445,6 @@
         let animationFrameId = null;
         let ghostTimeout = null;
         let ghostAppearTimeout = null;
-        let logoTimeout = null;
         let logoAppearTimeout = null;
 
         function stopAllAudio() {
@@ -462,33 +471,81 @@
             soundBtn.style.display = 'none';
         });
 
+        function showLogo() {
+            if (!logoImage) return;
+            
+            // Спочатку ховаємо лого та скидаємо всі анімації
+            logoImage.setAttribute('visible', 'false');
+            logoImage.classList.remove('logo-appear', 'logo-float');
+            
+            // Очищаємо попередні таймери
+            if (logoAppearTimeout) clearTimeout(logoAppearTimeout);
+            
+            // Запускаємо появу лого через 100мс
+            logoAppearTimeout = setTimeout(() => {
+                logoImage.setAttribute('visible', 'true');
+                logoImage.classList.add('logo-appear');
+                
+                // Відтворюємо звук логотипу
+                if (logoSound && !logoSound.muted) {
+                    logoSound.currentTime = 0;
+                    logoSound.play().catch(e => console.log("🔇 Звук логотипу не запустився:", e));
+                }
+                
+                // Після завершення анімації появи додаємо плаваючу анімацію
+                setTimeout(() => {
+                    logoImage.classList.remove('logo-appear');
+                    logoImage.classList.add('logo-float');
+                }, 3000); // Час анімації появи
+                
+            }, 100);
+        }
+
         function showGhost() {
             if (!ghost) return;
             
+            // Спочатку ховаємо привида та скидаємо всі анімації
             ghost.setAttribute('visible', 'false');
             ghost.classList.remove('ghost-appear', 'ghost-float');
             
+            // Очищаємо попередні таймери
             if (ghostTimeout) clearTimeout(ghostTimeout);
             if (ghostAppearTimeout) clearTimeout(ghostAppearTimeout);
             
+            // Запускаємо появу привида через 500мс після лого
             ghostAppearTimeout = setTimeout(() => {
                 ghost.setAttribute('visible', 'true');
                 ghost.classList.add('ghost-appear');
                 
+                // Відтворюємо звук "boo" на початку анімації
                 if (booSound && !booSound.muted) {
                     booSound.currentTime = 0;
                     booSound.play().catch(e => console.log("🔇 Звук привида не запустився:", e));
                 }
                 
+                // Після завершення анімації появи додаємо плаваючу анімацію
                 ghostTimeout = setTimeout(() => {
                     ghost.classList.remove('ghost-appear');
                     ghost.classList.add('ghost-float');
                     
+                    // Ховаємо привида через 2 секунди плавання
                     setTimeout(() => {
                         hideGhost();
                     }, 2000);
-                }, 3000);
-            }, 100);
+                    
+                }, 3000); // Час анімації появи
+                
+            }, 500);
+        }
+
+        function hideLogo() {
+            if (!logoImage) return;
+            logoImage.setAttribute('visible', 'false');
+            logoImage.classList.remove('logo-appear', 'logo-float');
+            if (logoAppearTimeout) {
+                clearTimeout(logoAppearTimeout);
+                logoAppearTimeout = null;
+            }
         }
 
         function hideGhost() {
@@ -505,42 +562,9 @@
             }
         }
 
-        function showLogo() {
-            if (!logoImage) return;
-            
-            logoImage.setAttribute('visible', 'false');
-            logoImage.classList.remove('logo-appear');
-            
-            if (logoTimeout) clearTimeout(logoTimeout);
-            if (logoAppearTimeout) clearTimeout(logoAppearTimeout);
-            
-            logoAppearTimeout = setTimeout(() => {
-                logoImage.setAttribute('visible', 'true');
-                logoImage.classList.add('logo-appear');
-                
-                if (logoSound && !logoSound.muted) {
-                    logoSound.currentTime = 0;
-                    logoSound.play().catch(e => console.log("🔇 Звук логотипу не запустився:", e));
-                }
-                
-                logoTimeout = setTimeout(() => {
-                    logoImage.classList.remove('logo-appear');
-                }, 3000);
-            }, 100);
-        }
-
-        function hideLogo() {
-            if (!logoImage) return;
-            logoImage.setAttribute('visible', 'false');
-            logoImage.classList.remove('logo-appear');
-            if (logoTimeout) {
-                clearTimeout(logoTimeout);
-                logoTimeout = null;
-            }
-            if (logoAppearTimeout) {
-                clearTimeout(logoAppearTimeout);
-                logoAppearTimeout = null;
-            }
+        function hideAllAR() {
+            hideLogo();
+            hideGhost();
         }
 
         setTimeout(() => {
@@ -554,8 +578,11 @@
             arStarted = true;
             loader.style.display = 'none';
             instruction.style.display = 'none';
-            showGhost();
+            
+            // Спочатку показуємо лого, потім привида
             showLogo();
+            showGhost();
+            
             if (!isGameRunning) {
                 playBtn.style.display = 'block';
                 soundBtn.style.display = 'block';
@@ -564,8 +591,7 @@
         });
 
         targetEntity.addEventListener('targetLost', () => {
-            hideGhost();
-            hideLogo();
+            hideAllAR();
             if (isGameRunning) return;
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
@@ -598,8 +624,7 @@
             youtubeBtn.style.display = 'none';
             stopBtn.style.display = 'block';
             resetBtn.style.display = 'none';
-            hideLogo();
-            hideGhost();
+            hideAllAR();
             document.getElementById('canvasGameContainer').style.display = 'block';
             initCanvasGame();
         }
@@ -623,7 +648,7 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
-            showLogo();
+            hideAllAR();
         }
 
         function resetGame() {
@@ -639,7 +664,6 @@
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
             resetBtn.style.display = 'none';
-            showLogo();
         }
 
         function initCanvasGame() {
@@ -672,16 +696,19 @@
             }
 
             function generateEmojis() {
+                // Видаляємо старі елементи
                 emojis = emojis.filter(emoji => 
                     (emoji.fadeOut <= 0 && emoji.shake <= 0 && !emoji.isClicked) && 
                     (Date.now() - emoji.creationTime < emoji.lifetime)
                 );
 
+                // Додаємо нові елементи
                 const needed = maxEmojisOnScreen - emojis.length;
                 for (let i = 0; i < needed; i++) {
                     emojis.push(createEmoji());
                 }
 
+                // Гарантуємо, що є хоча б одна пара однакових
                 const typesCount = {};
                 emojis.forEach(emoji => {
                     typesCount[emoji.value] = (typesCount[emoji.value] || 0) + 1;
@@ -696,6 +723,7 @@
                 }
 
                 if (!hasPair && emojis.length >= 2) {
+                    // Якщо немає пари, робимо перші два елементи однаковими
                     emojis[0].value = emojis[1].value;
                 }
             }
@@ -741,6 +769,7 @@
                         }
 
                         if (selectedEmojis.length === 2) {
+                            // УМОВА: ловимо будь-які однакові елементи
                             if (selectedEmojis[0].value === selectedEmojis[1].value) {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.fadeOut = 1;
@@ -799,6 +828,7 @@
                 const now = Date.now();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+                // Оновлюємо елементи
                 if (now - lastGeneration > generationInterval) {
                     generateEmojis();
                     lastGeneration = now;
