@@ -1,275 +1,578 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Магія Розмальовки! ✨</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎃 Хелловінський жах-челендж — Лови монстрів! 👻</title>
 
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <!-- A-Frame + MindAR -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      /* 🔑 КРИТИЧНО: фон має бути ПРОЗОРИМ, щоб бачити відео з камери */
-      background: transparent;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-    }
-
-    /* Лоадер */
-    .arjs-loader {
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #ffcc00;
-      font-size: 1.8em;
-      text-align: center;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    a-scene {
-      width: 100% !important;
-      height: 100% !important;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background: transparent;
-    }
-
-    #hint {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: #ffcc00;
-      padding: 16px 24px;
-      border-radius: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      z-index: 100;
-      max-width: 90%;
-      backdrop-filter: blur(8px);
-      border: 2px solid #ffcc00;
-      animation: pulse 2s infinite;
-      display: none;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    #music-btn {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      padding: 14px 28px;
-      font-size: 18px;
-      font-weight: bold;
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(255, 107, 107, 0.6);
-    }
-    #music-btn.playing {
-      background: #4CAF50;
-      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.6);
-    }
-  </style>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #000; /* Темний фон для Хелловіну */
+        }
+        a-scene {
+            width: 100% !important;
+            height: 100% !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: transparent;
+        }
+        .arjs-loader {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #1a1a1a; /* Темний фон */
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff8c00; /* Помаранчевий текст */
+            font-size: 1.5em;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .ui-btn {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 16px 30px;
+            border-radius: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            display: none;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        #playBtn {
+            bottom: 180px;
+            background: linear-gradient(45deg, #ff4500, #ff8c00); /* Помаранчево-червоний градієнт */
+            color: white;
+        }
+        #stopBtn {
+            bottom: 180px;
+            background: linear-gradient(45deg, #8b0000, #ff4500); /* Темно-червоний */
+            color: white;
+        }
+        #resetBtn {
+            bottom: 100px;
+            background: linear-gradient(45deg, #4b0082, #8b00ff); /* Фіолетовий */
+            color: white;
+        }
+        #soundBtn {
+            bottom: 260px;
+            background: linear-gradient(45deg, #228b22, #006400); /* Темно-зелений для моторошності */
+            color: white;
+        }
+        #youtubeBtn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            transform: none;
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #ff4500, #ff8c00);
+            color: white;
+            border-radius: 25px;
+            font-size: 0.95em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+            font-family: Arial, sans-serif;
+            z-index: 1100;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        #youtubeBtn:hover {
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+        }
+        .ui-info-text {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            transform: none;
+            z-index: 500;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: left;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        #taskText {
+            color: #ff4500; /* Помаранчевий */
+            font-size: 1.6em;
+            display: none;
+        }
+        #timerText {
+            top: 50px;
+            color: #ffd700; /* Золотий */
+            font-size: 1.4em;
+            display: none;
+        }
+        #scoreText {
+            top: 90px;
+            color: #32cd32; /* Зелений для жаху */
+            font-size: 1.4em;
+            display: none;
+        }
+        #instruction {
+            position: fixed;
+            bottom: 250px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff8c00;
+            font-size: 1.1em;
+            text-align: center;
+            z-index: 9998;
+            background: rgba(0, 0, 0, 0.8); /* Темний фон */
+            padding: 15px 25px;
+            border-radius: 20px;
+            max-width: 90%;
+            display: none;
+            line-height: 1.4;
+        }
+        #canvasGameContainer {
+            z-index: 1000;
+            position: relative;
+            background: #000; /* Темний фон для канвасу */
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
 </head>
 <body>
+    <div class="arjs-loader" id="loader">
+        <div class="pulse">🎃 Ласкаво просимо до "Хелловінський жах-челендж"! 👻</div>
+        <div style="margin-top: 20px; font-size: 1.1em;">
+            Наведи камеру на маркер, щоб почати жах! 🕷️
+        </div>
+    </div>
 
-  <div class="arjs-loader" id="loader">
-    <div>🪄 Магія Розмальовки! ✨</div>
-    <div style="margin-top: 20px; font-size: 1.2em;">Завантаження... Наведи камеру на картинку! 🎨</div>
-  </div>
+    <div id="instruction">
+        🖼️ Надрукуй або покажи зображення, яке використовувалось для генерації <code>targets.mind</code>
+    </div>
 
-  <a-scene
-    mindar-image="imageTargetSrc: ./assets/markers/markers.mind; autoStart: true; uiLoading: no; uiError: no; maxTrack: 15;"
-    vr-mode-ui="enabled: false"
-    device-orientation-permission-ui="enabled: false"
-    loading-screen="enabled: false"
-    embedded
-    renderer="colorManagement: true; logarithmicDepthBuffer: true;"
-  >
-    <a-assets>
-      <img id="img01" src="./assets/images/img01.png" />
-      <img id="img02" src="./assets/images/img02.png" />
-      <img id="img03" src="./assets/images/img03.png" />
-      <img id="img04" src="./assets/images/img04.png" />
-      <audio id="bg-audio" src="./assets/audio/background.mp3" preload="auto"></audio>
-    </a-assets>
+    <p id="taskText" class="ui-info-text">Злови пару монстрів, жах = ?</p>
+    <p id="timerText" class="ui-info-text">⏳ Час: 01:00</p>
+    <p id="scoreText" class="ui-info-text">🕸️ Очки: 0</p>
 
-    <!-- Камера без look-controls (AR-режим) -->
-    <a-camera
-      id="camera"
-      position="0 0 0"
-      look-controls="enabled: false"
-    ></a-camera>
+    <div id="canvasGameContainer" style="display: none;">
+        <canvas id="gameCanvas"></canvas>
+        <button id="endBtn" class="ui-btn">🛑 Завершити</button>
+    </div>
 
-    <!-- Група 1: img01.png -->
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 4">
-      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 8">
-      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 12">
-      <a-image src="#img01" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
+    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:20px; border-radius:15px; z-index:10000; font-size:1.2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 8px 20px rgba(0,0,0,0.4);">
+    </div>
 
-    <!-- Група 2: img02.png -->
-    <a-entity mindar-image-target="targetIndex: 1">
-      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 5">
-      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 9">
-      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 13">
-      <a-image src="#img02" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
+    <a-scene
+        mindar-image="imageTargetSrc: ./targets.mind;"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+        loading-screen="enabled: false"
+        embedded
+        renderer="colorManagement: true; physicallyCorrectLights: true;"
+    >
+        <a-assets>
+            <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Замініть на моторошну музику -->
+            <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Звук жаху -->
+            <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Звук привида -->
+            <img id="logo-img" src="./halloween-logo.png" crossorigin="anonymous" alt="Хелловінський логотип"> <!-- Замініть на гарбуз або привид -->
+        </a-assets>
 
-    <!-- Група 3: img03.png -->
-    <a-entity mindar-image-target="targetIndex: 2">
-      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 6">
-      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 10">
-      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 14">
-      <a-image src="#img03" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
+        <a-camera
+            look-controls="enabled: false"
+            position="0 0 0"
+        >
+            <a-cursor
+                raycaster="objects: .emoji;"
+                cursor="fuse: false; maxDistance: 10"
+                position="0 0 -1"
+                geometry="primitive: ring; radiusOuter: 0.015; radiusInner: 0.008"
+                material="color: #ff8c00; shader: flat" <!-- Помаранчевий курсор -->
+            ></a-cursor>
+        </a-camera>
 
-    <!-- Група 4: img04.png -->
-    <a-entity mindar-image-target="targetIndex: 3">
-      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 7">
-      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-    <a-entity mindar-image-target="targetIndex: 11">
-      <a-image src="#img04" position="0 0 0" rotation="0 180 0" scale="0.3 0.3 0.3" transparent="true"
-        animation="property: scale; from: 0.3 0.3 0.3; to: 13.5 13.5 13.5; dur: 1000; startEvents: targetFound; easing: easeOutBack"
-        animation__disappear="property: scale; to: 0.3 0.3 0.3; dur: 300; startEvents: targetLost">
-      </a-image>
-    </a-entity>
-  </a-scene>
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-image
+                id="logo-image"
+                src="#logo-img"
+                position="0 0 0.05"
+                rotation="30 0 0"
+                scale="2.5 2.5 2.5"
+                visible="true"
+            ></a-image>
+            <a-entity id="game-elements" visible="false">
+                <!-- Тут можна додати допоміжні елементи для AR -->
+            </a-entity>
+        </a-entity>
+    </a-scene>
 
-  <div id="hint">🪄 Наведи камеру на свою картинку!</div>
-  <button id="music-btn">🎵 Увімкнути музичку!</button>
+    <button id="playBtn" class="ui-btn">🚀 Почати жах!</button>
+    <button id="stopBtn" class="ui-btn" style="display: none;">🛑 Зупинити</button>
+    <button id="resetBtn" class="ui-btn">🔄 Спробувати ще!</button>
+    <button id="soundBtn" class="ui-btn" style="display: none;">🔊 Увімкнути звук</button>
+    <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ Автор SmartLessa</a>
 
-  <script>
-    const audio = document.getElementById('bg-audio');
-    const musicBtn = document.getElementById('music-btn');
-    const hint = document.getElementById('hint');
-    const loader = document.getElementById('loader');
+    <script>
+        function fixHeight() {
+            document.body.style.height = window.innerHeight + 'px';
+        }
+        fixHeight();
+        window.addEventListener('resize', fixHeight);
 
-    // Адаптація висоти
-    function fixHeight() {
-      document.body.style.height = window.innerHeight + 'px';
-    }
-    fixHeight();
-    window.addEventListener('resize', fixHeight);
+        const loader = document.querySelector('#loader');
+        const targetEntity = document.querySelector('a-entity[mindar-image-target]');
+        const logoImage = document.querySelector('#logo-image');
+        const playBtn = document.querySelector('#playBtn');
+        const stopBtn = document.querySelector('#stopBtn');
+        const resetBtn = document.querySelector('#resetBtn');
+        const soundBtn = document.querySelector('#soundBtn');
+        const youtubeBtn = document.querySelector('#youtubeBtn');
+        const gameElements = document.querySelector('#game-elements');
+        const taskText = document.getElementById('taskText');
+        const timerText = document.getElementById('timerText');
+        const scoreText = document.getElementById('scoreText');
+        const instruction = document.querySelector('#instruction');
+        const bgMusic = document.querySelector('#bg-music');
+        const logoSound = document.querySelector('#logo-sound');
+        const clickSound = document.querySelector('#click-sound');
+        const endMessage = document.getElementById('endMessage');
 
-    // Події завантаження
-    document.querySelector('a-scene').addEventListener('renderstart', () => {
-      setTimeout(() => {
-        loader.style.display = 'none';
-        hint.style.display = 'block';
-      }, 800);
-    });
+        let isGameRunning = false;
+        let arStarted = false;
+        let score = 0;
+        let emojis = [];
+        let startTime = null;
+        let inputHandler = null;
+        let targetSum = 0;
+        let selectedEmojis = [];
 
-    // Музика
-    musicBtn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play()
-          .then(() => {
-            musicBtn.textContent = '🔊 Музичка грає!';
-            musicBtn.classList.add('playing');
-          })
-          .catch(() => {
-            alert('Будь ласка, натисни ще раз для звуку!');
-          });
-      } else {
-        audio.pause();
-        musicBtn.textContent = '🎵 Увімкнути музичку!';
-        musicBtn.classList.remove('playing');
-      }
-    });
+        // Зупинка всіх звуків
+        function stopAllAudio() {
+            if (bgMusic) {
+                bgMusic.pause();
+                bgMusic.currentTime = 0;
+                bgMusic.muted = true;
+            }
+            if (logoSound) {
+                logoSound.pause();
+                logoSound.currentTime = 0;
+                logoSound.muted = true;
+            }
+            if (clickSound) {
+                clickSound.pause();
+                clickSound.currentTime = 0;
+                clickSound.muted = true;
+            }
+        }
 
-    // Події маркерів
-    document.querySelectorAll('[mindar-image-target]').forEach(entity => {
-      entity.addEventListener('targetFound', () => hint.style.display = 'none');
-      entity.addEventListener('targetLost', () => hint.style.display = 'block');
-    });
-  </script>
+        // Обробка втрати фокусу сторінки
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                console.log("ℹ️ Сторінка втратила фокус, зупиняємо звуки");
+                stopAllAudio();
+            }
+        });
+
+        // Кнопка увімкнення звуку
+        soundBtn.addEventListener('click', () => {
+            if (bgMusic) bgMusic.muted = false;
+            if (logoSound) {
+                logoSound.muted = false;
+                logoSound.currentTime = 0;
+                logoSound.play().catch(e => console.log("🔇 Звук логотипу не запустився:", e));
+            }
+            if (clickSound) clickSound.muted = false;
+            soundBtn.style.display = 'none';
+        });
+
+        setTimeout(() => {
+            if (!arStarted) {
+                instruction.style.display = 'block';
+                console.log("ℹ️ Показано інструкцію — чекаємо на маркер");
+            }
+        }, 3000);
+
+        targetEntity.addEventListener('targetFound', () => {
+            console.log("🎯 Маркер знайдено!");
+            arStarted = true;
+            loader.style.display = 'none';
+            instruction.style.display = 'none';
+            if (!isGameRunning) {
+                playBtn.style.display = 'block';
+                soundBtn.style.display = 'block';
+                youtubeBtn.style.display = 'block';
+                if (logoImage) logoImage.setAttribute('visible', 'true');
+            }
+        });
+
+        targetEntity.addEventListener('targetLost', () => {
+            if (isGameRunning) return; // Ігноруємо втрату маркера під час гри
+            playBtn.style.display = 'none';
+            soundBtn.style.display = 'none';
+            youtubeBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            if (logoImage) logoImage.setAttribute('visible', 'true');
+            gameElements.setAttribute('visible', 'false');
+            taskText.style.display = 'none';
+            timerText.style.display = 'none';
+            scoreText.style.display = 'none';
+        });
+
+        playBtn.addEventListener('click', startCanvasGame);
+        stopBtn.addEventListener('click', stopGame);
+        resetBtn.addEventListener('click', resetGame);
+
+        youtubeBtn.addEventListener('click', () => {
+            console.log("🔗 Клік по YouTube-кнопці!");
+            window.open('https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi', '_blank');
+        });
+        youtubeBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            console.log("🔗 Сенсорний клік по YouTube-кнопці!");
+            window.open('https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi', '_blank');
+        });
+
+        function startCanvasGame() {
+            console.log("▶️ Початок Canvas-гри!");
+            isGameRunning = true;
+            playBtn.style.display = 'none';
+            soundBtn.style.display = 'none';
+            youtubeBtn.style.display = 'none';
+            stopBtn.style.display = 'block';
+            resetBtn.style.display = 'none';
+            if (logoImage) logoImage.setAttribute('visible', 'false');
+            document.querySelector('a-scene').style.display = 'none';
+            document.getElementById('canvasGameContainer').style.display = 'block';
+            initCanvasGame();
+        }
+
+        function stopGame() {
+            if (!isGameRunning) return;
+            isGameRunning = false;
+            stopBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            playBtn.style.display = 'block';
+            soundBtn.style.display = 'block';
+            youtubeBtn.style.display = 'block';
+            document.getElementById('canvasGameContainer').style.display = 'none';
+            document.querySelector('a-scene').style.display = 'block';
+            if (logoImage) logoImage.setAttribute('visible', 'true');
+            taskText.style.display = 'none';
+            timerText.style.display = 'none';
+            scoreText.style.display = 'none';
+            if (endMessage) endMessage.style.display = 'none';
+            stopAllAudio();
+        }
+
+        function resetGame() {
+            stopGame();
+            score = 0;
+            emojis = [];
+            selectedEmojis = [];
+            targetSum = 0;
+            startTime = null;
+            scoreText.textContent = `🕸️ Очки: 0`;
+            timerText.textContent = `⏳ Час: 60`;
+            taskText.textContent = `Злови пару монстрів, жах = ?`;
+            playBtn.style.display = 'block';
+            soundBtn.style.display = 'block';
+            youtubeBtn.style.display = 'block';
+            resetBtn.style.display = 'none';
+            if (logoImage) logoImage.setAttribute('visible', 'true');
+        }
+
+        function initCanvasGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            if (bgMusic && !bgMusic.muted) {
+                bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
+            }
+
+            const emojiTypes = ['👻', '🕷️', '🎃', '🦇', '💀', '🧟‍♂️', '🧛‍♀️']; // Хелловінські емодзі
+            const maxEmojisOnScreen = 4;
+
+            function generateTargetSum() {
+                const possibleSums = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                return possibleSums[Math.floor(Math.random() * possibleSums.length)];
+            }
+
+            function createEmoji() {
+                const number = Math.floor(Math.random() * 5) + 1; // 1–5 (рівень жаху)
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: 40 + Math.random() * 60,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
+                    number: number,
+                    isClicked: false,
+                    fadeOut: 0,
+                    shake: 0
+                };
+            }
+
+            function generateEmojis() {
+                emojis = [];
+                for (let i = 0; i < maxEmojisOnScreen; i++) {
+                    emojis.push(createEmoji());
+                }
+                targetSum = generateTargetSum();
+                taskText.textContent = `Злови пару монстрів, жах = ${targetSum}`;
+            }
+
+            if (emojis.length === 0) {
+                generateEmojis();
+            }
+
+            startTime = Date.now();
+            taskText.style.display = 'block';
+            timerText.style.display = 'block';
+            timerText.textContent = `⏳ Час: 60`;
+            scoreText.style.display = 'block';
+            scoreText.textContent = `🕸️ Очки: ${score}`;
+
+            if (inputHandler) {
+                canvas.removeEventListener('click', inputHandler);
+                canvas.removeEventListener('touchstart', inputHandler);
+            }
+
+            inputHandler = (e) => {
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+                emojis.forEach((emoji, index) => {
+                    if (emoji.isClicked || emoji.fadeOut > 0 || emoji.shake > 0) return;
+                    const dx = x - emoji.x;
+                    const dy = y - emoji.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < emoji.size / 1.5) {
+                        emoji.isClicked = true;
+                        selectedEmojis.push(emoji);
+                        if (clickSound && !clickSound.muted) {
+                            clickSound.currentTime = 0;
+                            clickSound.play().catch(e => console.log("🔇 Звук кліку не запустився:", e));
+                        }
+
+                        if (selectedEmojis.length === 2) {
+                            const sum = selectedEmojis[0].number + selectedEmojis[1].number;
+                            if (sum === targetSum) {
+                                selectedEmojis.forEach(emoji => {
+                                    emoji.fadeOut = 1;
+                                });
+                                score += 2;
+                                scoreText.textContent = `🕸️ Очки: ${score}`;
+                                setTimeout(generateEmojis, 1000); // Нова четвірка після зникнення
+                            } else {
+                                selectedEmojis.forEach(emoji => {
+                                    emoji.shake = 10;
+                                    emoji.isClicked = false;
+                                });
+                            }
+                            selectedEmojis = [];
+                        }
+                    }
+                });
+            };
+
+            canvas.addEventListener('click', inputHandler);
+            canvas.addEventListener('touchstart', inputHandler, { passive: false });
+
+            let lastTime = Date.now();
+            function animate() {
+                if (!isGameRunning) return;
+
+                const now = Date.now();
+                console.log('FPS:', 1000 / (now - lastTime));
+                lastTime = now;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                emojis = emojis.filter(emoji => emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked);
+                emojis.forEach(emoji => {
+                    if (emoji.fadeOut > 0) {
+                        emoji.fadeOut -= 0.1;
+                        ctx.globalAlpha = emoji.fadeOut;
+                    } else if (emoji.shake > 0) {
+                        emoji.shake -= 1;
+                        emoji.x += (Math.random() - 0.5) * 5;
+                        emoji.y += (Math.random() - 0.5) * 5;
+                    } else {
+                        emoji.x += emoji.vx;
+                        emoji.y += emoji.vy;
+                        if (emoji.x < 0 || emoji.x > canvas.width) emoji.vx *= -1;
+                        if (emoji.y < 0 || emoji.y > canvas.height) emoji.vy *= -1;
+                    }
+
+                    ctx.font = `${emoji.size}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : 'white'; /* Помаранчевий для вибраних */
+                    ctx.fillText(`${emoji.value} ${emoji.number}`, emoji.x, emoji.y);
+                    ctx.globalAlpha = 1;
+                });
+
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const remaining = 60 - elapsed;
+                if (remaining <= 0) {
+                    endCanvasGame();
+                    return;
+                }
+                timerText.textContent = `⏳ Час: ${String(remaining).padStart(2, '0')}`;
+
+                requestAnimationFrame(animate);
+            }
+
+            function endCanvasGame() {
+                isGameRunning = false;
+                stopBtn.style.display = 'none';
+                resetBtn.style.display = 'block';
+                taskText.style.display = 'none';
+                timerText.style.display = 'none';
+                scoreText.style.display = 'none';
+                endMessage.textContent = `Жах завершено! Ти зловив ${score / 2} пар монстрів! З Хелловіном! 🎃👻`;
+                endMessage.style.display = 'block';
+                stopAllAudio();
+                navigator.share({
+                    title: 'Хелловінський жах-челендж',
+                    text: `Я зловив ${score / 2} пар монстрів! #HalloweenHorror`
+                }).catch(e => console.log("🔗 Шаринг не підтримуюється:", e));
+                setTimeout(() => {
+                    endMessage.style.display = 'none';
+                    stopGame();
+                }, 5000);
+            }
+
+            document.getElementById('endBtn').addEventListener('click', endCanvasGame);
+            requestAnimationFrame(animate);
+        }
+    </script>
 </body>
 </html>
