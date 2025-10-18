@@ -17,7 +17,7 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: #000;
+            background: transparent; /* Прозорий фон для body */
         }
         a-scene {
             width: 100% !important;
@@ -26,6 +26,7 @@
             top: 0;
             left: 0;
             background: transparent;
+            z-index: 1; /* AR-сцена на задньому плані */
         }
         .arjs-loader {
             height: 100%;
@@ -33,7 +34,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            background-color: #1a1a1a;
+            background-color: rgba(0, 0, 0, 0.8); /* Напівпрозорий чорний для завантаження */
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -163,9 +164,17 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         #canvasGameContainer {
-            z-index: 1000;
-            position: relative;
-            background: #000;
+            z-index: 1000; /* Канвас поверх AR-сцени */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent; /* Прозорий фон контейнера */
+            display: none;
+        }
+        #gameCanvas {
+            background: transparent; /* Прозорий фон канвасу */
         }
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -181,7 +190,7 @@
     <div class="arjs-loader" id="loader">
         <div class="pulse">🎃 ЛОВИ МОНСТРІВ НА ХЕЛЛОВІН! 👻</div>
         <div style="margin-top: 30px; font-size: 1.4em;">
-            Покажи картинку з гарбузом! 🕷️
+            ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ! 🕷️
         </div>
     </div>
 
@@ -194,7 +203,7 @@
     <p id="scoreText" class="ui-info-text">🕸️ ОЧКИ: 0</p>
     <p id="feedbackMessage">МОЛОДЕЦЬ! 🎃</p>
 
-    <div id="canvasGameContainer" style="display: none;">
+    <div id="canvasGameContainer">
         <canvas id="gameCanvas"></canvas>
         <button id="endBtn" class="ui-btn">🛑 ЗУПИНИТИ</button>
     </div>
@@ -342,7 +351,7 @@
         });
 
         targetEntity.addEventListener('targetLost', () => {
-            if (isGameRunning) return;
+            if (isGameRunning) return; // Продовжуємо гру, навіть якщо маркер втрачено
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
             youtubeBtn.style.display = 'none';
@@ -378,7 +387,7 @@
             stopBtn.style.display = 'block';
             resetBtn.style.display = 'none';
             if (logoImage) logoImage.setAttribute('visible', 'false');
-            document.querySelector('a-scene').style.display = 'none';
+            // Не ховаємо a-scene, щоб AR-фон залишався видимим
             document.getElementById('canvasGameContainer').style.display = 'block';
             initCanvasGame();
         }
@@ -392,6 +401,7 @@
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
             document.getElementById('canvasGameContainer').style.display = 'none';
+            // Показуємо AR-сцену назад
             document.querySelector('a-scene').style.display = 'block';
             if (logoImage) logoImage.setAttribute('visible', 'true');
             taskText.style.display = 'none';
@@ -441,8 +451,8 @@
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 80 + Math.random() * 40, // Більші монстри
-                    vx: (Math.random() - 0.5) * 2, // Повільніше
+                    size: 80 + Math.random() * 40,
+                    vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
                     number: number,
@@ -538,7 +548,7 @@
                 console.log('FPS:', 1000 / (now - lastTime));
                 lastTime = now;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо до прозорого
 
                 emojis = emojis.filter(emoji => emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked);
                 emojis.forEach(emoji => {
