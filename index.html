@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎃 Хелловінський жах-челендж — Лови монстрів! 👻</title>
+    <title>🎃 Хелловін: Лови монстрів! 👻</title>
 
     <!-- A-Frame + MindAR -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
@@ -17,7 +17,7 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: #000; /* Темний фон для Хелловіну */
+            background: #000;
         }
         a-scene {
             width: 100% !important;
@@ -33,14 +33,14 @@
             position: absolute;
             top: 0;
             left: 0;
-            background-color: #1a1a1a; /* Темний фон */
+            background-color: #1a1a1a;
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #ff8c00; /* Помаранчевий текст */
-            font-size: 1.5em;
+            color: #ff8c00;
+            font-size: 2.5em;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
@@ -49,13 +49,13 @@
             position: fixed;
             left: 50%;
             transform: translateX(-50%);
-            padding: 16px 30px;
-            border-radius: 40px;
-            font-size: 1.2em;
+            padding: 25px 50px;
+            border-radius: 60px;
+            font-size: 2em;
             font-weight: bold;
             text-decoration: none;
             z-index: 1000;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
             transition: all 0.2s ease;
             cursor: pointer;
             border: none;
@@ -63,23 +63,23 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         #playBtn {
-            bottom: 180px;
-            background: linear-gradient(45deg, #ff4500, #ff8c00); /* Помаранчево-червоний градієнт */
+            bottom: 220px;
+            background: linear-gradient(45deg, #ff4500, #ff8c00);
             color: white;
         }
         #stopBtn {
-            bottom: 180px;
-            background: linear-gradient(45deg, #8b0000, #ff4500); /* Темно-червоний */
+            bottom: 220px;
+            background: linear-gradient(45deg, #8b0000, #ff4500);
             color: white;
         }
         #resetBtn {
-            bottom: 100px;
-            background: linear-gradient(45deg, #4b0082, #8b00ff); /* Фіолетовий */
+            bottom: 140px;
+            background: linear-gradient(45deg, #4b0082, #8b00ff);
             color: white;
         }
         #soundBtn {
-            bottom: 260px;
-            background: linear-gradient(45deg, #228b22, #006400); /* Темно-зелений для моторошності */
+            bottom: 300px;
+            background: linear-gradient(45deg, #228b22, #006400);
             color: white;
         }
         #youtubeBtn {
@@ -87,11 +87,11 @@
             bottom: 20px;
             left: 20px;
             transform: none;
-            padding: 12px 20px;
+            padding: 15px 25px;
             background: linear-gradient(45deg, #ff4500, #ff8c00);
             color: white;
-            border-radius: 25px;
-            font-size: 0.95em;
+            border-radius: 30px;
+            font-size: 1.2em;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             display: none;
             font-family: Arial, sans-serif;
@@ -104,85 +104,102 @@
         }
         .ui-info-text {
             position: fixed;
-            left: 10px;
-            top: 10px;
+            left: 15px;
+            top: 15px;
             transform: none;
             z-index: 500;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: left;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 4px 4px 6px rgba(0,0,0,0.7);
+            font-size: 2.5em;
         }
         #taskText {
-            color: #ff4500; /* Помаранчевий */
-            font-size: 1.6em;
+            color: #ff4500;
+            font-size: 3em;
             display: none;
         }
         #timerText {
-            top: 50px;
-            color: #ffd700; /* Золотий */
-            font-size: 1.4em;
+            top: 80px;
+            color: #ffd700;
+            font-size: 2.2em;
             display: none;
         }
         #scoreText {
-            top: 90px;
-            color: #32cd32; /* Зелений для жаху */
-            font-size: 1.4em;
+            top: 140px;
+            color: #32cd32;
+            font-size: 2.2em;
             display: none;
         }
         #instruction {
             position: fixed;
-            bottom: 250px;
+            bottom: 320px;
             left: 50%;
             transform: translateX(-50%);
             color: #ff8c00;
-            font-size: 1.1em;
+            font-size: 1.8em;
             text-align: center;
             z-index: 9998;
-            background: rgba(0, 0, 0, 0.8); /* Темний фон */
-            padding: 15px 25px;
-            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 25px 35px;
+            border-radius: 30px;
             max-width: 90%;
             display: none;
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+        #feedbackMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff8c00;
+            font-size: 2em;
+            text-align: center;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px 30px;
+            border-radius: 20px;
+            display: none;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         #canvasGameContainer {
             z-index: 1000;
             position: relative;
-            background: #000; /* Темний фон для канвасу */
+            background: #000;
         }
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
         .pulse {
-            animation: pulse 2s infinite;
+            animation: pulse 1.5s infinite;
         }
     </style>
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse">🎃 Ласкаво просимо до "Хелловінський жах-челендж"! 👻</div>
-        <div style="margin-top: 20px; font-size: 1.1em;">
-            Наведи камеру на маркер, щоб почати жах! 🕷️
+        <div class="pulse">🎃 ЛОВИ МОНСТРІВ НА ХЕЛЛОВІН! 👻</div>
+        <div style="margin-top: 30px; font-size: 1.4em;">
+            Покажи картинку з гарбузом! 🕷️
         </div>
     </div>
 
     <div id="instruction">
-        🖼️ Надрукуй або покажи зображення, яке використовувалось для генерації <code>targets.mind</code>
+        🎃 ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ, ЩОБ ПОЧАТИ! 👻
     </div>
 
-    <p id="taskText" class="ui-info-text">Злови пару монстрів, жах = ?</p>
-    <p id="timerText" class="ui-info-text">⏳ Час: 01:00</p>
-    <p id="scoreText" class="ui-info-text">🕸️ Очки: 0</p>
+    <p id="taskText" class="ui-info-text">ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃</p>
+    <p id="timerText" class="ui-info-text">⏳ ЧАС: 01:30</p>
+    <p id="scoreText" class="ui-info-text">🕸️ ОЧКИ: 0</p>
+    <p id="feedbackMessage">МОЛОДЕЦЬ! 🎃</p>
 
     <div id="canvasGameContainer" style="display: none;">
         <canvas id="gameCanvas"></canvas>
-        <button id="endBtn" class="ui-btn">🛑 Завершити</button>
+        <button id="endBtn" class="ui-btn">🛑 ЗУПИНИТИ</button>
     </div>
 
-    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:20px; border-radius:15px; z-index:10000; font-size:1.2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 8px 20px rgba(0,0,0,0.4);">
+    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:40px; border-radius:25px; z-index:10000; font-size:2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 12px 30px rgba(0,0,0,0.5);">
     </div>
 
     <a-scene
@@ -194,10 +211,10 @@
         renderer="colorManagement: true; physicallyCorrectLights: true;"
     >
         <a-assets>
-            <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Замініть на моторошну музику -->
-            <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Звук жаху -->
-            <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio> <!-- Звук привида -->
-            <img id="logo-img" src="./halloween-logo.png" crossorigin="anonymous" alt="Хелловінський логотип"> <!-- Замініть на гарбуз або привид -->
+            <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <img id="logo-img" src="./halloween-logo.png" crossorigin="anonymous" alt="Хелловінський гарбуз">
         </a-assets>
 
         <a-camera
@@ -209,7 +226,7 @@
                 cursor="fuse: false; maxDistance: 10"
                 position="0 0 -1"
                 geometry="primitive: ring; radiusOuter: 0.015; radiusInner: 0.008"
-                material="color: #ff8c00; shader: flat" <!-- Помаранчевий курсор -->
+                material="color: #ff8c00; shader: flat"
             ></a-cursor>
         </a-camera>
 
@@ -223,16 +240,15 @@
                 visible="true"
             ></a-image>
             <a-entity id="game-elements" visible="false">
-                <!-- Тут можна додати допоміжні елементи для AR -->
             </a-entity>
         </a-entity>
     </a-scene>
 
-    <button id="playBtn" class="ui-btn">🚀 Почати жах!</button>
-    <button id="stopBtn" class="ui-btn" style="display: none;">🛑 Зупинити</button>
-    <button id="resetBtn" class="ui-btn">🔄 Спробувати ще!</button>
-    <button id="soundBtn" class="ui-btn" style="display: none;">🔊 Увімкнути звук</button>
-    <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ Автор SmartLessa</a>
+    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ЛОВИТИ! 🎃</button>
+    <button id="stopBtn" class="ui-btn" style="display: none;">🛑 ЗУПИНИТИ</button>
+    <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 👻</button>
+    <button id="soundBtn" class="ui-btn" style="display: none;">🔊 УВІМКНУТИ ЗВУКИ!</button>
+    <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ АВТОР ГРИ</a>
 
     <script>
         function fixHeight() {
@@ -258,6 +274,7 @@
         const logoSound = document.querySelector('#logo-sound');
         const clickSound = document.querySelector('#click-sound');
         const endMessage = document.getElementById('endMessage');
+        const feedbackMessage = document.getElementById('feedbackMessage');
 
         let isGameRunning = false;
         let arStarted = false;
@@ -268,7 +285,6 @@
         let targetSum = 0;
         let selectedEmojis = [];
 
-        // Зупинка всіх звуків
         function stopAllAudio() {
             if (bgMusic) {
                 bgMusic.pause();
@@ -287,7 +303,6 @@
             }
         }
 
-        // Обробка втрати фокусу сторінки
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
                 console.log("ℹ️ Сторінка втратила фокус, зупиняємо звуки");
@@ -295,7 +310,6 @@
             }
         });
 
-        // Кнопка увімкнення звуку
         soundBtn.addEventListener('click', () => {
             if (bgMusic) bgMusic.muted = false;
             if (logoSound) {
@@ -328,7 +342,7 @@
         });
 
         targetEntity.addEventListener('targetLost', () => {
-            if (isGameRunning) return; // Ігноруємо втрату маркера під час гри
+            if (isGameRunning) return;
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
             youtubeBtn.style.display = 'none';
@@ -338,6 +352,7 @@
             taskText.style.display = 'none';
             timerText.style.display = 'none';
             scoreText.style.display = 'none';
+            feedbackMessage.style.display = 'none';
         });
 
         playBtn.addEventListener('click', startCanvasGame);
@@ -355,7 +370,7 @@
         });
 
         function startCanvasGame() {
-            console.log("▶️ Початок Canvas-гри!");
+            console.log("▶️ Початок гри!");
             isGameRunning = true;
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
@@ -382,7 +397,7 @@
             taskText.style.display = 'none';
             timerText.style.display = 'none';
             scoreText.style.display = 'none';
-            if (endMessage) endMessage.style.display = 'none';
+            feedbackMessage.style.display = 'none';
             stopAllAudio();
         }
 
@@ -393,9 +408,9 @@
             selectedEmojis = [];
             targetSum = 0;
             startTime = null;
-            scoreText.textContent = `🕸️ Очки: 0`;
-            timerText.textContent = `⏳ Час: 60`;
-            taskText.textContent = `Злови пару монстрів, жах = ?`;
+            scoreText.textContent = `🕸️ ОЧКИ: 0`;
+            timerText.textContent = `⏳ ЧАС: 90`;
+            taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃`;
             playBtn.style.display = 'block';
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
@@ -413,22 +428,22 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['👻', '🕷️', '🎃', '🦇', '💀', '🧟‍♂️', '🧛‍♀️']; // Хелловінські емодзі
-            const maxEmojisOnScreen = 4;
+            const emojiTypes = ['👻', '🕷️'];
+            const maxEmojisOnScreen = 2;
 
             function generateTargetSum() {
-                const possibleSums = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                const possibleSums = [2, 3, 4];
                 return possibleSums[Math.floor(Math.random() * possibleSums.length)];
             }
 
             function createEmoji() {
-                const number = Math.floor(Math.random() * 5) + 1; // 1–5 (рівень жаху)
+                const number = Math.floor(Math.random() * 2) + 1; // 1 або 2
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 40 + Math.random() * 60,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4,
+                    size: 80 + Math.random() * 40, // Більші монстри
+                    vx: (Math.random() - 0.5) * 2, // Повільніше
+                    vy: (Math.random() - 0.5) * 2,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
                     number: number,
                     isClicked: false,
@@ -443,7 +458,7 @@
                     emojis.push(createEmoji());
                 }
                 targetSum = generateTargetSum();
-                taskText.textContent = `Злови пару монстрів, жах = ${targetSum}`;
+                taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ${targetSum} 🎃`;
             }
 
             if (emojis.length === 0) {
@@ -453,9 +468,9 @@
             startTime = Date.now();
             taskText.style.display = 'block';
             timerText.style.display = 'block';
-            timerText.textContent = `⏳ Час: 60`;
+            timerText.textContent = `⏳ ЧАС: 90`;
             scoreText.style.display = 'block';
-            scoreText.textContent = `🕸️ Очки: ${score}`;
+            scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
 
             if (inputHandler) {
                 canvas.removeEventListener('click', inputHandler);
@@ -488,13 +503,23 @@
                                     emoji.fadeOut = 1;
                                 });
                                 score += 2;
-                                scoreText.textContent = `🕸️ Очки: ${score}`;
-                                setTimeout(generateEmojis, 1000); // Нова четвірка після зникнення
+                                scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
+                                feedbackMessage.textContent = `МОЛОДЕЦЬ! 🎃`;
+                                feedbackMessage.style.display = 'block';
+                                setTimeout(() => {
+                                    feedbackMessage.style.display = 'none';
+                                    generateEmojis();
+                                }, 1000);
                             } else {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.shake = 10;
                                     emoji.isClicked = false;
                                 });
+                                feedbackMessage.textContent = `СПРОБУЙ ${targetSum - selectedEmojis[0].number} + ${selectedEmojis[0].number} 🎃`;
+                                feedbackMessage.style.display = 'block';
+                                setTimeout(() => {
+                                    feedbackMessage.style.display = 'none';
+                                }, 2000);
                             }
                             selectedEmojis = [];
                         }
@@ -534,18 +559,18 @@
                     ctx.font = `${emoji.size}px Arial`;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : 'white'; /* Помаранчевий для вибраних */
+                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : 'white';
                     ctx.fillText(`${emoji.value} ${emoji.number}`, emoji.x, emoji.y);
                     ctx.globalAlpha = 1;
                 });
 
                 const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const remaining = 60 - elapsed;
+                const remaining = 90 - elapsed;
                 if (remaining <= 0) {
                     endCanvasGame();
                     return;
                 }
-                timerText.textContent = `⏳ Час: ${String(remaining).padStart(2, '0')}`;
+                timerText.textContent = `⏳ ЧАС: ${String(remaining).padStart(2, '0')}`;
 
                 requestAnimationFrame(animate);
             }
@@ -557,17 +582,18 @@
                 taskText.style.display = 'none';
                 timerText.style.display = 'none';
                 scoreText.style.display = 'none';
-                endMessage.textContent = `Жах завершено! Ти зловив ${score / 2} пар монстрів! З Хелловіном! 🎃👻`;
+                feedbackMessage.style.display = 'none';
+                endMessage.textContent = `СУПЕР! ТИ ЗЛОВИВ ${score / 2} МОНСТРІВ! 🎃 ГРАТИ ЩЕ? 👻`;
                 endMessage.style.display = 'block';
                 stopAllAudio();
                 navigator.share({
-                    title: 'Хелловінський жах-челендж',
-                    text: `Я зловив ${score / 2} пар монстрів! #HalloweenHorror`
+                    title: 'Хелловін: Лови монстрів!',
+                    text: `Я зловив ${score / 2} пар монстрів! #HalloweenFun`
                 }).catch(e => console.log("🔗 Шаринг не підтримуюється:", e));
                 setTimeout(() => {
                     endMessage.style.display = 'none';
                     stopGame();
-                }, 5000);
+                }, 6000);
             }
 
             document.getElementById('endBtn').addEventListener('click', endCanvasGame);
