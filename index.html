@@ -17,7 +17,7 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: transparent; /* Прозорий фон для body */
+            background: transparent;
         }
         a-scene {
             width: 100% !important;
@@ -26,7 +26,7 @@
             top: 0;
             left: 0;
             background: transparent;
-            z-index: 1; /* AR-сцена на задньому плані */
+            z-index: 1;
         }
         .arjs-loader {
             height: 100%;
@@ -34,14 +34,14 @@
             position: absolute;
             top: 0;
             left: 0;
-            background-color: rgba(0, 0, 0, 0.8); /* Напівпрозорий чорний для завантаження */
+            background-color: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #ff8c00;
-            font-size: 2.5em;
+            font-size: 1.5em;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
@@ -50,36 +50,37 @@
             position: fixed;
             left: 50%;
             transform: translateX(-50%);
-            padding: 25px 50px;
-            border-radius: 60px;
-            font-size: 2em;
+            padding: 15px 30px;
+            border-radius: 40px;
+            font-size: 1.2em;
             font-weight: bold;
             text-decoration: none;
             z-index: 1000;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
             transition: all 0.2s ease;
             cursor: pointer;
             border: none;
             display: none;
             font-family: 'Comic Sans MS', cursive, sans-serif;
+            white-space: nowrap;
         }
         #playBtn {
-            bottom: 220px;
+            bottom: 180px;
             background: linear-gradient(45deg, #ff4500, #ff8c00);
             color: white;
         }
         #stopBtn {
-            bottom: 220px;
+            bottom: 180px;
             background: linear-gradient(45deg, #8b0000, #ff4500);
             color: white;
         }
         #resetBtn {
-            bottom: 140px;
+            bottom: 120px;
             background: linear-gradient(45deg, #4b0082, #8b00ff);
             color: white;
         }
         #soundBtn {
-            bottom: 300px;
+            bottom: 240px;
             background: linear-gradient(45deg, #228b22, #006400);
             color: white;
         }
@@ -88,11 +89,11 @@
             bottom: 20px;
             left: 20px;
             transform: none;
-            padding: 15px 25px;
+            padding: 10px 15px;
             background: linear-gradient(45deg, #ff4500, #ff8c00);
             color: white;
-            border-radius: 30px;
-            font-size: 1.2em;
+            border-radius: 20px;
+            font-size: 0.9em;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             display: none;
             font-family: Arial, sans-serif;
@@ -105,48 +106,50 @@
         }
         .ui-info-text {
             position: fixed;
-            left: 15px;
-            top: 15px;
+            left: 10px;
+            top: 10px;
             transform: none;
             z-index: 500;
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: left;
             font-weight: bold;
-            text-shadow: 4px 4px 6px rgba(0,0,0,0.7);
-            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            font-size: 1.2em;
+            margin: 0;
+            padding: 5px;
         }
         #taskText {
             color: #ff4500;
-            font-size: 3em;
+            font-size: 1.5em;
             display: none;
         }
         #timerText {
-            top: 80px;
+            top: 50px;
             color: #ffd700;
-            font-size: 2.2em;
+            font-size: 1.2em;
             display: none;
         }
         #scoreText {
-            top: 140px;
+            top: 85px;
             color: #32cd32;
-            font-size: 2.2em;
+            font-size: 1.2em;
             display: none;
         }
         #instruction {
             position: fixed;
-            bottom: 320px;
+            bottom: 250px;
             left: 50%;
             transform: translateX(-50%);
             color: #ff8c00;
-            font-size: 1.8em;
+            font-size: 1.2em;
             text-align: center;
             z-index: 9998;
             background: rgba(0, 0, 0, 0.9);
-            padding: 25px 35px;
-            border-radius: 30px;
+            padding: 15px 20px;
+            border-radius: 20px;
             max-width: 90%;
             display: none;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         #feedbackMessage {
             position: fixed;
@@ -154,42 +157,68 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #ff8c00;
-            font-size: 2em;
+            font-size: 1.5em;
             text-align: center;
             z-index: 10000;
             background: rgba(0, 0, 0, 0.9);
-            padding: 20px 30px;
-            border-radius: 20px;
+            padding: 15px 20px;
+            border-radius: 15px;
             display: none;
             font-family: 'Comic Sans MS', cursive, sans-serif;
         }
         #canvasGameContainer {
-            z-index: 1000; /* Канвас поверх AR-сцени */
+            z-index: 1000;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: transparent; /* Прозорий фон контейнера */
+            background: transparent;
             display: none;
         }
         #gameCanvas {
-            background: transparent; /* Прозорий фон канвасу */
+            background: transparent;
         }
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
         .pulse {
             animation: pulse 1.5s infinite;
+        }
+        /* Медіа-запити для адаптації */
+        @media (max-width: 480px) {
+            .ui-btn {
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+            .ui-info-text {
+                font-size: 1em;
+            }
+            #taskText {
+                font-size: 1.2em;
+            }
+            #timerText {
+                top: 45px;
+            }
+            #scoreText {
+                top: 75px;
+            }
+            #instruction {
+                font-size: 1em;
+                bottom: 220px;
+            }
+            #feedbackMessage {
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="arjs-loader" id="loader">
         <div class="pulse">🎃 ЛОВИ МОНСТРІВ НА ХЕЛЛОВІН! 👻</div>
-        <div style="margin-top: 30px; font-size: 1.4em;">
+        <div style="margin-top: 20px; font-size: 1em;">
             ПОКАЖИ КАРТИНКУ З ГАРБУЗОМ! 🕷️
         </div>
     </div>
@@ -208,7 +237,7 @@
         <button id="endBtn" class="ui-btn">🛑 ЗУПИНИТИ</button>
     </div>
 
-    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:40px; border-radius:25px; z-index:10000; font-size:2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 12px 30px rgba(0,0,0,0.5);">
+    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:30px; border-radius:20px; z-index:10000; font-size:1.5em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
     </div>
 
     <a-scene
@@ -223,7 +252,7 @@
             <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <img id="logo-img" src="./halloween-logo.png" crossorigin="anonymous" alt="Хелловінський гарбуз">
+            <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський гарбуз">
         </a-assets>
 
         <a-camera
@@ -293,6 +322,7 @@
         let inputHandler = null;
         let targetSum = 0;
         let selectedEmojis = [];
+        let animationFrameId = null;
 
         function stopAllAudio() {
             if (bgMusic) {
@@ -387,7 +417,6 @@
             stopBtn.style.display = 'block';
             resetBtn.style.display = 'none';
             if (logoImage) logoImage.setAttribute('visible', 'false');
-            // Не ховаємо a-scene, щоб AR-фон залишався видимим
             document.getElementById('canvasGameContainer').style.display = 'block';
             initCanvasGame();
         }
@@ -401,7 +430,6 @@
             soundBtn.style.display = 'block';
             youtubeBtn.style.display = 'block';
             document.getElementById('canvasGameContainer').style.display = 'none';
-            // Показуємо AR-сцену назад
             document.querySelector('a-scene').style.display = 'block';
             if (logoImage) logoImage.setAttribute('visible', 'true');
             taskText.style.display = 'none';
@@ -409,6 +437,12 @@
             scoreText.style.display = 'none';
             feedbackMessage.style.display = 'none';
             stopAllAudio();
+            
+            // Зупиняємо анімацію
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
         }
 
         function resetGame() {
@@ -438,22 +472,22 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['👻', '🕷️'];
-            const maxEmojisOnScreen = 2;
+            const emojiTypes = ['👻', '🕷️', '🦇', '🎃', '💀'];
+            const maxEmojisOnScreen = 4; // Збільшено кількість елементів
 
             function generateTargetSum() {
-                const possibleSums = [2, 3, 4];
+                const possibleSums = [2, 3, 4, 5];
                 return possibleSums[Math.floor(Math.random() * possibleSums.length)];
             }
 
             function createEmoji() {
-                const number = Math.floor(Math.random() * 2) + 1; // 1 або 2
+                const number = Math.floor(Math.random() * 3) + 1; // 1, 2 або 3
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 80 + Math.random() * 40,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: (Math.random() - 0.5) * 2,
+                    size: 40 + Math.random() * 30, // Зменшено розмір
+                    vx: (Math.random() - 0.5) * 4, // Збільшено швидкість
+                    vy: (Math.random() - 0.5) * 4,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
                     number: number,
                     isClicked: false,
@@ -545,10 +579,9 @@
                 if (!isGameRunning) return;
 
                 const now = Date.now();
-                console.log('FPS:', 1000 / (now - lastTime));
                 lastTime = now;
 
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Очищаємо до прозорого
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
 
                 emojis = emojis.filter(emoji => emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked);
                 emojis.forEach(emoji => {
@@ -582,7 +615,7 @@
                 }
                 timerText.textContent = `⏳ ЧАС: ${String(remaining).padStart(2, '0')}`;
 
-                requestAnimationFrame(animate);
+                animationFrameId = requestAnimationFrame(animate);
             }
 
             function endCanvasGame() {
@@ -596,10 +629,20 @@
                 endMessage.textContent = `СУПЕР! ТИ ЗЛОВИВ ${score / 2} МОНСТРІВ! 🎃 ГРАТИ ЩЕ? 👻`;
                 endMessage.style.display = 'block';
                 stopAllAudio();
-                navigator.share({
-                    title: 'Хелловін: Лови монстрів!',
-                    text: `Я зловив ${score / 2} пар монстрів! #HalloweenFun`
-                }).catch(e => console.log("🔗 Шаринг не підтримуюється:", e));
+                
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                
+                // Використовуємо Web Share API, якщо доступно
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Хелловін: Лови монстрів!',
+                        text: `Я зловив ${score / 2} пар монстрів! #HalloweenFun`
+                    }).catch(e => console.log("🔗 Шаринг не підтримуються:", e));
+                }
+                
                 setTimeout(() => {
                     endMessage.style.display = 'none';
                     stopGame();
@@ -607,7 +650,7 @@
             }
 
             document.getElementById('endBtn').addEventListener('click', endCanvasGame);
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
         }
     </script>
 </body>
