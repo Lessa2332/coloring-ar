@@ -187,6 +187,17 @@
         .pulse {
             animation: pulse 1.5s infinite;
         }
+        @keyframes ghostFloat {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { transform: translateY(-20px) scale(1.1); opacity: 1; }
+            40% { transform: translateY(-40px) scale(1.2); opacity: 0.8; }
+            60% { transform: translateY(-60px) scale(1.1); opacity: 0.6; }
+            80% { transform: translateY(-80px) scale(1); opacity: 0.4; }
+            100% { transform: translateY(-100px) scale(0.8); opacity: 0; }
+        }
+        .ghost-float {
+            animation: ghostFloat 2s ease-out forwards;
+        }
         /* Медіа-запити для адаптації */
         @media (max-width: 480px) {
             .ui-btn {
@@ -228,7 +239,7 @@
     </div>
 
     <p id="taskText" class="ui-info-text">ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃</p>
-    <p id="timerText" class="ui-info-text">⏳ ЧАС: 01:30</p>
+    <p id="timerText" class="ui-info-text">⏳ ЧАС: 60</p>
     <p id="scoreText" class="ui-info-text">🕸️ ОЧКИ: 0</p>
     <p id="feedbackMessage">МОЛОДЕЦЬ! 🎃</p>
 
@@ -252,7 +263,9 @@
             <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський гарбуз">
+            <img id="ghost-img" src="./ghost.png" crossorigin="anonymous" alt="Привид">
         </a-assets>
 
         <a-camera
@@ -277,6 +290,22 @@
                 scale="2.5 2.5 2.5"
                 visible="true"
             ></a-image>
+            
+            <!-- Привид, який з'являється при знаходженні маркера -->
+            <a-entity 
+                id="ghost"
+                position="0 0.5 0.1"
+                scale="0.8 0.8 0.8"
+                visible="false"
+            >
+                <a-image
+                    src="#ghost-img"
+                    position="0 0 0"
+                    transparent="true"
+                    alpha-test="0.5"
+                ></a-image>
+            </a-entity>
+            
             <a-entity id="game-elements" visible="false">
             </a-entity>
         </a-entity>
@@ -298,6 +327,7 @@
         const loader = document.querySelector('#loader');
         const targetEntity = document.querySelector('a-entity[mindar-image-target]');
         const logoImage = document.querySelector('#logo-image');
+        const ghost = document.querySelector('#ghost');
         const playBtn = document.querySelector('#playBtn');
         const stopBtn = document.querySelector('#stopBtn');
         const resetBtn = document.querySelector('#resetBtn');
@@ -311,6 +341,7 @@
         const bgMusic = document.querySelector('#bg-music');
         const logoSound = document.querySelector('#logo-sound');
         const clickSound = document.querySelector('#click-sound');
+        const booSound = document.querySelector('#boo-sound');
         const endMessage = document.getElementById('endMessage');
         const feedbackMessage = document.getElementById('feedbackMessage');
 
@@ -323,6 +354,7 @@
         let targetSum = 0;
         let selectedEmojis = [];
         let animationFrameId = null;
+        let ghostTimeout = null;
 
         function stopAllAudio() {
             if (bgMusic) {
@@ -339,6 +371,11 @@
                 clickSound.pause();
                 clickSound.currentTime = 0;
                 clickSound.muted = true;
+            }
+            if (booSound) {
+                booSound.pause();
+                booSound.currentTime = 0;
+                booSound.muted = true;
             }
         }
 
@@ -357,21 +394,52 @@
                 logoSound.play().catch(e => console.log("🔇 Звук логотипу не запустився:", e));
             }
             if (clickSound) clickSound.muted = false;
+            if (booSound) booSound.muted = false;
             soundBtn.style.display = 'none';
         });
+
+        function showGhost() {
+            if (!ghost) return;
+            
+            ghost.setAttribute('visible', 'true');
+            
+            if (booSound && !booSound.muted) {
+                booSound.currentTime = 0;
+                booSound.play().catch(e => console.log("🔇 Звук привида не запустився:", e));
+            }
+            
+            ghost.classList.add('ghost-float');
+            
+            ghostTimeout = setTimeout(() => {
+                hideGhost();
+            }, 2000);
+        }
+
+        function hideGhost() {
+            if (!ghost) return;
+            ghost.setAttribute('visible', 'false');
+            ghost.classList.remove('ghost-float');
+            if (ghostTimeout) {
+                clearTimeout(ghostTimeout);
+                ghostTimeout = null;
+            }
+        }
 
         setTimeout(() => {
             if (!arStarted) {
                 instruction.style.display = 'block';
                 console.log("ℹ️ Показано інструкцію — чекаємо на маркер");
             }
-        }, 3000);
+        }, 2000);
 
         targetEntity.addEventListener('targetFound', () => {
             console.log("🎯 Маркер знайдено!");
             arStarted = true;
             loader.style.display = 'none';
             instruction.style.display = 'none';
+            
+            showGhost();
+            
             if (!isGameRunning) {
                 playBtn.style.display = 'block';
                 soundBtn.style.display = 'block';
@@ -381,7 +449,9 @@
         });
 
         targetEntity.addEventListener('targetLost', () => {
-            if (isGameRunning) return; // Продовжуємо гру, навіть якщо маркер втрачено
+            hideGhost();
+            
+            if (isGameRunning) return;
             playBtn.style.display = 'none';
             soundBtn.style.display = 'none';
             youtubeBtn.style.display = 'none';
@@ -417,6 +487,7 @@
             stopBtn.style.display = 'block';
             resetBtn.style.display = 'none';
             if (logoImage) logoImage.setAttribute('visible', 'false');
+            hideGhost();
             document.getElementById('canvasGameContainer').style.display = 'block';
             initCanvasGame();
         }
@@ -438,11 +509,12 @@
             feedbackMessage.style.display = 'none';
             stopAllAudio();
             
-            // Зупиняємо анімацію
             if (animationFrameId) {
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
+            
+            hideGhost();
         }
 
         function resetGame() {
@@ -453,7 +525,7 @@
             targetSum = 0;
             startTime = null;
             scoreText.textContent = `🕸️ ОЧКИ: 0`;
-            timerText.textContent = `⏳ ЧАС: 90`;
+            timerText.textContent = `⏳ ЧАС: 60`;
             taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ? 🎃`;
             playBtn.style.display = 'block';
             soundBtn.style.display = 'block';
@@ -472,47 +544,78 @@
                 bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
             }
 
-            const emojiTypes = ['👻', '🕷️', '🦇', '🎃', '💀'];
-            const maxEmojisOnScreen = 4; // Збільшено кількість елементів
+            const emojiTypes = ['👻', '🕷️', '🦇', '🎃', '💀', '😈', '🍬', '🕸️'];
+            const maxEmojisOnScreen = 6; // Більше елементів на екрані
 
             function generateTargetSum() {
-                const possibleSums = [2, 3, 4, 5];
+                // Більше варіантів сум, включаючи 5
+                const possibleSums = [2, 3, 4, 5, 6];
                 return possibleSums[Math.floor(Math.random() * possibleSums.length)];
             }
 
             function createEmoji() {
-                const number = Math.floor(Math.random() * 3) + 1; // 1, 2 або 3
+                const number = Math.floor(Math.random() * 4) + 1; // 1, 2, 3 або 4
                 return {
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: 40 + Math.random() * 30, // Зменшено розмір
-                    vx: (Math.random() - 0.5) * 4, // Збільшено швидкість
-                    vy: (Math.random() - 0.5) * 4,
+                    size: 35 + Math.random() * 25, // Менші елементи
+                    vx: (Math.random() - 0.5) * 6, // Швидший рух
+                    vy: (Math.random() - 0.5) * 6,
                     value: emojiTypes[Math.floor(Math.random() * emojiTypes.length)],
                     number: number,
                     isClicked: false,
                     fadeOut: 0,
-                    shake: 0
+                    shake: 0,
+                    creationTime: Date.now(),
+                    lifetime: 5000 + Math.random() * 5000 // Елементи зникають через 5-10 секунд
                 };
             }
 
             function generateEmojis() {
-                emojis = [];
-                for (let i = 0; i < maxEmojisOnScreen; i++) {
+                // Додаємо нові елементи, але не видаляємо старі
+                const needed = maxEmojisOnScreen - emojis.length;
+                for (let i = 0; i < needed; i++) {
                     emojis.push(createEmoji());
                 }
+                
+                // Генеруємо нову цільову суму
                 targetSum = generateTargetSum();
                 taskText.textContent = `ЗЛОВИ, ЩОБ ВИЙШЛО ${targetSum} 🎃`;
+                
+                // Перевіряємо, чи є можливі комбінації для поточної суми
+                setTimeout(checkPossibleCombinations, 100);
             }
 
-            if (emojis.length === 0) {
-                generateEmojis();
+            function checkPossibleCombinations() {
+                const numbers = emojis.map(e => e.number);
+                let hasCombination = false;
+                
+                // Шукаємо пару, що дає потрібну суму
+                for (let i = 0; i < numbers.length; i++) {
+                    for (let j = i + 1; j < numbers.length; j++) {
+                        if (numbers[i] + numbers[j] === targetSum) {
+                            hasCombination = true;
+                            break;
+                        }
+                    }
+                    if (hasCombination) break;
+                }
+                
+                // Якщо немає можливих комбінацій, генеруємо нові елементи
+                if (!hasCombination) {
+                    console.log("🔄 Немає можливих комбінацій, генеруємо нові елементи");
+                    emojis = [];
+                    generateEmojis();
+                }
             }
+
+            // Початкова генерація
+            generateEmojis();
 
             startTime = Date.now();
             taskText.style.display = 'block';
             timerText.style.display = 'block';
-            timerText.textContent = `⏳ ЧАС: 90`;
+            timerText.textContent = `⏳ ЧАС: 60`;
             scoreText.style.display = 'block';
             scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
 
@@ -548,22 +651,23 @@
                                 });
                                 score += 2;
                                 scoreText.textContent = `🕸️ ОЧКИ: ${score}`;
-                                feedbackMessage.textContent = `МОЛОДЕЦЬ! 🎃`;
+                                feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ОЧКИ! 🎃`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
                                     generateEmojis();
-                                }, 1000);
+                                }, 800); // Коротша затримка
                             } else {
                                 selectedEmojis.forEach(emoji => {
-                                    emoji.shake = 10;
+                                    emoji.shake = 8;
                                     emoji.isClicked = false;
                                 });
-                                feedbackMessage.textContent = `СПРОБУЙ ${targetSum - selectedEmojis[0].number} + ${selectedEmojis[0].number} 🎃`;
+                                const needed = targetSum - selectedEmojis[0].number;
+                                feedbackMessage.textContent = `СПРОБУЙ ${needed} + ${selectedEmojis[0].number} 🎃`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
                                     feedbackMessage.style.display = 'none';
-                                }, 2000);
+                                }, 1500); // Коротша затримка
                             }
                             selectedEmojis = [];
                         }
@@ -574,6 +678,9 @@
             canvas.addEventListener('click', inputHandler);
             canvas.addEventListener('touchstart', inputHandler, { passive: false });
 
+            let lastEmojiGeneration = Date.now();
+            const emojiGenerationInterval = 2000; // Нові елементи кожні 2 секунди
+
             let lastTime = Date.now();
             function animate() {
                 if (!isGameRunning) return;
@@ -583,15 +690,26 @@
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                emojis = emojis.filter(emoji => emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked);
+                // Видаляємо старі елементи
+                emojis = emojis.filter(emoji => 
+                    (emoji.fadeOut > 0 || emoji.shake > 0 || !emoji.isClicked) && 
+                    (now - emoji.creationTime < emoji.lifetime)
+                );
+
+                // Генеруємо нові елементи кожні 2 секунди
+                if (now - lastEmojiGeneration > emojiGenerationInterval) {
+                    generateEmojis();
+                    lastEmojiGeneration = now;
+                }
+
                 emojis.forEach(emoji => {
                     if (emoji.fadeOut > 0) {
-                        emoji.fadeOut -= 0.1;
+                        emoji.fadeOut -= 0.15; // Швидше зникання
                         ctx.globalAlpha = emoji.fadeOut;
                     } else if (emoji.shake > 0) {
                         emoji.shake -= 1;
-                        emoji.x += (Math.random() - 0.5) * 5;
-                        emoji.y += (Math.random() - 0.5) * 5;
+                        emoji.x += (Math.random() - 0.5) * 4;
+                        emoji.y += (Math.random() - 0.5) * 4;
                     } else {
                         emoji.x += emoji.vx;
                         emoji.y += emoji.vy;
@@ -599,16 +717,20 @@
                         if (emoji.y < 0 || emoji.y > canvas.height) emoji.vy *= -1;
                     }
 
-                    ctx.font = `${emoji.size}px Arial`;
+                    ctx.font = `bold ${emoji.size}px Arial`;
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : 'white';
+                    
+                    // Різні кольори для різних чисел
+                    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'];
+                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : colors[emoji.number - 1] || 'white';
+                    
                     ctx.fillText(`${emoji.value} ${emoji.number}`, emoji.x, emoji.y);
                     ctx.globalAlpha = 1;
                 });
 
                 const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const remaining = 90 - elapsed;
+                const remaining = 60 - elapsed; // Зменшено час гри до 60 секунд
                 if (remaining <= 0) {
                     endCanvasGame();
                     return;
@@ -635,7 +757,6 @@
                     animationFrameId = null;
                 }
                 
-                // Використовуємо Web Share API, якщо доступно
                 if (navigator.share) {
                     navigator.share({
                         title: 'Хелловін: Лови монстрів!',
@@ -646,7 +767,7 @@
                 setTimeout(() => {
                     endMessage.style.display = 'none';
                     stopGame();
-                }, 6000);
+                }, 5000);
             }
 
             document.getElementById('endBtn').addEventListener('click', endCanvasGame);
