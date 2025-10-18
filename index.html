@@ -184,16 +184,44 @@
         .pulse {
             animation: pulse 1.5s infinite;
         }
+        @keyframes ghostAppear {
+            0% { 
+                transform: translateY(0) scale(0.3); 
+                opacity: 0; 
+            }
+            20% { 
+                transform: translateY(-10px) scale(0.5); 
+                opacity: 0.3; 
+            }
+            40% { 
+                transform: translateY(-20px) scale(0.7); 
+                opacity: 0.6; 
+            }
+            60% { 
+                transform: translateY(-30px) scale(0.9); 
+                opacity: 0.8; 
+            }
+            80% { 
+                transform: translateY(-40px) scale(1.1); 
+                opacity: 0.9; 
+            }
+            100% { 
+                transform: translateY(-50px) scale(1); 
+                opacity: 1; 
+            }
+        }
         @keyframes ghostFloat {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            20% { transform: translateY(-15px) scale(1.1); opacity: 1; }
-            40% { transform: translateY(-30px) scale(1.2); opacity: 0.8; }
-            60% { transform: translateY(-45px) scale(1.1); opacity: 0.6; }
-            80% { transform: translateY(-60px) scale(1); opacity: 0.4; }
-            100% { transform: translateY(-75px) scale(0.8); opacity: 0; }
+            0% { transform: translateY(-50px) scale(1); opacity: 1; }
+            25% { transform: translateY(-60px) scale(1.05); opacity: 0.9; }
+            50% { transform: translateY(-70px) scale(1.1); opacity: 0.8; }
+            75% { transform: translateY(-80px) scale(1.05); opacity: 0.7; }
+            100% { transform: translateY(-90px) scale(1); opacity: 0.6; }
+        }
+        .ghost-appear {
+            animation: ghostAppear 3s ease-out forwards;
         }
         .ghost-float {
-            animation: ghostFloat 1.5s ease-out forwards;
+            animation: ghostFloat 2s ease-in-out infinite;
         }
         @media (max-width: 480px) {
             .ui-btn {
@@ -297,18 +325,21 @@
         </a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
+            <!-- Зменшений логотип -->
             <a-image
                 id="logo-image"
                 src="#logo-img"
-                position="0 0 0.05"
+                position="0 0 0.03"
                 rotation="30 0 0"
-                scale="2.5 2.5 2.5"
+                scale="1.5 1.5 1.5"
                 visible="true"
             ></a-image>
+            
+            <!-- Привид з анімацією появи -->
             <a-entity 
                 id="ghost"
-                position="0 0.5 0.1"
-                scale="0.8 0.8 0.8"
+                position="0 0.3 0.08"
+                scale="0.5 0.5 0.5"
                 visible="false"
             >
                 <a-image
@@ -318,6 +349,7 @@
                     alpha-test="0.5"
                 ></a-image>
             </a-entity>
+            
             <a-entity id="game-elements" visible="false">
             </a-entity>
         </a-entity>
@@ -367,6 +399,7 @@
         let selectedEmojis = [];
         let animationFrameId = null;
         let ghostTimeout = null;
+        let ghostAppearTimeout = null;
 
         function stopAllAudio() {
             [bgMusic, logoSound, clickSound, booSound, candySound].forEach(audio => {
@@ -394,24 +427,52 @@
 
         function showGhost() {
             if (!ghost) return;
-            ghost.setAttribute('visible', 'true');
-            if (booSound && !booSound.muted) {
-                booSound.currentTime = 0;
-                booSound.play().catch(e => console.log("🔇 Звук привида не запустився:", e));
-            }
-            ghost.classList.add('ghost-float');
-            ghostTimeout = setTimeout(() => {
-                hideGhost();
-            }, 1500);
+            
+            // Спочатку ховаємо привида та скидаємо всі анімації
+            ghost.setAttribute('visible', 'false');
+            ghost.classList.remove('ghost-appear', 'ghost-float');
+            
+            // Очищаємо попередні таймери
+            if (ghostTimeout) clearTimeout(ghostTimeout);
+            if (ghostAppearTimeout) clearTimeout(ghostAppearTimeout);
+            
+            // Запускаємо появу привида через 100мс (невелика затримка для плавності)
+            ghostAppearTimeout = setTimeout(() => {
+                ghost.setAttribute('visible', 'true');
+                ghost.classList.add('ghost-appear');
+                
+                // Відтворюємо звук "boo" на початку анімації
+                if (booSound && !booSound.muted) {
+                    booSound.currentTime = 0;
+                    booSound.play().catch(e => console.log("🔇 Звук привида не запустився:", e));
+                }
+                
+                // Після завершення анімації появи додаємо плаваючу анімацію
+                ghostTimeout = setTimeout(() => {
+                    ghost.classList.remove('ghost-appear');
+                    ghost.classList.add('ghost-float');
+                    
+                    // Ховаємо привида через 2 секунди плавання
+                    setTimeout(() => {
+                        hideGhost();
+                    }, 2000);
+                    
+                }, 3000); // Час анімації появи
+                
+            }, 100);
         }
 
         function hideGhost() {
             if (!ghost) return;
             ghost.setAttribute('visible', 'false');
-            ghost.classList.remove('ghost-float');
+            ghost.classList.remove('ghost-appear', 'ghost-float');
             if (ghostTimeout) {
                 clearTimeout(ghostTimeout);
                 ghostTimeout = null;
+            }
+            if (ghostAppearTimeout) {
+                clearTimeout(ghostAppearTimeout);
+                ghostAppearTimeout = null;
             }
         }
 
