@@ -381,25 +381,35 @@
                 this.clearEmojis();
                 this.state.emojis = [];
                 const numPairs = 3 + this.state.level;
-                for (let i = 0; i < numPairs * 2; i++) {
-                    this.state.emojis.push(this.createEmoji());
-                }
-                this.state.emojis.sort(() => Math.random() - 0.5);
+                
+                // Створюємо пари унікальних емодзі
+                const usedEmojis = [];
                 for (let i = 0; i < numPairs; i++) {
-                    const type = this.emojiTypes[i % this.emojiTypes.length];
-                    this.state.emojis[i*2].type = type;
-                    this.state.emojis[i*2 + 1].type = type;
+                    let emojiType;
+                    do {
+                        emojiType = this.emojiTypes[Math.floor(Math.random() * this.emojiTypes.length)];
+                    } while (usedEmojis.includes(emojiType));
+                    
+                    usedEmojis.push(emojiType);
+                    
+                    // Створюємо дві однакові емодзі
+                    for (let j = 0; j < 2; j++) {
+                        this.state.emojis.push(this.createEmoji(emojiType));
+                    }
                 }
+                
+                // Перемішуємо
+                this.state.emojis.sort(() => Math.random() - 0.5);
                 this.renderEmojis();
             }
 
-            createEmoji() {
+            createEmoji(type) {
                 return {
-                    x: (Math.random() - 0.5) * 1,
-                    y: (Math.random() - 0.5) * 1,
+                    x: (Math.random() - 0.5) * 1.5,
+                    y: (Math.random() - 0.5) * 1.5,
                     z: Math.random() * 0.1 - 0.05,
-                    scale: '0.5 0.5 0.5',
-                    type: this.emojiTypes[Math.floor(Math.random() * this.emojiTypes.length)],
+                    scale: 0.8 + Math.random() * 0.4,
+                    type: type,
                     isClicked: false,
                     entity: null
                 };
@@ -407,14 +417,41 @@
 
             renderEmojis() {
                 this.state.emojis.forEach(emoji => {
-                    const entity = document.createElement('a-text');
-                    entity.setAttribute('value', emoji.type);
+                    const entity = document.createElement('a-entity');
+                    
+                    // Використовуємо text компонент для відображення емодзі
+                    entity.setAttribute('text', {
+                        value: emoji.type,
+                        align: 'center',
+                        width: 2,
+                        color: '#ff8c00',
+                        font: 'mozillavr'
+                    });
+                    
                     entity.setAttribute('position', `${emoji.x} ${emoji.y} ${emoji.z}`);
-                    entity.setAttribute('scale', emoji.scale);
-                    entity.setAttribute('color', '#ff8c00');
-                    entity.setAttribute('align', 'center');
+                    entity.setAttribute('scale', `${emoji.scale} ${emoji.scale} ${emoji.scale}`);
                     entity.setAttribute('class', 'clickable');
-                    entity.setAttribute('animation', 'property: position.y; from: ' + emoji.y + '; to: ' + (emoji.y - 0.05) + '; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine');
+                    
+                    // Додаємо анімацію плавання
+                    entity.setAttribute('animation', {
+                        property: 'position.y',
+                        from: emoji.y,
+                        to: emoji.y - 0.05,
+                        dir: 'alternate',
+                        dur: 2000,
+                        loop: true,
+                        easing: 'easeInOutSine'
+                    });
+                    
+                    // Додаємо анімацію обертання
+                    entity.setAttribute('animation__rotate', {
+                        property: 'rotation',
+                        to: '0 360 0',
+                        dur: 10000 + Math.random() * 5000,
+                        loop: true,
+                        easing: 'linear'
+                    });
+                    
                     entity.addEventListener('click', () => this.handleEmojiClick(emoji));
                     this.elements.target.appendChild(entity);
                     emoji.entity = entity;
@@ -422,8 +459,12 @@
             }
 
             clearEmojis() {
-                while (this.elements.target.children.length > 1) {
-                    this.elements.target.removeChild(this.elements.target.lastChild);
+                // Видаляємо всі діти крім logo-image
+                const children = Array.from(this.elements.target.children);
+                for (let child of children) {
+                    if (child.id !== 'logo-image') {
+                        this.elements.target.removeChild(child);
+                    }
                 }
             }
 
@@ -432,7 +473,14 @@
 
                 emoji.isClicked = true;
                 this.state.selectedEmojis.push(emoji);
-                emoji.entity.setAttribute('animation__shake', 'property: rotation; to: 0 5 0; dir: alternate; dur: 200; loop: 3');
+                
+                // Візуальний ефект при виборі
+                emoji.entity.setAttribute('animation__select', {
+                    property: 'scale',
+                    to: `${emoji.scale * 1.3} ${emoji.scale * 1.3} ${emoji.scale * 1.3}`,
+                    dur: 200,
+                    easing: 'easeOutElastic'
+                });
 
                 if (this.state.selectedEmojis.length === 2) {
                     this.checkMatch();
@@ -448,6 +496,21 @@
                     this.state.score += 10 * this.state.level;
                     this.showFeedback('МОЛОДЕЦЬ! +' + (10 * this.state.level) + ' БАЛІВ! 🎉');
 
+                    // Ефект для знайденої пари
+                    first.entity.setAttribute('animation__match', {
+                        property: 'scale',
+                        to: '0 0 0',
+                        dur: 500,
+                        easing: 'easeInBack'
+                    });
+                    
+                    second.entity.setAttribute('animation__match', {
+                        property: 'scale',
+                        to: '0 0 0',
+                        dur: 500,
+                        easing: 'easeInBack'
+                    });
+
                     setTimeout(() => {
                         if (first.entity && first.entity.parentNode) {
                             this.elements.target.removeChild(first.entity);
@@ -461,14 +524,28 @@
                         if (this.state.emojis.length === 0) {
                             this.nextLevel();
                         }
-                    }, 1000);
+                    }, 600);
                 } else {
                     this.showFeedback('СПРОБУЙ ЩЕ! 💪');
+                    
                     setTimeout(() => {
                         first.isClicked = false;
                         second.isClicked = false;
-                        if (first.entity) first.entity.removeAttribute('animation__shake');
-                        if (second.entity) second.entity.removeAttribute('animation__shake');
+                        
+                        // Повертаємо нормальний розмір
+                        first.entity.setAttribute('animation__deselect', {
+                            property: 'scale',
+                            to: `${first.scale} ${first.scale} ${first.scale}`,
+                            dur: 200,
+                            easing: 'easeOutElastic'
+                        });
+                        second.entity.setAttribute('animation__deselect', {
+                            property: 'scale',
+                            to: `${second.scale} ${second.scale} ${second.scale}`,
+                            dur: 200,
+                            easing: 'easeOutElastic'
+                        });
+                        
                         this.state.selectedEmojis = [];
                     }, 1000);
                 }
