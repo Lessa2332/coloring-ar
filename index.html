@@ -243,7 +243,7 @@
     <button id="soundBtn" class="control-btn">🔊 УВІМКНУТИ ЗВУКИ!</button>
 
     <a-scene
-        mindar-image="imageTargetSrc: ./targets.mind;"
+        mindar-image="imageTargetSrc: targets.mind;"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false"
         loading-screen="enabled: false"
@@ -251,9 +251,9 @@
         renderer="colorManagement: true;"
     >
         <a-assets>
-            <audio id="bg-music" src="./bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
-            <audio id="marker-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
-            <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
+            <audio id="bg-music" src="bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+            <audio id="marker-sound" src="boo.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <img id="logo-img" src="logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
         </a-assets>
 
         <a-camera look-controls="enabled: false" position="0 0 0">
@@ -449,8 +449,12 @@
                     this.showFeedback('МОЛОДЕЦЬ! +' + (10 * this.state.level) + ' БАЛІВ! 🎉');
 
                     setTimeout(() => {
-                        this.elements.target.removeChild(first.entity);
-                        this.elements.target.removeChild(second.entity);
+                        if (first.entity && first.entity.parentNode) {
+                            this.elements.target.removeChild(first.entity);
+                        }
+                        if (second.entity && second.entity.parentNode) {
+                            this.elements.target.removeChild(second.entity);
+                        }
                         this.state.emojis = this.state.emojis.filter(e => e !== first && e !== second);
                         this.state.selectedEmojis = [];
 
@@ -463,8 +467,8 @@
                     setTimeout(() => {
                         first.isClicked = false;
                         second.isClicked = false;
-                        first.entity.removeAttribute('animation__shake');
-                        second.entity.removeAttribute('animation__shake');
+                        if (first.entity) first.entity.removeAttribute('animation__shake');
+                        if (second.entity) second.entity.removeAttribute('animation__shake');
                         this.state.selectedEmojis = [];
                     }, 1000);
                 }
