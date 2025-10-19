@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎃 Хелловін: Знайди пари монстрів! 👻</title>
+    <title>🎄 Новорічний: Знайди пари символів! 🎅</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
     <style>
@@ -14,7 +15,7 @@
 
         body {
             background: #000;
-            color: #ff8c00;
+            color: #00bfff;
             font-family: 'Comic Sans MS', cursive;
             overflow: hidden;
             touch-action: none;
@@ -28,12 +29,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.9);
-            color: #ff8c00;
+            color: #00bfff;
             padding: 20px;
             border-radius: 15px;
             text-align: center;
             z-index: 1000;
-            border: 3px solid #ff8c00;
+            border: 3px solid #00bfff;
         }
 
         .pulse {
@@ -49,12 +50,12 @@
         .ui-element {
             position: fixed;
             background: rgba(0, 0, 0, 0.8);
-            color: #ff8c00;
+            color: #00bfff;
             padding: 10px 15px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 20px;
             z-index: 100;
-            border: 2px solid #ff8c00;
+            border: 2px solid #00bfff;
             backdrop-filter: blur(5px);
         }
 
@@ -68,9 +69,9 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            border: 3px solid #ff8c00;
+            border: 3px solid #00bfff;
             background: rgba(0, 0, 0, 0.9);
-            color: #ff8c00;
+            color: #00bfff;
             font-size: 24px;
             cursor: pointer;
             z-index: 150;
@@ -82,7 +83,7 @@
 
         .kid-friendly-btn:active {
             transform: scale(0.9);
-            background: #ff8c00;
+            background: #00bfff;
             color: #000;
         }
 
@@ -97,12 +98,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.95);
-            color: #ff8c00;
+            color: #00bfff;
             padding: 30px;
             border-radius: 20px;
             text-align: center;
             z-index: 200;
-            border: 4px solid #ff8c00;
+            border: 4px solid #00bfff;
             backdrop-filter: blur(10px);
             display: none;
         }
@@ -113,12 +114,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.9);
-            color: #ff8c00;
+            color: #00bfff;
             padding: 15px 25px;
             border-radius: 15px;
             z-index: 150;
             display: none;
-            border: 2px solid #ff8c00;
+            border: 2px solid #00bfff;
         }
 
         .control-btn {
@@ -126,8 +127,8 @@
             bottom: 20px;
             padding: 15px 25px;
             background: rgba(0, 0, 0, 0.9);
-            color: #ff8c00;
-            border: 3px solid #ff8c00;
+            color: #00bfff;
+            border: 3px solid #00bfff;
             border-radius: 25px;
             font-size: 18px;
             cursor: pointer;
@@ -138,7 +139,7 @@
 
         .control-btn:active {
             transform: scale(0.95);
-            background: #ff8c00;
+            background: #00bfff;
             color: #000;
         }
 
@@ -169,12 +170,12 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.9);
-            color: #ff8c00;
+            color: #00bfff;
             padding: 20px;
             border-radius: 15px;
             text-align: center;
             z-index: 100;
-            border: 3px solid #ff8c00;
+            border: 3px solid #00bfff;
             display: none;
         }
 
@@ -187,7 +188,6 @@
             z-index: 10;
         }
 
-        /* Анімації для елементів */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -200,7 +200,7 @@
         }
 
         .emoji-float {
-            animation: float 3s ease-in-out infinite;
+            animation: float 4s ease-in-out infinite;
         }
 
         .emoji-shake {
@@ -210,20 +210,20 @@
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse" style="font-size: 24px;">🎃 ЗНАЙДИ ПАРИ МОНСТРІВ! 👻</div>
-        <div style="margin-top: 15px; font-size: 18px;">НАВЕДИ НА РОЗМАЛЬОВКУ! 🎨</div>
+        <div class="pulse" style="font-size: 24px;">🎄 ЗНАЙДИ ПАРИ СИМВОЛІВ! 🎅</div>
+        <div style="margin-top: 15px; font-size: 18px;">НАВЕДИ НА НОВОРІЧНУ РОЗМАЛЬОВКУ! 🎨</div>
     </div>
 
     <div id="instruction" class="pulse">
-        <div style="font-size: 22px;">🎃 НАВЕДИ НА РОЗМАЛЬОВКУ! 👻</div>
-        <div style="margin-top: 10px; font-size: 16px;">Щоб побачити монстрів! 👀</div>
+        <div style="font-size: 22px;">🎄 НАВЕДИ НА НОВОРІЧНУ РОЗМАЛЬОВКУ! 🎅</div>
+        <div style="margin-top: 10px; font-size: 16px;">Щоб побачити символи! 👀</div>
     </div>
 
-    <p id="taskText" class="ui-element">ЗНАЙДИ ПАРИ МОНСТРІВ! 👻</p>
+    <p id="taskText" class="ui-element">ЗНАЙДИ ПАРИ СИМВОЛІВ! 🎅</p>
     <p id="timerText" class="ui-element">⏳ ЧАС: 60</p>
     <p id="scoreText" class="ui-element">🎯 БАЛИ: 0</p>
     <p id="levelText" class="ui-element">🚀 РІВЕНЬ: 1</p>
-    <p id="feedbackMessage" class="ui-element">МОЛОДЕЦЬ! 👻</p>
+    <p id="feedbackMessage">МОЛОДЕЦЬ! 🎉</p>
 
     <button id="kidPauseBtn" class="kid-friendly-btn" title="Пауза">⏸️</button>
     <button id="kidStopBtn" class="kid-friendly-btn" title="Стоп">🛑</button>
@@ -238,12 +238,12 @@
         <button id="retryBtn" class="control-btn">🔄 СПРОБУВАТИ ЗНОВУ</button>
     </div>
 
-    <button id="playBtn" class="control-btn">🚀 ПОЧАТИ ГРУ! 👻</button>
-    <button id="resetBtn" class="control-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
+    <button id="playBtn" class="control-btn">🚀 ПОЧАТИ ГРУ! 🎅</button>
+    <button id="resetBtn" class="control-btn">🔄 ГРАТИ ЩЕ! 🎄</button>
     <button id="soundBtn" class="control-btn">🔊 УВІМКНУТИ ЗВУКИ!</button>
 
     <a-scene
-        mindar-image="imageTargetSrc: targets.mind;"
+        mindar-image="imageTargetSrc: ./targets.mind;"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false"
         loading-screen="enabled: false"
@@ -251,16 +251,18 @@
         renderer="colorManagement: true;"
     >
         <a-assets>
-            <audio id="bg-music" src="bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
-            <audio id="marker-sound" src="boo.mp3" preload="auto" crossorigin="anonymous"></audio>
-            <img id="logo-img" src="logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
+            <audio id="bg-music" src="./bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+            <audio id="marker-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="click-sound" src="./click.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="match-sound" src="./match.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Новорічна ялинка">
         </a-assets>
 
         <a-camera look-controls="enabled: false" position="0 0 0">
             <a-cursor raycaster="objects: .clickable;" 
                 position="0 0 -1" 
                 geometry="primitive: ring; radiusOuter: 0.03; radiusInner: 0.02"
-                material="color: #ff8c00; shader: flat">
+                material="color: #00bfff; shader: flat">
             </a-cursor>
         </a-camera>
 
@@ -269,12 +271,11 @@
                 scale="1 1 1" visible="false" class="clickable"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
             </a-image>
-            <!-- Тут будуть динамічно додані емодзі як текст -->
         </a-entity>
     </a-scene>
 
     <script>
-        class HalloweenGame {
+        class NewYearGame {
             constructor() {
                 this.state = {
                     isGameRunning: false,
@@ -309,16 +310,22 @@
                     kidHomeBtn: document.getElementById('kidHomeBtn'),
                     bgMusic: document.getElementById('bg-music'),
                     markerSound: document.getElementById('marker-sound'),
+                    clickSound: document.getElementById('click-sound'),
+                    matchSound: document.getElementById('match-sound'),
                     scene: document.querySelector('a-scene'),
                     target: document.getElementById('target-entity'),
                     logo: document.getElementById('logo-image')
                 };
 
-                this.emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈'];
+                this.emojiTypes = ['🎄', '🎅', '🎁', '❄️', '🔔', '🎉'];
                 this.init();
             }
 
             init() {
+                if (!this.elements.bgMusic || !this.elements.markerSound || !this.elements.clickSound || !this.elements.matchSound || !this.elements.logo) {
+                    this.showError('Деякі файли не знайдено. Перевірте папку.');
+                    return;
+                }
                 this.setupEventListeners();
                 this.hideAllUI();
                 this.elements.loader.style.display = 'block';
@@ -369,9 +376,9 @@
                 this.state.score = 0;
                 this.state.timeLeft = 60;
                 this.state.level = 1;
-                
                 this.hideAllUI();
                 this.showGameUI();
+                this.showFeedback('Клікни на пари символів! 🎄');
                 this.createInitialEmojis();
                 this.startGameLoop();
                 this.playSound(this.elements.bgMusic);
@@ -380,91 +387,58 @@
             createInitialEmojis() {
                 this.clearEmojis();
                 this.state.emojis = [];
-                const numPairs = 3 + this.state.level;
-                
-                // Створюємо пари унікальних емодзі
-                const usedEmojis = [];
-                for (let i = 0; i < numPairs; i++) {
-                    let emojiType;
-                    do {
-                        emojiType = this.emojiTypes[Math.floor(Math.random() * this.emojiTypes.length)];
-                    } while (usedEmojis.includes(emojiType));
-                    
-                    usedEmojis.push(emojiType);
-                    
-                    // Створюємо дві однакові емодзі
-                    for (let j = 0; j < 2; j++) {
-                        this.state.emojis.push(this.createEmoji(emojiType));
-                    }
+                const numPairs = Math.min(3 + this.state.level, 6); // Ліміт 12 емодзі
+                for (let i = 0; i < numPairs * 2; i++) {
+                    this.state.emojis.push(this.createEmoji());
                 }
-                
-                // Перемішуємо
                 this.state.emojis.sort(() => Math.random() - 0.5);
+                for (let i = 0; i < numPairs; i++) {
+                    const type = this.emojiTypes[i % this.emojiTypes.length];
+                    this.state.emojis[i*2].type = type;
+                    this.state.emojis[i*2 + 1].type = type;
+                }
                 this.renderEmojis();
             }
 
-            createEmoji(type) {
+            createEmoji() {
                 return {
-                    x: (Math.random() - 0.5) * 1.5,
-                    y: (Math.random() - 0.5) * 1.5,
+                    x: (Math.random() - 0.5) * 1,
+                    y: (Math.random() - 0.5) * 1,
                     z: Math.random() * 0.1 - 0.05,
-                    scale: 0.8 + Math.random() * 0.4,
-                    type: type,
+                    scale: '0.5 0.5 0.5',
+                    type: '',
                     isClicked: false,
                     entity: null
                 };
             }
 
             renderEmojis() {
-                this.state.emojis.forEach(emoji => {
-                    const entity = document.createElement('a-entity');
-                    
-                    // Використовуємо text компонент для відображення емодзі
-                    entity.setAttribute('text', {
-                        value: emoji.type,
-                        align: 'center',
-                        width: 2,
-                        color: '#ff8c00',
-                        font: 'mozillavr'
-                    });
-                    
+                this.state.emojis.forEach((emoji, index) => {
+                    let entity = this.elements.target.children[index + 1]; // +1 через logo
+                    if (!entity) {
+                        entity = document.createElement('a-text');
+                        entity.setAttribute('class', 'clickable');
+                        entity.addEventListener('click', () => this.handleEmojiClick(emoji));
+                        this.elements.target.appendChild(entity);
+                    }
+                    const type = this.state.emojis[index].type || this.emojiTypes[index % this.emojiTypes.length];
+                    entity.setAttribute('value', type);
                     entity.setAttribute('position', `${emoji.x} ${emoji.y} ${emoji.z}`);
-                    entity.setAttribute('scale', `${emoji.scale} ${emoji.scale} ${emoji.scale}`);
-                    entity.setAttribute('class', 'clickable');
-                    
-                    // Додаємо анімацію плавання
-                    entity.setAttribute('animation', {
-                        property: 'position.y',
-                        from: emoji.y,
-                        to: emoji.y - 0.05,
-                        dir: 'alternate',
-                        dur: 2000,
-                        loop: true,
-                        easing: 'easeInOutSine'
-                    });
-                    
-                    // Додаємо анімацію обертання
-                    entity.setAttribute('animation__rotate', {
-                        property: 'rotation',
-                        to: '0 360 0',
-                        dur: 10000 + Math.random() * 5000,
-                        loop: true,
-                        easing: 'linear'
-                    });
-                    
-                    entity.addEventListener('click', () => this.handleEmojiClick(emoji));
-                    this.elements.target.appendChild(entity);
+                    entity.setAttribute('scale', emoji.scale);
+                    entity.setAttribute('color', '#00bfff');
+                    entity.setAttribute('align', 'center');
+                    entity.setAttribute('animation', 'property: position.y; from: ' + emoji.y + '; to: ' + (emoji.y - 0.05) + '; dir: alternate; dur: 4000; loop: true; easing: easeInOutSine');
                     emoji.entity = entity;
+                    emoji.type = type; // Оновлюємо тип для синхронізації
                 });
+                while (this.elements.target.children.length > this.state.emojis.length + 1) {
+                    this.elements.target.removeChild(this.elements.target.lastChild);
+                }
             }
 
             clearEmojis() {
-                // Видаляємо всі діти крім logo-image
-                const children = Array.from(this.elements.target.children);
-                for (let child of children) {
-                    if (child.id !== 'logo-image') {
-                        this.elements.target.removeChild(child);
-                    }
+                while (this.elements.target.children.length > 1) {
+                    this.elements.target.removeChild(this.elements.target.lastChild);
                 }
             }
 
@@ -473,14 +447,8 @@
 
                 emoji.isClicked = true;
                 this.state.selectedEmojis.push(emoji);
-                
-                // Візуальний ефект при виборі
-                emoji.entity.setAttribute('animation__select', {
-                    property: 'scale',
-                    to: `${emoji.scale * 1.3} ${emoji.scale * 1.3} ${emoji.scale * 1.3}`,
-                    dur: 200,
-                    easing: 'easeOutElastic'
-                });
+                this.playSound(this.elements.clickSound);
+                emoji.entity.setAttribute('animation__shake', 'property: rotation; to: 0 5 0; dir: alternate; dur: 200; loop: 3');
 
                 if (this.state.selectedEmojis.length === 2) {
                     this.checkMatch();
@@ -494,60 +462,28 @@
                 
                 if (first.type === second.type) {
                     this.state.score += 10 * this.state.level;
+                    this.playSound(this.elements.matchSound);
                     this.showFeedback('МОЛОДЕЦЬ! +' + (10 * this.state.level) + ' БАЛІВ! 🎉');
 
-                    // Ефект для знайденої пари
-                    first.entity.setAttribute('animation__match', {
-                        property: 'scale',
-                        to: '0 0 0',
-                        dur: 500,
-                        easing: 'easeInBack'
-                    });
-                    
-                    second.entity.setAttribute('animation__match', {
-                        property: 'scale',
-                        to: '0 0 0',
-                        dur: 500,
-                        easing: 'easeInBack'
-                    });
-
                     setTimeout(() => {
-                        if (first.entity && first.entity.parentNode) {
-                            this.elements.target.removeChild(first.entity);
-                        }
-                        if (second.entity && second.entity.parentNode) {
-                            this.elements.target.removeChild(second.entity);
-                        }
+                        this.elements.target.removeChild(first.entity);
+                        this.elements.target.removeChild(second.entity);
                         this.state.emojis = this.state.emojis.filter(e => e !== first && e !== second);
                         this.state.selectedEmojis = [];
 
                         if (this.state.emojis.length === 0) {
                             this.nextLevel();
                         }
-                    }, 600);
+                    }, 500);
                 } else {
                     this.showFeedback('СПРОБУЙ ЩЕ! 💪');
-                    
                     setTimeout(() => {
                         first.isClicked = false;
                         second.isClicked = false;
-                        
-                        // Повертаємо нормальний розмір
-                        first.entity.setAttribute('animation__deselect', {
-                            property: 'scale',
-                            to: `${first.scale} ${first.scale} ${first.scale}`,
-                            dur: 200,
-                            easing: 'easeOutElastic'
-                        });
-                        second.entity.setAttribute('animation__deselect', {
-                            property: 'scale',
-                            to: `${second.scale} ${second.scale} ${second.scale}`,
-                            dur: 200,
-                            easing: 'easeOutElastic'
-                        });
-                        
+                        first.entity.removeAttribute('animation__shake');
+                        second.entity.removeAttribute('animation__shake');
                         this.state.selectedEmojis = [];
-                    }, 1000);
+                    }, 500);
                 }
             }
 
@@ -558,14 +494,13 @@
                 this.showFeedback('НОВИЙ РІВЕНЬ ' + this.state.level + '! 🚀');
                 setTimeout(() => {
                     this.createInitialEmojis();
-                }, 2000);
+                }, 1000);
             }
 
             updateGame() {
                 if (!this.state.isGameRunning || this.state.isGamePaused) return;
 
-                this.state.timeLeft -= 1/60;
-                
+                this.state.timeLeft -= 1;
                 if (this.state.timeLeft <= 0) {
                     this.endGame();
                     return;
@@ -577,20 +512,12 @@
             }
 
             startGameLoop() {
-                const gameLoop = () => {
-                    this.updateGame();
-                    if (this.state.isGameRunning && !this.state.isGamePaused) {
-                        this.state.gameLoopId = requestAnimationFrame(gameLoop);
-                    }
-                };
-                this.state.gameLoopId = requestAnimationFrame(gameLoop);
+                const gameLoop = setInterval(() => this.updateGame(), 1000);
+                this.state.gameLoopId = gameLoop;
             }
 
             stopGameLoop() {
-                if (this.state.gameLoopId) {
-                    cancelAnimationFrame(this.state.gameLoopId);
-                    this.state.gameLoopId = null;
-                }
+                if (this.state.gameLoopId) clearInterval(this.state.gameLoopId);
             }
 
             endGame() {
@@ -599,11 +526,17 @@
                 this.stopSound(this.elements.bgMusic);
                 this.clearEmojis();
                 
-                this.elements.endMessage.innerHTML = `
-                    <div style="font-size: 24px; margin-bottom: 15px;">🎃 ГРА ЗАВЕРШЕНА! 👻</div>
+                let highScore = localStorage.getItem('newYearHighScore') || 0;
+                let endMessage = `
+                    <div style="font-size: 24px; margin-bottom: 15px;">🎄 ГРА ЗАВЕРШЕНА! 🎅</div>
                     <div style="font-size: 20px;">ТВІЙ РАХУНОК: ${this.state.score}</div>
                     <div style="font-size: 16px; margin-top: 10px;">ГРАТИ ЩЕ РАЗ?</div>
                 `;
+                if (this.state.score > highScore) {
+                    localStorage.setItem('newYearHighScore', this.state.score);
+                    endMessage += '<div style="font-size: 18px;">Новий рекорд! 🎉</div>';
+                }
+                this.elements.endMessage.innerHTML = endMessage;
                 this.elements.endMessage.style.display = 'block';
                 this.elements.resetBtn.style.display = 'block';
                 this.hideGameUI();
@@ -648,8 +581,7 @@
 
             toggleSound() {
                 const isMuted = this.elements.bgMusic.muted;
-                this.elements.bgMusic.muted = !isMuted;
-                this.elements.markerSound.muted = !isMuted;
+                [this.elements.bgMusic, this.elements.markerSound, this.elements.clickSound, this.elements.matchSound].forEach(sound => sound.muted = !isMuted);
                 this.elements.soundBtn.textContent = isMuted ? '🔊 УВІМКНУТИ ЗВУКИ!' : '🔇 ВИМКНУТИ ЗВУКИ!';
                 this.elements.kidSoundBtn.textContent = isMuted ? '🔊' : '🔇';
             }
@@ -657,7 +589,10 @@
             playSound(sound) {
                 if (sound && !sound.muted) {
                     sound.currentTime = 0;
-                    sound.play().catch(e => console.log('🔇 Не вдалося відтворити звук'));
+                    sound.play().catch(e => {
+                        console.log('🔇 Не вдалося відтворити звук:', e);
+                        this.showFeedback('Помилка звуку. Перевірте файли.');
+                    });
                 }
             }
 
@@ -669,8 +604,7 @@
             }
 
             stopAllSounds() {
-                this.stopSound(this.elements.bgMusic);
-                this.stopSound(this.elements.markerSound);
+                [this.elements.bgMusic, this.elements.markerSound, this.elements.clickSound, this.elements.matchSound].forEach(this.stopSound);
             }
 
             showFeedback(message) {
@@ -734,16 +668,18 @@
 
         window.addEventListener('load', () => {
             try {
-                window.game = new HalloweenGame();
+                window.game = new NewYearGame();
             } catch (error) {
                 console.error('❌ Помилка запуску гри:', error);
-                document.getElementById('errorMessage').textContent = 'Не вдалося запустити гру';
+                document.getElementById('errorMessage').textContent = 'Не вдалося запустити гру. Перевірте файли або камеру.';
                 document.getElementById('errorOverlay').style.display = 'flex';
             }
         });
 
         window.addEventListener('error', (event) => {
             console.error('🚨 Глобальна помилка:', event.error);
+            document.getElementById('errorMessage').textContent = 'Сталася помилка. Спробуйте ще раз.';
+            document.getElementById('errorOverlay').style.display = 'flex';
         });
     </script>
 </body>
