@@ -281,36 +281,11 @@
             75% { transform: translateY(-30px) scale(1.02) rotate(-2deg); }
             100% { transform: translateY(-25px) scale(1) rotate(0deg); }
         }
-        @keyframes speakerGlow {
-            0% { opacity: 0.7; }
-            50% { opacity: 1; }
-            100% { opacity: 0.7; }
-        }
-        @keyframes speakerPulse {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.05); }
-            50% { transform: scale(1.1); }
-            75% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        @keyframes soundWaves {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
         .logo-appear {
             animation: logoAppear 3s ease-out forwards;
         }
         .logo-float {
             animation: logoFloat 4s ease-in-out infinite;
-        }
-        .speaker-glow {
-            animation: speakerGlow 2s ease-in-out infinite;
-        }
-        .speaker-pulse {
-            animation: speakerPulse 1.5s ease-in-out infinite;
-        }
-        .sound-waves {
-            animation: soundWaves 2s ease-out infinite;
         }
         @keyframes arSceneAppear {
             0% { opacity: 0; transform: scale(0.5); }
@@ -415,10 +390,9 @@
         <a-assets>
             <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="click-sound" src="./click-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="logo-sound" src="./lab.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="logo-sound" src="./logo-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <audio id="success-sound" src="./success-sound.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="music-intro" src="./music-intro.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
         </a-assets>
 
@@ -427,7 +401,7 @@
             position="0 0 0"
         >
             <a-cursor
-                raycaster="objects: .clickable;"
+                raycaster="objects: .emoji;"
                 cursor="fuse: false; maxDistance: 10"
                 position="0 0 -1"
                 geometry="primitive: ring; radiusOuter: 0.015; radiusInner: 0.008"
@@ -449,148 +423,6 @@
                 material="shader: flat"
             ></a-image>
             
-            <!-- Динаміки з анімацією -->
-            <a-entity id="speakers-set" visible="false">
-                <!-- Лівий динамік -->
-                <a-entity class="clickable speaker-left" 
-                    position="-1.5 0.5 0"
-                    animation="property: rotation; to: 0 0 5; loop: true; dir: alternate; dur: 2000"
-                    sound="src: #music-intro; on: click; volume: 8">
-                    
-                    <!-- Основа динаміка -->
-                    <a-cylinder
-                        class="speaker-glow"
-                        color="#FF4500"
-                        radius="0.3"
-                        height="0.1"
-                        position="0 0 0"
-                    ></a-cylinder>
-                    
-                    <!-- Центр динаміка -->
-                    <a-circle
-                        class="speaker-pulse"
-                        color="#FFD700"
-                        radius="0.2"
-                        position="0 0 0.01"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Хвилі звуку -->
-                    <a-circle
-                        class="sound-waves"
-                        color="#FF8C00"
-                        radius="0.25"
-                        position="0 0 0.005"
-                        opacity="0.7"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Ніжка динаміка -->
-                    <a-cylinder
-                        color="#8B4513"
-                        radius="0.1"
-                        height="0.8"
-                        position="0 -0.45 0"
-                    ></a-cylinder>
-                </a-entity>
-
-                <!-- Правий динамік -->
-                <a-entity class="clickable speaker-right" 
-                    position="1.5 0.5 0"
-                    animation="property: rotation; to: 0 0 -5; loop: true; dir: alternate; dur: 2000"
-                    sound="src: #music-intro; on: click; volume: 8">
-                    
-                    <!-- Основа динаміка -->
-                    <a-cylinder
-                        class="speaker-glow"
-                        color="#32CD32"
-                        radius="0.3"
-                        height="0.1"
-                        position="0 0 0"
-                    ></a-cylinder>
-                    
-                    <!-- Центр динаміка -->
-                    <a-circle
-                        class="speaker-pulse"
-                        color="#00FF00"
-                        radius="0.2"
-                        position="0 0 0.01"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Хвилі звуку -->
-                    <a-circle
-                        class="sound-waves"
-                        color="#7CFC00"
-                        radius="0.25"
-                        position="0 0 0.005"
-                        opacity="0.7"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Ніжка динаміка -->
-                    <a-cylinder
-                        color="#8B4513"
-                        radius="0.1"
-                        height="0.8"
-                        position="0 -0.45 0"
-                    ></a-cylinder>
-                </a-entity>
-
-                <!-- Центральний динамік -->
-                <a-entity class="clickable speaker-center" 
-                    position="0 -0.5 0"
-                    animation="property: scale; to: 1.1 1.1 1.1; loop: true; dir: alternate; dur: 1500"
-                    sound="src: #boo-sound; on: click; volume: 10">
-                    
-                    <!-- Основа динаміка -->
-                    <a-cylinder
-                        class="speaker-glow"
-                        color="#8B00FF"
-                        radius="0.4"
-                        height="0.15"
-                        position="0 0 0"
-                    ></a-cylinder>
-                    
-                    <!-- Центр динаміка -->
-                    <a-circle
-                        class="speaker-pulse"
-                        color="#FF00FF"
-                        radius="0.3"
-                        position="0 0 0.02"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Хвилі звуку -->
-                    <a-circle
-                        class="sound-waves"
-                        color="#BA55D3"
-                        radius="0.35"
-                        position="0 0 0.01"
-                        opacity="0.7"
-                        shader="flat"
-                    ></a-circle>
-                    
-                    <!-- Ніжка динаміка -->
-                    <a-cylinder
-                        color="#4B0082"
-                        radius="0.15"
-                        height="0.6"
-                        position="0 -0.4 0"
-                    ></a-cylinder>
-                </a-entity>
-
-                <!-- Текст інструкції -->
-                <a-text
-                    value="ТОРКАЙ ДИНАМІКИ! 🔊"
-                    position="0 1.2 0"
-                    align="center"
-                    color="#FFD700"
-                    scale="1.5 1.5 1.5"
-                    animation="property: color; to: #FF4500; loop: true; dir: alternate; dur: 1000"
-                ></a-text>
-            </a-entity>
-
             <a-entity id="game-elements" visible="false">
             </a-entity>
         </a-entity>
@@ -611,7 +443,6 @@
         const loader = document.querySelector('#loader');
         const targetEntity = document.querySelector('a-entity[mindar-image-target]');
         const logoImage = document.querySelector('#logo-image');
-        const speakersSet = document.querySelector('#speakers-set');
         const playBtn = document.querySelector('#playBtn');
         const resetBtn = document.querySelector('#resetBtn');
         const soundBtn = document.querySelector('#soundBtn');
@@ -626,7 +457,6 @@
         const clickSound = document.querySelector('#click-sound');
         const booSound = document.querySelector('#boo-sound');
         const successSound = document.querySelector('#success-sound');
-        const musicIntro = document.querySelector('#music-intro');
         const endMessage = document.getElementById('endMessage');
         const feedbackMessage = document.getElementById('feedbackMessage');
         const aScene = document.querySelector('a-scene');
@@ -652,7 +482,7 @@
         let particles = [];
 
         function stopAllAudio() {
-            [bgMusic, logoSound, clickSound, booSound, successSound, musicIntro].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) {
                     audio.pause();
                     audio.currentTime = 0;
@@ -729,7 +559,7 @@
 
         function toggleGameSound() {
             const isMuted = bgMusic.muted;
-            [bgMusic, clickSound, successSound, musicIntro, booSound].forEach(audio => {
+            [bgMusic, clickSound, successSound].forEach(audio => {
                 if (audio) audio.muted = !isMuted;
             });
             
@@ -770,13 +600,13 @@
         }
 
         soundBtn.addEventListener('click', () => {
-            [bgMusic, logoSound, clickSound, booSound, successSound, musicIntro].forEach(audio => {
+            [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
                 if (audio) audio.muted = false;
             });
             soundBtn.style.display = 'none';
         });
 
-        function showLogoAndSpeakers() {
+        function showLogo() {
             if (!logoImage) return;
             
             logoImage.setAttribute('visible', 'false');
@@ -793,23 +623,14 @@
                 setTimeout(() => {
                     logoImage.classList.remove('logo-appear');
                     logoImage.classList.add('logo-float');
-                    
-                    // Показати динаміки
-                    speakersSet.setAttribute('visible', 'true');
-                    playSound(booSound);
-                    
-                }, 2000);
+                }, 3000);
             }, 100);
         }
 
-        function hideLogoAndSpeakers() {
-            if (logoImage) {
-                logoImage.setAttribute('visible', 'false');
-                logoImage.classList.remove('logo-appear', 'logo-float');
-            }
-            if (speakersSet) {
-                speakersSet.setAttribute('visible', 'false');
-            }
+        function hideLogo() {
+            if (!logoImage) return;
+            logoImage.setAttribute('visible', 'false');
+            logoImage.classList.remove('logo-appear', 'logo-float');
             if (logoAppearTimeout) {
                 clearTimeout(logoAppearTimeout);
                 logoAppearTimeout = null;
@@ -817,7 +638,7 @@
         }
 
         function hideAllAR() {
-            hideLogoAndSpeakers();
+            hideLogo();
         }
 
         setTimeout(() => {
@@ -833,7 +654,9 @@
             instruction.style.display = 'none';
             aScene.style.display = 'block';
             aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
-            showLogoAndSpeakers();
+            showLogo();
+            
+            playSound(booSound);
             
             if (!isGameRunning) {
                 showUIForAR();
@@ -849,12 +672,16 @@
         playBtn.addEventListener('click', startCanvasGame);
         resetBtn.addEventListener('click', resetGame);
 
-        youtubeBtn.addEventListener('click', () => {
-            window.open('https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi', '_blank');
+        // ✅ ВИПРАВЛЕНО: прибрано зайві пробіли в URL
+        const YOUTUBE_URL = 'https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi';
+
+        youtubeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(YOUTUBE_URL, '_blank');
         });
         youtubeBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            window.open('https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi', '_blank');
+            window.open(YOUTUBE_URL, '_blank');
         });
 
         function startCanvasGame() {
@@ -888,7 +715,7 @@
                 animationFrameId = null;
             }
             hidePauseMessage();
-            showLogoAndSpeakers();
+            showLogo();
         }
 
         function resetGame() {
@@ -907,7 +734,22 @@
 
         function initCanvasGame() {
             const canvas = document.getElementById('gameCanvas');
+            if (!canvas) {
+                console.error("❌ Canvas не знайдено!");
+                return;
+            }
             const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.error("❌ Не вдалося отримати 2D контекст!");
+                return;
+            }
+
+            // Видалення попередніх слухачів (якщо є)
+            if (inputHandler) {
+                canvas.removeEventListener('click', inputHandler);
+                canvas.removeEventListener('touchstart', inputHandler);
+            }
+
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
@@ -984,34 +826,24 @@
             scoreText.style.display = 'block';
             scoreText.textContent = `🎯 ОЧКИ: ${score}`;
 
-            if (inputHandler) {
-                canvas.removeEventListener('click', inputHandler);
-                canvas.removeEventListener('touchstart', inputHandler);
-            }
-
             inputHandler = (e) => {
                 if (isGamePaused) return;
-                
                 e.preventDefault();
                 const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                const x = (e.clientX || (e.touches?.[0]?.clientX)) - rect.left;
+                const y = (e.clientY || (e.touches?.[0]?.clientY)) - rect.top;
 
                 let clicked = false;
-
                 for (let i = emojis.length - 1; i >= 0; i--) {
                     const emoji = emojis[i];
                     if (emoji.isClicked || emoji.fadeOut > 0 || emoji.shake > 0) continue;
-                    
                     const dx = x - emoji.x;
                     const dy = y - emoji.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
-                    
                     if (distance < emoji.size / 1.5) {
                         emoji.isClicked = true;
                         selectedEmojis.push(emoji);
                         clicked = true;
-
                         playSound(clickSound);
 
                         if (selectedEmojis.length === 2) {
@@ -1024,9 +856,7 @@
                                 });
                                 score += 2;
                                 scoreText.textContent = `🎯 ОЧКИ: ${score}`;
-                                
                                 playSound(successSound);
-                                
                                 feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ОЧКИ! ${selectedEmojis[0].value}`;
                                 feedbackMessage.style.display = 'block';
                                 setTimeout(() => {
@@ -1069,7 +899,6 @@
 
             function animate() {
                 if (!isGameRunning || isGamePaused) return;
-
                 const now = Date.now();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1135,7 +964,6 @@
                     return;
                 }
                 timerText.textContent = `⏳ ЧАС: ${String(remaining).padStart(2, '0')}`;
-
                 animationFrameId = requestAnimationFrame(animate);
             }
 
