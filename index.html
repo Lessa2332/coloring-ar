@@ -1,13 +1,10 @@
-<!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎃 Хелловін: Лови монстрів! 👻</title>
-
+    <title>🎃 Хелловін: Знайди пари монстрів! 👻</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -64,6 +61,7 @@
         #taskText { top: 10px; left: 10px; }
         #timerText { top: 10px; right: 10px; }
         #scoreText { bottom: 10px; left: 10px; }
+        #levelText { bottom: 10px; right: 10px; }
 
         .kid-friendly-btn {
             position: fixed;
@@ -121,15 +119,6 @@
             z-index: 150;
             display: none;
             border: 2px solid #ff8c00;
-        }
-
-        #gameCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 50;
         }
 
         .control-btn {
@@ -221,7 +210,7 @@
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse" style="font-size: 24px;">🎃 ЛОВИ МОНСТРІВ! 👻</div>
+        <div class="pulse" style="font-size: 24px;">🎃 ЗНАЙДИ ПАРИ МОНСТРІВ! 👻</div>
         <div style="margin-top: 15px; font-size: 18px;">НАВЕДИ НА РОЗМАЛЬОВКУ! 🎨</div>
     </div>
 
@@ -230,17 +219,16 @@
         <div style="margin-top: 10px; font-size: 16px;">Щоб побачити монстрів! 👀</div>
     </div>
 
-    <p id="taskText" class="ui-element">ЛОВИ МОНСТРІВ! 👻</p>
+    <p id="taskText" class="ui-element">ЗНАЙДИ ПАРИ МОНСТРІВ! 👻</p>
     <p id="timerText" class="ui-element">⏳ ЧАС: 60</p>
     <p id="scoreText" class="ui-element">🎯 БАЛИ: 0</p>
-    <p id="feedbackMessage">МОЛОДЕЦЬ! 👻</p>
+    <p id="levelText" class="ui-element">🚀 РІВЕНЬ: 1</p>
+    <p id="feedbackMessage" class="ui-element">МОЛОДЕЦЬ! 👻</p>
 
     <button id="kidPauseBtn" class="kid-friendly-btn" title="Пауза">⏸️</button>
     <button id="kidStopBtn" class="kid-friendly-btn" title="Стоп">🛑</button>
     <button id="kidSoundBtn" class="kid-friendly-btn" title="Звук">🔊</button>
     <button id="kidHomeBtn" class="kid-friendly-btn" title="Додому">🏠</button>
-
-    <canvas id="gameCanvas"></canvas>
 
     <div id="endMessage"></div>
 
@@ -264,9 +252,15 @@
     >
         <a-assets>
             <audio id="bg-music" src="./bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
-            <audio id="click-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
-            <audio id="success-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="marker-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
+            <!-- Припустимо, що додано glTF моделі для кожного типу. Якщо немає, завантажте безкоштовні моделі та додайте файли до репо -->
+            <a-asset-item id="ghost-model" src="./ghost.gltf"></a-asset-item>
+            <a-asset-item id="pumpkin-model" src="./pumpkin.gltf"></a-asset-item>
+            <a-asset-item id="spider-model" src="./spider.gltf"></a-asset-item>
+            <a-asset-item id="bat-model" src="./bat.gltf"></a-asset-item>
+            <a-asset-item id="skull-model" src="./skull.gltf"></a-asset-item>
+            <a-asset-item id="devil-model" src="./devil.gltf"></a-asset-item>
         </a-assets>
 
         <a-camera look-controls="enabled: false" position="0 0 0">
@@ -277,11 +271,12 @@
             </a-cursor>
         </a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0">
+        <a-entity id="target-entity" mindar-image-target="targetIndex: 0">
             <a-image id="logo-image" src="#logo-img" position="0 0 0" rotation="0 0 0"
                 scale="1 1 1" visible="false" class="clickable"
                 animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
             </a-image>
+            <!-- Тут будуть динамічно додані 3D-ентіті для емодзі -->
         </a-entity>
     </a-scene>
 
@@ -293,10 +288,11 @@
                     isGamePaused: false,
                     score: 0,
                     timeLeft: 60,
+                    level: 1,
                     gameLoopId: null,
                     emojis: [],
                     selectedEmojis: [],
-                    particles: []
+                    particles: [] // Залишаємо для майбутнього, але зараз не використовуємо в AR
                 };
 
                 this.elements = {
@@ -305,9 +301,9 @@
                     taskText: document.getElementById('taskText'),
                     timerText: document.getElementById('timerText'),
                     scoreText: document.getElementById('scoreText'),
+                    levelText: document.getElementById('levelText'),
                     feedbackMessage: document.getElementById('feedbackMessage'),
                     endMessage: document.getElementById('endMessage'),
-                    gameCanvas: document.getElementById('gameCanvas'),
                     playBtn: document.getElementById('playBtn'),
                     resetBtn: document.getElementById('resetBtn'),
                     soundBtn: document.getElementById('soundBtn'),
@@ -319,14 +315,20 @@
                     kidSoundBtn: document.getElementById('kidSoundBtn'),
                     kidHomeBtn: document.getElementById('kidHomeBtn'),
                     bgMusic: document.getElementById('bg-music'),
-                    clickSound: document.getElementById('click-sound'),
-                    successSound: document.getElementById('success-sound'),
+                    markerSound: document.getElementById('marker-sound'),
                     scene: document.querySelector('a-scene'),
-                    target: document.querySelector('a-entity[mindar-image-target]'),
+                    target: document.getElementById('target-entity'),
                     logo: document.getElementById('logo-image')
                 };
 
-                this.emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈'];
+                this.emojiTypes = [
+                    {type: '👻', model: '#ghost-model'},
+                    {type: '🎃', model: '#pumpkin-model'},
+                    {type: '🕷️', model: '#spider-model'},
+                    {type: '🦇', model: '#bat-model'},
+                    {type: '💀', model: '#skull-model'},
+                    {type: '😈', model: '#devil-model'}
+                ];
                 this.init();
             }
 
@@ -359,15 +361,7 @@
                 this.elements.kidSoundBtn.addEventListener('click', () => this.toggleSound());
                 this.elements.kidHomeBtn.addEventListener('click', () => this.goHome());
 
-                // Touch events для canvas
-                this.elements.gameCanvas.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    this.handleTouch(e.touches[0]);
-                });
-
-                this.elements.gameCanvas.addEventListener('click', (e) => {
-                    this.handleTouch(e);
-                });
+                // Для кліків в AR - обробка через cursor click на clickable entities
             }
 
             onMarkerFound() {
@@ -380,6 +374,7 @@
                 if (this.elements.logo) {
                     this.elements.logo.setAttribute('visible', 'true');
                 }
+                this.playSound(this.elements.markerSound); // Граємо boo.mp3 при виявленні маркера
             }
 
             onMarkerLost() {
@@ -397,94 +392,77 @@
                 this.state.isGameRunning = true;
                 this.state.score = 0;
                 this.state.timeLeft = 60;
+                this.state.level = 1;
                 
                 this.hideAllUI();
                 this.showGameUI();
-                this.setupCanvas();
+                this.createInitialEmojis();
                 this.startGameLoop();
                 this.playSound(this.elements.bgMusic);
             }
 
-            setupCanvas() {
-                const canvas = this.elements.gameCanvas;
-                const ctx = canvas.getContext('2d');
-                
-                const resize = () => {
-                    canvas.width = window.innerWidth;
-                    canvas.height = window.innerHeight;
-                };
-                
-                resize();
-                window.addEventListener('resize', resize);
-                
-                // Створюємо стартові елементи
-                this.createInitialEmojis();
-            }
-
             createInitialEmojis() {
+                this.clearEmojis();
                 this.state.emojis = [];
-                for (let i = 0; i < 6; i++) {
+                const numPairs = 3 + this.state.level; // Більше емодзі з рівнями (пар)
+                for (let i = 0; i < numPairs * 2; i++) {
                     this.state.emojis.push(this.createEmoji());
                 }
-                // Гарантуємо що є хоча б одна пара
-                this.state.emojis[0].type = this.state.emojis[1].type = this.emojiTypes[0];
+                // Перемішуємо
+                this.state.emojis.sort(() => Math.random() - 0.5);
+                // Гарантуємо пари: Парні індекси однакові
+                for (let i = 0; i < numPairs; i++) {
+                    const type = this.emojiTypes[i % this.emojiTypes.length];
+                    this.state.emojis[i*2].type = type.type;
+                    this.state.emojis[i*2].model = type.model;
+                    this.state.emojis[i*2 + 1].type = type.type;
+                    this.state.emojis[i*2 + 1].model = type.model;
+                }
+                this.renderEmojis();
             }
 
             createEmoji() {
-                const canvas = this.elements.gameCanvas;
                 const type = this.emojiTypes[Math.floor(Math.random() * this.emojiTypes.length)];
-                
+                const scale = 0.1 + Math.random() * 0.05; // Масштаб для 3D
                 return {
-                    x: Math.random() * (canvas.width - 100) + 50,
-                    y: Math.random() * (canvas.height - 100) + 50,
-                    size: 60 + Math.random() * 40,
-                    type: type,
+                    x: (Math.random() - 0.5) * 1, // Позиція в межах маркера (-0.5 to 0.5)
+                    y: (Math.random() - 0.5) * 1,
+                    z: Math.random() * 0.1 - 0.05, // Трохи глибини
+                    scale: `${scale} ${scale} ${scale}`,
+                    type: type.type,
+                    model: type.model,
                     isClicked: false,
-                    alpha: 1,
-                    wiggle: Math.random() * Math.PI * 2
+                    entity: null // Буде A-Frame entity
                 };
             }
 
-            createParticle(x, y, color) {
-                return {
-                    x: x,
-                    y: y,
-                    size: 3 + Math.random() * 8,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
-                    color: color,
-                    life: 1,
-                    decay: 0.02 + Math.random() * 0.02
-                };
+            renderEmojis() {
+                this.state.emojis.forEach(emoji => {
+                    const entity = document.createElement('a-entity');
+                    entity.setAttribute('gltf-model', emoji.model);
+                    entity.setAttribute('position', `${emoji.x} ${emoji.y} ${emoji.z}`);
+                    entity.setAttribute('scale', emoji.scale);
+                    entity.setAttribute('class', 'clickable');
+                    entity.setAttribute('animation', 'property: position.y; from: ' + emoji.y + '; to: ' + (emoji.y - 0.05) + '; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine'); // Float animation
+                    entity.addEventListener('click', () => this.handleEmojiClick(emoji));
+                    this.elements.target.appendChild(entity);
+                    emoji.entity = entity;
+                });
             }
 
-            handleTouch(touch) {
-                if (!this.state.isGameRunning || this.state.isGamePaused) return;
-
-                const rect = this.elements.gameCanvas.getBoundingClientRect();
-                const x = touch.clientX - rect.left;
-                const y = touch.clientY - rect.top;
-
-                // Перевіряємо клік по елементах
-                for (let i = this.state.emojis.length - 1; i >= 0; i--) {
-                    const emoji = this.state.emojis[i];
-                    if (emoji.isClicked) continue;
-
-                    const dx = x - emoji.x;
-                    const dy = y - emoji.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < emoji.size / 2) {
-                        this.handleEmojiClick(emoji, i);
-                        break;
-                    }
+            clearEmojis() {
+                while (this.elements.target.children.length > 1) { // Залишаємо logo
+                    this.elements.target.removeChild(this.elements.target.lastChild);
                 }
             }
 
-            handleEmojiClick(emoji, index) {
+            handleEmojiClick(emoji) {
+                if (!this.state.isGameRunning || this.state.isGamePaused || emoji.isClicked) return;
+
                 emoji.isClicked = true;
                 this.state.selectedEmojis.push(emoji);
-                this.playSound(this.elements.clickSound);
+                // Візуальний ефект: Змінити колір або анімацію
+                emoji.entity.setAttribute('animation__shake', 'property: rotation; to: 0 5 0; dir: alternate; dur: 200; loop: 3'); // Shake
 
                 if (this.state.selectedEmojis.length === 2) {
                     this.checkMatch();
@@ -498,27 +476,20 @@
                 
                 if (first.type === second.type) {
                     // Знайшли пару!
-                    this.state.score += 10;
-                    this.showFeedback('МОЛОДЕЦЬ! +10 БАЛІВ! 🎉');
-                    this.playSound(this.elements.successSound);
+                    this.state.score += 10 * this.state.level; // Бонус за рівень
+                    this.showFeedback('МОЛОДЕЦЬ! +' + (10 * this.state.level) + ' БАЛІВ! 🎉');
 
-                    // Створюємо частинки
-                    const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
-                    for (let i = 0; i < 20; i++) {
-                        this.state.particles.push(this.createParticle(
-                            (first.x + second.x) / 2,
-                            (first.y + second.y) / 2,
-                            colors[Math.floor(Math.random() * colors.length)]
-                        ));
-                    }
-
-                    // Видаляємо знайдені елементи
-                    this.state.emojis = this.state.emojis.filter(e => !e.isClicked);
-                    
-                    // Додаємо нові елементи
+                    // Видаляємо ентіті
                     setTimeout(() => {
-                        this.addNewEmojis();
+                        this.elements.target.removeChild(first.entity);
+                        this.elements.target.removeChild(second.entity);
+                        this.state.emojis = this.state.emojis.filter(e => e !== first && e !== second);
                         this.state.selectedEmojis = [];
+
+                        // Перевіряємо, чи всі пари знайдено
+                        if (this.state.emojis.length === 0) {
+                            this.nextLevel();
+                        }
                     }, 1000);
                 } else {
                     // Не співпали
@@ -526,57 +497,22 @@
                     setTimeout(() => {
                         first.isClicked = false;
                         second.isClicked = false;
+                        // Зняти ефекти
+                        first.entity.removeAttribute('animation__shake');
+                        second.entity.removeAttribute('animation__shake');
                         this.state.selectedEmojis = [];
                     }, 1000);
                 }
             }
 
-            addNewEmojis() {
-                const needed = 6 - this.state.emojis.length;
-                for (let i = 0; i < needed; i++) {
-                    this.state.emojis.push(this.createEmoji());
-                }
-            }
-
-            drawEmoji(ctx, emoji) {
-                ctx.save();
-                ctx.globalAlpha = emoji.alpha;
-                
-                // Анімація хитності
-                emoji.wiggle += 0.05;
-                const offsetY = Math.sin(emoji.wiggle) * 5;
-                
-                ctx.font = `bold ${emoji.size}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(emoji.type, emoji.x, emoji.y + offsetY);
-                
-                // Ефект виділення при кліку
-                if (emoji.isClicked) {
-                    ctx.strokeStyle = '#ff8c00';
-                    ctx.lineWidth = 3;
-                    ctx.strokeText(emoji.type, emoji.x, emoji.y + offsetY);
-                }
-                
-                ctx.restore();
-            }
-
-            drawParticles(ctx) {
-                this.state.particles = this.state.particles.filter(p => p.life > 0);
-                
-                this.state.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= p.decay;
-                    
-                    ctx.save();
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                });
+            nextLevel() {
+                this.state.level++;
+                this.state.timeLeft += 30 - this.state.level * 2; // Бонус часу, але менше з рівнями
+                if (this.state.timeLeft < 10) this.state.timeLeft = 10; // Мін час
+                this.showFeedback('НОВИЙ РІВЕНЬ ' + this.state.level + '! 🚀');
+                setTimeout(() => {
+                    this.createInitialEmojis();
+                }, 2000);
             }
 
             updateGame() {
@@ -592,30 +528,12 @@
 
                 this.elements.timerText.textContent = `⏳ ЧАС: ${Math.ceil(this.state.timeLeft)}`;
                 this.elements.scoreText.textContent = `🎯 БАЛИ: ${this.state.score}`;
-            }
-
-            render() {
-                const canvas = this.elements.gameCanvas;
-                const ctx = canvas.getContext('2d');
-                
-                // Очищаємо canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Малюємо фон
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Малюємо елементи
-                this.state.emojis.forEach(emoji => this.drawEmoji(ctx, emoji));
-                
-                // Малюємо частинки
-                this.drawParticles(ctx);
+                this.elements.levelText.textContent = `🚀 РІВЕНЬ: ${this.state.level}`;
             }
 
             startGameLoop() {
                 const gameLoop = () => {
                     this.updateGame();
-                    this.render();
                     
                     if (this.state.isGameRunning && !this.state.isGamePaused) {
                         this.state.gameLoopId = requestAnimationFrame(gameLoop);
@@ -636,6 +554,7 @@
                 this.state.isGameRunning = false;
                 this.stopGameLoop();
                 this.stopSound(this.elements.bgMusic);
+                this.clearEmojis();
                 
                 this.elements.endMessage.innerHTML = `
                     <div style="font-size: 24px; margin-bottom: 15px;">🎃 ГРА ЗАВЕРШЕНА! 👻</div>
@@ -651,7 +570,6 @@
             restartGame() {
                 this.state.emojis = [];
                 this.state.selectedEmojis = [];
-                this.state.particles = [];
                 this.elements.endMessage.style.display = 'none';
                 this.elements.resetBtn.style.display = 'none';
                 this.startGame();
@@ -679,6 +597,7 @@
                 this.elements.playBtn.style.display = 'block';
                 this.elements.soundBtn.style.display = 'block';
                 this.hideGameControls();
+                this.clearEmojis();
             }
 
             goHome() {
@@ -689,8 +608,7 @@
             toggleSound() {
                 const isMuted = this.elements.bgMusic.muted;
                 this.elements.bgMusic.muted = !isMuted;
-                this.elements.clickSound.muted = !isMuted;
-                this.elements.successSound.muted = !isMuted;
+                this.elements.markerSound.muted = !isMuted;
                 
                 this.elements.soundBtn.textContent = isMuted ? '🔊 УВІМКНУТИ ЗВУКИ!' : '🔇 ВИМКНУТИ ЗВУКИ!';
                 this.elements.kidSoundBtn.textContent = isMuted ? '🔊' : '🔇';
@@ -712,8 +630,7 @@
 
             stopAllSounds() {
                 this.stopSound(this.elements.bgMusic);
-                this.stopSound(this.elements.clickSound);
-                this.stopSound(this.elements.successSound);
+                this.stopSound(this.elements.markerSound);
             }
 
             showFeedback(message) {
@@ -730,6 +647,7 @@
                 this.elements.taskText.style.display = 'block';
                 this.elements.timerText.style.display = 'block';
                 this.elements.scoreText.style.display = 'block';
+                this.elements.levelText.style.display = 'block';
                 this.showGameControls();
             }
 
@@ -737,6 +655,7 @@
                 this.elements.taskText.style.display = 'none';
                 this.elements.timerText.style.display = 'none';
                 this.elements.scoreText.style.display = 'none';
+                this.elements.levelText.style.display = 'none';
                 this.hideGameControls();
             }
 
