@@ -56,7 +56,7 @@
             font-weight: bold;
             text-decoration: none;
             z-index: 1000;
-            box-shadow: 0 6px 15px rgba(255, 69, 0, 0.6);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
             transition: all 0.2s ease;
             cursor: pointer;
             border: none;
@@ -69,27 +69,79 @@
             background: linear-gradient(45deg, #ff4500, #ff8c00);
             color: white;
         }
-        #stopBtn {
-            bottom: 150px;
-            background: linear-gradient(45deg, #ff0000, #ff4500);
-            color: white;
-        }
-        #backBtn {
-            bottom: 200px;
-            background: linear-gradient(45deg, #ff00ff, #8b00ff);
-            color: white;
-            display: none;
-        }
         #resetBtn {
             bottom: 100px;
-            background: linear-gradient(45deg, #ff00ff, #8b00ff);
+            background: linear-gradient(45deg, #4b0082, #8b00ff);
             color: white;
         }
         #soundBtn {
             bottom: 200px;
-            background: linear-gradient(45deg, #00ff00, #006400);
+            background: linear-gradient(45deg, #228b22, #006400);
             color: white;
         }
+        
+        /* Великі круглі кнопки для дітей */
+        .kid-friendly-btn {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 1.5em;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .kid-friendly-btn:active {
+            transform: scale(0.85);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #kidPauseBtn {
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8c00);
+            color: white;
+        }
+
+        #kidStopBtn {
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #ff4500, #dc143c);
+            color: white;
+        }
+
+        #kidSoundBtn {
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #32cd32, #008000);
+            color: white;
+        }
+
+        #kidHomeBtn {
+            bottom: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #8b00ff, #4b0082);
+            color: white;
+        }
+
+        /* Анімація пульсації для важливих кнопок */
+        @keyframes important-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse-important {
+            animation: important-pulse 2s infinite;
+            border: 3px solid #ffd700;
+        }
+
         #youtubeBtn {
             position: fixed;
             bottom: 15px;
@@ -100,7 +152,7 @@
             color: white;
             border-radius: 15px;
             font-size: 0.8em;
-            box-shadow: 0 4px 10px rgba(255, 69, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             display: none;
             font-family: Arial, sans-serif;
             z-index: 1100;
@@ -116,7 +168,7 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: left;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(255, 69, 0, 0.7);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
             font-size: 1em;
             margin: 0;
             padding: 3px;
@@ -134,7 +186,7 @@
         }
         #scoreText {
             top: 70px;
-            color: #00ff00;
+            color: #32cd32;
             font-size: 1em;
             display: none;
         }
@@ -183,70 +235,64 @@
             background: transparent;
         }
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0); }
-            50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255, 69, 0, 0.7); }
-            100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
         .pulse {
-            animation: pulse 1.2s infinite;
+            animation: pulse 1.5s infinite;
         }
         @keyframes logoAppear {
             0% { 
                 transform: translateY(0) scale(0.1); 
                 opacity: 0;
                 filter: blur(10px);
-                box-shadow: 0 0 0 rgba(255, 165, 0, 0);
             }
             20% { 
+                transform: translateY(-5px) scale(0.3); 
+                opacity: 0.2;
+                filter: blur(8px);
+            }
+            40% { 
                 transform: translateY(-10px) scale(0.5); 
                 opacity: 0.4;
                 filter: blur(6px);
-                box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
-            }
-            40% { 
-                transform: translateY(-20px) scale(0.9); 
-                opacity: 0.7;
-                filter: blur(3px);
-                box-shadow: 0 0 20px rgba(255, 165, 0, 0.7);
             }
             60% { 
-                transform: translateY(-30px) scale(1.2); 
-                opacity: 0.9;
-                filter: blur(1px);
-                box-shadow: 0 0 30px rgba(255, 165, 0, 0.9);
+                transform: translateY(-15px) scale(0.8); 
+                opacity: 0.7;
+                filter: blur(4px);
             }
             80% { 
-                transform: translateY(-40px) scale(1.4); 
-                opacity: 1;
-                filter: blur(0);
-                box-shadow: 0 0 40px rgba(255, 165, 0, 1);
+                transform: translateY(-20px) scale(1.1); 
+                opacity: 0.9;
+                filter: blur(2px);
             }
             100% { 
-                transform: translateY(-50px) scale(1.5); 
+                transform: translateY(-25px) scale(1); 
                 opacity: 1;
                 filter: blur(0);
-                box-shadow: 0 0 50px rgba(255, 165, 0, 0.8);
             }
         }
         @keyframes logoFloat {
-            0% { transform: translateY(-50px) scale(1.5) rotate(0deg); }
-            25% { transform: translateY(-60px) scale(1.6) rotate(5deg); box-shadow: 0 0 30px rgba(255, 0, 255, 0.7); }
-            50% { transform: translateY(-70px) scale(1.7) rotate(0deg); box-shadow: 0 0 40px rgba(255, 0, 255, 0.9); }
-            75% { transform: translateY(-60px) scale(1.6) rotate(-5deg); box-shadow: 0 0 30px rgba(255, 0, 255, 0.7); }
-            100% { transform: translateY(-50px) scale(1.5) rotate(0deg); box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); }
+            0% { transform: translateY(-25px) scale(1) rotate(0deg); }
+            25% { transform: translateY(-30px) scale(1.02) rotate(2deg); }
+            50% { transform: translateY(-35px) scale(1.05) rotate(0deg); }
+            75% { transform: translateY(-30px) scale(1.02) rotate(-2deg); }
+            100% { transform: translateY(-25px) scale(1) rotate(0deg); }
         }
         .logo-appear {
-            animation: logoAppear 2s ease-out forwards;
+            animation: logoAppear 3s ease-out forwards;
         }
         .logo-float {
-            animation: logoFloat 3s ease-in-out infinite;
+            animation: logoFloat 4s ease-in-out infinite;
         }
         @keyframes arSceneAppear {
-            0% { opacity: 0; transform: scale(0.5); background: radial-gradient(circle, rgba(255, 69, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%); }
-            100% { opacity: 1; transform: scale(1.2); background: radial-gradient(circle, rgba(255, 69, 0, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%); }
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
         }
         a-scene {
-            animation: arSceneAppear 0.8s ease-in forwards;
+            animation: arSceneAppear 1s ease-in forwards;
         }
         @media (max-width: 480px) {
             .ui-btn {
@@ -278,6 +324,11 @@
                 font-size: 1.1em;
                 padding: 10px;
             }
+            .kid-friendly-btn {
+                width: 65px;
+                height: 65px;
+                font-size: 1.4em;
+            }
         }
         @media (max-width: 320px) {
             .ui-btn {
@@ -289,6 +340,11 @@
             }
             #taskText {
                 font-size: 0.9em;
+            }
+            .kid-friendly-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.3em;
             }
         }
     </style>
@@ -310,13 +366,17 @@
     <p id="scoreText" class="ui-info-text">🎯 ОЧКИ: 0</p>
     <p id="feedbackMessage">МОЛОДЕЦЬ! 👻</p>
 
+    <!-- Великі круглі кнопки для дітей -->
+    <button id="kidPauseBtn" class="kid-friendly-btn" title="Пауза">⏸️</button>
+    <button id="kidStopBtn" class="kid-friendly-btn pulse-important" title="Стоп">🛑</button>
+    <button id="kidSoundBtn" class="kid-friendly-btn" title="Звук">🔊</button>
+    <button id="kidHomeBtn" class="kid-friendly-btn" title="Додому">🏠</button>
+
     <div id="canvasGameContainer">
         <canvas id="gameCanvas"></canvas>
-        <button id="backBtn" class="ui-btn">🔙 НАЗАД ДО АР</button>
-        <button id="endBtn" class="ui-btn">🛑 ЗУПИНИТИ</button>
     </div>
 
-    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:linear-gradient(45deg, #ff4500, #ff8c00); color:#ffffff; padding:20px; border-radius:15px; z-index:10000; font-size:1.2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 8px 20px rgba(255,69,0,0.5);">
+    <div id="endMessage" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.9); color:#ff8c00; padding:20px; border-radius:15px; z-index:10000; font-size:1.2em; text-align:center; font-family:'Comic Sans MS', cursive; box-shadow:0 8px 20px rgba(0,0,0,0.5);">
     </div>
 
     <a-scene
@@ -345,7 +405,7 @@
                 cursor="fuse: false; maxDistance: 10"
                 position="0 0 -1"
                 geometry="primitive: ring; radiusOuter: 0.015; radiusInner: 0.008"
-                material="color: #ff00ff; shader: flat"
+                material="color: #ff8c00; shader: flat"
             ></a-cursor>
         </a-camera>
 
@@ -369,7 +429,6 @@
     </a-scene>
 
     <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ГРУ! 👻</button>
-    <button id="stopBtn" class="ui-btn" style="display: none;">🛑 ЗУПИНИТИ</button>
     <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
     <button id="soundBtn" class="ui-btn" style="display: none;">🔊 УВІМКНУТИ ЗВУКИ!</button>
     <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ АВТОР</a>
@@ -385,8 +444,6 @@
         const targetEntity = document.querySelector('a-entity[mindar-image-target]');
         const logoImage = document.querySelector('#logo-image');
         const playBtn = document.querySelector('#playBtn');
-        const stopBtn = document.querySelector('#stopBtn');
-        const backBtn = document.querySelector('#backBtn');
         const resetBtn = document.querySelector('#resetBtn');
         const soundBtn = document.querySelector('#soundBtn');
         const youtubeBtn = document.querySelector('#youtubeBtn');
@@ -404,7 +461,16 @@
         const feedbackMessage = document.getElementById('feedbackMessage');
         const aScene = document.querySelector('a-scene');
 
+        // Елементи кнопок для дітей
+        const gameControls = {
+            pauseBtn: document.getElementById('kidPauseBtn'),
+            stopBtn: document.getElementById('kidStopBtn'),
+            soundBtn: document.getElementById('kidSoundBtn'),
+            homeBtn: document.getElementById('kidHomeBtn')
+        };
+
         let isGameRunning = false;
+        let isGamePaused = false;
         let arStarted = false;
         let score = 0;
         let emojis = [];
@@ -425,12 +491,113 @@
             });
         }
 
+        function playSound(soundElement) {
+            if (soundElement && !soundElement.muted) {
+                soundElement.currentTime = 0;
+                soundElement.play().catch(e => console.log("🔇 Звук не запустився:", e));
+            }
+        }
+
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'hidden') {
                 console.log("ℹ️ Сторінка втратила фокус, зупиняємо звуки");
                 stopAllAudio();
             }
         });
+
+        // Функції для керування кнопками
+        function showGameControls() {
+            Object.values(gameControls).forEach(btn => {
+                if (btn) btn.style.display = 'flex';
+            });
+        }
+
+        function hideGameControls() {
+            Object.values(gameControls).forEach(btn => {
+                if (btn) btn.style.display = 'none';
+            });
+        }
+
+        function showUIForAR() {
+            if (!isGameRunning) {
+                playBtn.style.display = 'block';
+                soundBtn.style.display = 'block';
+                youtubeBtn.style.display = 'block';
+                hideGameControls();
+            }
+        }
+
+        function hideUIForAR() {
+            playBtn.style.display = 'none';
+            soundBtn.style.display = 'none';
+            youtubeBtn.style.display = 'none';
+        }
+
+        // Обробники подій для кнопок дітей
+        gameControls.pauseBtn?.addEventListener('click', togglePause);
+        gameControls.stopBtn?.addEventListener('click', stopGame);
+        gameControls.soundBtn?.addEventListener('click', toggleGameSound);
+        gameControls.homeBtn?.addEventListener('click', goToHome);
+
+        function togglePause() {
+            isGamePaused = !isGamePaused;
+            
+            if (isGamePaused) {
+                // Пауза гри
+                cancelAnimationFrame(animationFrameId);
+                gameControls.pauseBtn.innerHTML = '▶️';
+                gameControls.pauseBtn.title = "Продовжити";
+                showPauseMessage();
+            } else {
+                // Продовження гри
+                animationFrameId = requestAnimationFrame(animate);
+                gameControls.pauseBtn.innerHTML = '⏸️';
+                gameControls.pauseBtn.title = "Пауза";
+                hidePauseMessage();
+            }
+        }
+
+        function toggleGameSound() {
+            const isMuted = bgMusic.muted;
+            [bgMusic, clickSound, successSound].forEach(audio => {
+                if (audio) audio.muted = !isMuted;
+            });
+            
+            gameControls.soundBtn.innerHTML = isMuted ? '🔊' : '🔇';
+            gameControls.soundBtn.title = isMuted ? "Вимкнути звук" : "Увімкнути звук";
+        }
+
+        function goToHome() {
+            stopGame();
+            showUIForAR();
+        }
+
+        function showPauseMessage() {
+            const pauseMsg = document.createElement('div');
+            pauseMsg.id = 'pauseMessage';
+            pauseMsg.innerHTML = '⏸️ ГРА НА ПАУЗІ<br><span style="font-size: 0.8em;">Торкнись кнопки ▶️ щоб продовжити</span>';
+            pauseMsg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: #ff8c00;
+                padding: 20px;
+                border-radius: 20px;
+                text-align: center;
+                z-index: 1002;
+                font-size: 1.5em;
+                font-family: 'Comic Sans MS', cursive;
+                border: 3px solid #ff8c00;
+            `;
+            document.body.appendChild(pauseMsg);
+        }
+
+        function hidePauseMessage() {
+            const pauseMsg = document.getElementById('pauseMessage');
+            if (pauseMsg) pauseMsg.remove();
+        }
 
         soundBtn.addEventListener('click', () => {
             [bgMusic, logoSound, clickSound, booSound, successSound].forEach(audio => {
@@ -451,15 +618,12 @@
                 logoImage.setAttribute('visible', 'true');
                 logoImage.classList.add('logo-appear');
                 
-                if (logoSound && !logoSound.muted) {
-                    logoSound.currentTime = 0;
-                    logoSound.play().catch(e => console.log("🔇 Звук логотипу не запустився:", e));
-                }
+                playSound(logoSound);
                 
                 setTimeout(() => {
                     logoImage.classList.remove('logo-appear');
                     logoImage.classList.add('logo-float');
-                }, 2000);
+                }, 3000);
             }, 100);
         }
 
@@ -489,38 +653,23 @@
             loader.style.display = 'none';
             instruction.style.display = 'none';
             aScene.style.display = 'block';
-            aScene.style.animation = 'arSceneAppear 0.8s ease-in forwards';
+            aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
             showLogo();
             
-            if (booSound && !booSound.muted) {
-                booSound.currentTime = 0;
-                booSound.play().catch(e => console.log("🔇 Звук появи AR не запустився:", e));
-            }
+            playSound(booSound);
             
             if (!isGameRunning) {
-                playBtn.style.display = 'block';
-                soundBtn.style.display = 'block';
-                youtubeBtn.style.display = 'block';
+                showUIForAR();
             }
         });
 
         targetEntity.addEventListener('targetLost', () => {
             hideAllAR();
             if (isGameRunning) return;
-            playBtn.style.display = 'none';
-            soundBtn.style.display = 'none';
-            youtubeBtn.style.display = 'none';
-            resetBtn.style.display = 'none';
-            gameElements.setAttribute('visible', 'false');
-            taskText.style.display = 'none';
-            timerText.style.display = 'none';
-            scoreText.style.display = 'none';
-            feedbackMessage.style.display = 'none';
+            hideUIForAR();
         });
 
         playBtn.addEventListener('click', startCanvasGame);
-        stopBtn.addEventListener('click', stopGame);
-        backBtn.addEventListener('click', stopGame);
         resetBtn.addEventListener('click', resetGame);
 
         youtubeBtn.addEventListener('click', () => {
@@ -534,12 +683,9 @@
         function startCanvasGame() {
             console.log("▶️ Початок гри!");
             isGameRunning = true;
-            playBtn.style.display = 'none';
-            soundBtn.style.display = 'none';
-            youtubeBtn.style.display = 'none';
-            stopBtn.style.display = 'block';
-            backBtn.style.display = 'block';
-            resetBtn.style.display = 'none';
+            isGamePaused = false;
+            hideUIForAR();
+            showGameControls(); // Показуємо кнопки для дітей
             hideAllAR();
             document.getElementById('canvasGameContainer').style.display = 'block';
             initCanvasGame();
@@ -548,15 +694,13 @@
         function stopGame() {
             if (!isGameRunning) return;
             isGameRunning = false;
-            stopBtn.style.display = 'none';
-            backBtn.style.display = 'none';
+            isGamePaused = false;
+            hideGameControls();
             resetBtn.style.display = 'none';
-            playBtn.style.display = 'block';
-            soundBtn.style.display = 'block';
-            youtubeBtn.style.display = 'block';
+            showUIForAR();
             document.getElementById('canvasGameContainer').style.display = 'none';
             aScene.style.display = 'block';
-            aScene.style.animation = 'arSceneAppear 0.8s ease-in forwards';
+            aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
             taskText.style.display = 'none';
             timerText.style.display = 'none';
             scoreText.style.display = 'none';
@@ -566,6 +710,7 @@
                 cancelAnimationFrame(animationFrameId);
                 animationFrameId = null;
             }
+            hidePauseMessage();
             showLogo();
         }
 
@@ -579,9 +724,7 @@
             scoreText.textContent = `🎯 ОЧКИ: 0`;
             timerText.textContent = `⏳ ЧАС: 60`;
             taskText.textContent = `ЛОВИ ОДНАКОВІ МОНСТРИ! 👻`;
-            playBtn.style.display = 'block';
-            soundBtn.style.display = 'block';
-            youtubeBtn.style.display = 'block';
+            showUIForAR();
             resetBtn.style.display = 'none';
         }
 
@@ -591,9 +734,7 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            if (bgMusic && !bgMusic.muted) {
-                bgMusic.play().catch(e => console.log("🔇 Музика не запустилася:", e));
-            }
+            playSound(bgMusic);
 
             const emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈'];
             const maxEmojisOnScreen = 4;
@@ -620,9 +761,9 @@
                     x: x,
                     y: y,
                     size: 5 + Math.random() * 10,
-                    vx: (Math.random() - 0.5) * 15,
-                    vy: (Math.random() - 0.5) * 15,
-                    color: ['#ff4500', '#32cd32', '#ffd700', '#ff00ff'][Math.floor(Math.random() * 4)],
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    color: ['#ff4500', '#32cd32', '#ffd700', '#8b00ff'][Math.floor(Math.random() * 4)],
                     alpha: 1,
                     life: 30
                 };
@@ -672,6 +813,8 @@
             }
 
             inputHandler = (e) => {
+                if (isGamePaused) return;
+                
                 e.preventDefault();
                 const rect = canvas.getBoundingClientRect();
                 const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
@@ -692,26 +835,20 @@
                         selectedEmojis.push(emoji);
                         clicked = true;
 
-                        if (clickSound && !clickSound.muted) {
-                            clickSound.currentTime = 0;
-                            clickSound.play().catch(e => console.log("🔇 Звук кліку не запустився:", e));
-                        }
+                        playSound(clickSound);
 
                         if (selectedEmojis.length === 2) {
                             if (selectedEmojis[0].value === selectedEmojis[1].value) {
                                 selectedEmojis.forEach(emoji => {
                                     emoji.fadeOut = 1;
-                                    for (let i = 0; i < 15) {
+                                    for (let i = 0; i < 15; i++) {
                                         particles.push(createParticle(emoji.x, emoji.y));
                                     }
                                 });
                                 score += 2;
                                 scoreText.textContent = `🎯 ОЧКИ: ${score}`;
                                 
-                                if (successSound && !successSound.muted) {
-                                    successSound.currentTime = 0;
-                                    successSound.play().catch(e => console.log("🔇 Звук успіху не запустився:", e));
-                                }
+                                playSound(successSound);
                                 
                                 feedbackMessage.textContent = `МОЛОДЕЦЬ! +2 ОЧКИ! ${selectedEmojis[0].value}`;
                                 feedbackMessage.style.display = 'block';
@@ -754,7 +891,7 @@
             const generationInterval = 1000;
 
             function animate() {
-                if (!isGameRunning) return;
+                if (!isGameRunning || isGamePaused) return;
 
                 const now = Date.now();
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -797,18 +934,18 @@
                     ctx.textBaseline = 'middle';
                     
                     const colors = {
-                        '👻': '#ffffff',
-                        '🎃': '#ff4500',
-                        '🕷️': '#ff8c00',
-                        '🦇': '#ff00ff',
-                        '💀': '#ffd700',
-                        '😈': '#00ff00'
+                        '👻': '#FFFFFF',
+                        '🎃': '#FFA500',
+                        '🕷️': '#8B4513',
+                        '🦇': '#4B0082',
+                        '💀': '#808080',
+                        '😈': '#FF0000'
                     };
                     
                     ctx.save();
                     ctx.translate(emoji.x, emoji.y);
                     ctx.rotate(Math.sin(emoji.wiggle) * 0.1);
-                    ctx.fillStyle = emoji.isClicked ? '#ff00ff' : (colors[emoji.value] || '#ffffff');
+                    ctx.fillStyle = emoji.isClicked ? '#ff8c00' : (colors[emoji.value] || '#ffffff');
                     ctx.fillText(emoji.value, 0, 0);
                     ctx.restore();
                     ctx.globalAlpha = 1;
@@ -827,8 +964,7 @@
 
             function endCanvasGame() {
                 isGameRunning = false;
-                stopBtn.style.display = 'none';
-                backBtn.style.display = 'none';
+                hideGameControls();
                 resetBtn.style.display = 'block';
                 taskText.style.display = 'none';
                 timerText.style.display = 'none';
@@ -856,7 +992,6 @@
                 }, 4000);
             }
 
-            document.getElementById('endBtn').addEventListener('click', endCanvasGame);
             animationFrameId = requestAnimationFrame(animate);
         }
     </script>
