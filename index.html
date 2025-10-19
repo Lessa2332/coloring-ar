@@ -9,56 +9,23 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #ff8c00;
+            font-family: 'Comic Sans MS', cursive;
+            overflow: hidden;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
         .arjs-loader {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #ff8c00;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            z-index: 1000;
-            font-family: 'Comic Sans MS', cursive;
-        }
-        .pulse {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .ui-info-text {
-            position: fixed;
-            background: rgba(0, 0, 0, 0.7);
-            color: #ff8c00;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-family: 'Comic Sans MS', cursive;
-        }
-        #taskText { top: 10px; left: 10px; }
-        #timerText { top: 10px; right: 10px; }
-        #scoreText { bottom: 10px; left: 10px; }
-        .kid-friendly-btn {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: #ff8c00;
-            color: white;
-            font-size: 1.2em;
-            cursor: pointer;
-            display: none;
-        }
-        #kidPauseBtn { top: 20%; right: 10px; }
-        #kidStopBtn { top: 35%; right: 10px; }
-        #kidSoundBtn { top: 50%; right: 10px; }
-        #kidHomeBtn { top: 65%; right: 10px; }
-        #endMessage {
-            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -67,78 +34,205 @@
             color: #ff8c00;
             padding: 20px;
             border-radius: 15px;
-            z-index: 10000;
             text-align: center;
-            font-family: 'Comic Sans MS', cursive;
+            z-index: 1000;
+            border: 3px solid #ff8c00;
         }
-        #errorOverlay {
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .ui-element {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.8);
+            color: #ff8c00;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            z-index: 100;
+            border: 2px solid #ff8c00;
+            backdrop-filter: blur(5px);
+        }
+
+        #taskText { top: 10px; left: 10px; }
+        #timerText { top: 10px; right: 10px; }
+        #scoreText { bottom: 10px; left: 10px; }
+
+        .kid-friendly-btn {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #ff8c00;
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff8c00;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 150;
             display: none;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .kid-friendly-btn:active {
+            transform: scale(0.9);
+            background: #ff8c00;
+            color: #000;
+        }
+
+        #kidPauseBtn { top: 20%; right: 20px; }
+        #kidStopBtn { top: 35%; right: 20px; }
+        #kidSoundBtn { top: 50%; right: 20px; }
+        #kidHomeBtn { top: 65%; right: 20px; }
+
+        #endMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            color: #ff8c00;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 200;
+            border: 4px solid #ff8c00;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+
+        #feedbackMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff8c00;
+            padding: 15px 25px;
+            border-radius: 15px;
+            z-index: 150;
+            display: none;
+            border: 2px solid #ff8c00;
+        }
+
+        #gameCanvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 50;
+        }
+
+        .control-btn {
+            position: fixed;
+            bottom: 20px;
+            padding: 15px 25px;
             background: rgba(0, 0, 0, 0.9);
+            color: #ff8c00;
+            border: 3px solid #ff8c00;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 100;
+            font-family: 'Comic Sans MS', cursive;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+            background: #ff8c00;
+            color: #000;
+        }
+
+        #playBtn { left: 50%; transform: translateX(-50%); }
+        #resetBtn { left: 50%; transform: translateX(-50%); display: none; }
+        #soundBtn { bottom: 80px; left: 50%; transform: translateX(-50%); }
+
+        #errorOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
             color: #ff4500;
-            z-index: 20000;
-            display: flex;
+            z-index: 1000;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Comic Sans MS';
             text-align: center;
             padding: 20px;
         }
-        #fpsCounter {
+
+        #instruction {
             position: fixed;
-            top: 5px;
-            right: 5px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #0f0;
-            font-size: 12px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            z-index: 30000;
-            font-family: monospace;
-        }
-        .ui-btn {
-            position: fixed;
-            bottom: 10px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background: #ff8c00;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-        #canvasGameContainer {
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: #ff8c00;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 100;
+            border: 3px solid #ff8c00;
             display: none;
+        }
+
+        a-scene {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 10;
         }
-        #gameCanvas {
-            width: 100%;
-            height: 100%;
+
+        /* Анімації для елементів */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .emoji-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .emoji-shake {
+            animation: shake 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
     <div class="arjs-loader" id="loader">
-        <div class="pulse">🎃 ЛОВИ ОДНАКОВИХ МОНСТРІВ! 👻</div>
-        <div style="margin-top: 15px; font-size: 0.9em;">НАВЕДИ НА РОЗМАЛЬОВКУ! 🎃</div>
+        <div class="pulse" style="font-size: 24px;">🎃 ЛОВИ МОНСТРІВ! 👻</div>
+        <div style="margin-top: 15px; font-size: 18px;">НАВЕДИ НА РОЗМАЛЬОВКУ! 🎨</div>
     </div>
 
-    <div id="instruction">🎃 НАВЕДИ НА РОЗМАЛЬОВКУ, ЩОБ ПОЧАТИ! 👻</div>
+    <div id="instruction" class="pulse">
+        <div style="font-size: 22px;">🎃 НАВЕДИ НА РОЗМАЛЬОВКУ! 👻</div>
+        <div style="margin-top: 10px; font-size: 16px;">Щоб побачити монстрів! 👀</div>
+    </div>
 
-    <p id="taskText" class="ui-info-text">ЛОВИ ОДНАКОВИХ МОНСТРІВ! 👻</p>
-    <p id="timerText" class="ui-info-text">⏳ ЧАС: 60</p>
-    <p id="scoreText" class="ui-info-text">🎯 БАЛИ: 0</p>
+    <p id="taskText" class="ui-element">ЛОВИ МОНСТРІВ! 👻</p>
+    <p id="timerText" class="ui-element">⏳ ЧАС: 60</p>
+    <p id="scoreText" class="ui-element">🎯 БАЛИ: 0</p>
     <p id="feedbackMessage">МОЛОДЕЦЬ! 👻</p>
 
     <button id="kidPauseBtn" class="kid-friendly-btn" title="Пауза">⏸️</button>
@@ -146,19 +240,19 @@
     <button id="kidSoundBtn" class="kid-friendly-btn" title="Звук">🔊</button>
     <button id="kidHomeBtn" class="kid-friendly-btn" title="Додому">🏠</button>
 
-    <div id="canvasGameContainer">
-        <canvas id="gameCanvas"></canvas>
-    </div>
+    <canvas id="gameCanvas"></canvas>
 
     <div id="endMessage"></div>
 
     <div id="errorOverlay">
-        <h2>⚠️ Щось пішло не так</h2>
-        <p id="errorMessage">Помилка завантаження</p>
-        <button id="retryBtn" style="margin-top:20px; padding:12px 24px; background:#ff8c00; color:white; border:none; border-radius:30px; font-size:1.1em; cursor:pointer;">🔄 Спробувати знову</button>
+        <h2 style="font-size: 28px; margin-bottom: 20px;">⚠️ Щось пішло не так</h2>
+        <p id="errorMessage" style="font-size: 18px; margin-bottom: 30px;">Помилка завантаження</p>
+        <button id="retryBtn" class="control-btn">🔄 СПРОБУВАТИ ЗНОВУ</button>
     </div>
 
-    <div id="fpsCounter"></div>
+    <button id="playBtn" class="control-btn">🚀 ПОЧАТИ ГРУ! 👻</button>
+    <button id="resetBtn" class="control-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
+    <button id="soundBtn" class="control-btn">🔊 УВІМКНУТИ ЗВУКИ!</button>
 
     <a-scene
         mindar-image="imageTargetSrc: ./targets.mind;"
@@ -166,592 +260,533 @@
         device-orientation-permission-ui="enabled: false"
         loading-screen="enabled: false"
         embedded
-        renderer="colorManagement: true; physicallyCorrectLights: true;"
+        renderer="colorManagement: true;"
     >
         <a-assets>
-            <audio id="bg-music" src="./bg-music.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="click-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="logo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="boo-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
-            <audio id="success-sound" src="./boo.mp3" preload="auto" muted playsinline crossorigin="anonymous"></audio>
+            <audio id="bg-music" src="./bg-music.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+            <audio id="click-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
+            <audio id="success-sound" src="./boo.mp3" preload="auto" crossorigin="anonymous"></audio>
             <img id="logo-img" src="./logo.png" crossorigin="anonymous" alt="Хелловінський будинок">
         </a-assets>
 
         <a-camera look-controls="enabled: false" position="0 0 0">
-            <a-cursor raycaster="objects: .emoji;" cursor="fuse: false; maxDistance: 10"
-                position="0 0 -1" geometry="primitive: ring; radiusOuter: 0.015; radiusInner: 0.008"
-                material="color: #ff8c00; shader: flat"></a-cursor>
+            <a-cursor raycaster="objects: .clickable;" 
+                position="0 0 -1" 
+                geometry="primitive: ring; radiusOuter: 0.03; radiusInner: 0.02"
+                material="color: #ff8c00; shader: flat">
+            </a-cursor>
         </a-camera>
 
         <a-entity mindar-image-target="targetIndex: 0">
-            <a-image id="logo-image" src="#logo-img" position="0 0 0.03" rotation="30 0 0"
-                scale="1.5 1.5 1.5" visible="false" transparent="true" alpha-test="0.6"
-                material="shader: flat"></a-image>
-            <a-entity id="game-elements" visible="false"></a-entity>
+            <a-image id="logo-image" src="#logo-img" position="0 0 0" rotation="0 0 0"
+                scale="1 1 1" visible="false" class="clickable"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
+            </a-image>
         </a-entity>
     </a-scene>
 
-    <button id="playBtn" class="ui-btn">🚀 ПОЧАТИ ГРУ! 👻</button>
-    <button id="resetBtn" class="ui-btn">🔄 ГРАТИ ЩЕ! 🎃</button>
-    <button id="soundBtn" class="ui-btn" style="display: none;">🔊 УВІМКНУТИ ЗВУКИ!</button>
-    <a href="https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi" id="youtubeBtn" target="_blank">❤️ АВТОР</a>
-
     <script>
-        class ARGame {
+        class HalloweenGame {
             constructor() {
                 this.state = {
                     isGameRunning: false,
                     isGamePaused: false,
-                    arStarted: false,
                     score: 0,
-                    startTime: null,
-                    animationFrameId: null,
-                    logoAppearTimeout: null,
+                    timeLeft: 60,
+                    gameLoopId: null,
                     emojis: [],
                     selectedEmojis: [],
-                    particles: [],
-                    lastGeneration: 0,
-                    generationInterval: 1000,
-                    emojiTypes: ['👻', '🎃', '🕷️', '🦇', '💀', '😈'],
-                    maxEmojisOnScreen: 4
+                    particles: []
                 };
+
                 this.elements = {
-                    loader: document.querySelector('#loader'),
-                    targetEntity: document.querySelector('a-entity[mindar-image-target]'),
-                    logoImage: document.querySelector('#logo-image'),
-                    playBtn: document.querySelector('#playBtn'),
-                    resetBtn: document.querySelector('#resetBtn'),
-                    soundBtn: document.querySelector('#soundBtn'),
-                    youtubeBtn: document.querySelector('#youtubeBtn'),
+                    loader: document.getElementById('loader'),
+                    instruction: document.getElementById('instruction'),
                     taskText: document.getElementById('taskText'),
                     timerText: document.getElementById('timerText'),
                     scoreText: document.getElementById('scoreText'),
-                    instruction: document.querySelector('#instruction'),
-                    bgMusic: document.querySelector('#bg-music'),
-                    logoSound: document.querySelector('#logo-sound'),
-                    clickSound: document.querySelector('#click-sound'),
-                    booSound: document.querySelector('#boo-sound'),
-                    successSound: document.querySelector('#success-sound'),
-                    endMessage: document.getElementById('endMessage'),
                     feedbackMessage: document.getElementById('feedbackMessage'),
-                    aScene: document.querySelector('a-scene'),
-                    canvas: document.getElementById('gameCanvas'),
+                    endMessage: document.getElementById('endMessage'),
+                    gameCanvas: document.getElementById('gameCanvas'),
+                    playBtn: document.getElementById('playBtn'),
+                    resetBtn: document.getElementById('resetBtn'),
+                    soundBtn: document.getElementById('soundBtn'),
                     errorOverlay: document.getElementById('errorOverlay'),
                     errorMessage: document.getElementById('errorMessage'),
                     retryBtn: document.getElementById('retryBtn'),
-                    fpsCounter: document.getElementById('fpsCounter')
+                    kidPauseBtn: document.getElementById('kidPauseBtn'),
+                    kidStopBtn: document.getElementById('kidStopBtn'),
+                    kidSoundBtn: document.getElementById('kidSoundBtn'),
+                    kidHomeBtn: document.getElementById('kidHomeBtn'),
+                    bgMusic: document.getElementById('bg-music'),
+                    clickSound: document.getElementById('click-sound'),
+                    successSound: document.getElementById('success-sound'),
+                    scene: document.querySelector('a-scene'),
+                    target: document.querySelector('a-entity[mindar-image-target]'),
+                    logo: document.getElementById('logo-image')
                 };
-                this.gameControls = {
-                    pauseBtn: document.getElementById('kidPauseBtn'),
-                    stopBtn: document.getElementById('kidStopBtn'),
-                    soundBtn: document.getElementById('kidSoundBtn'),
-                    homeBtn: document.getElementById('kidHomeBtn')
-                };
-                this.fontCache = new Map();
-                this.resizeObserver = null;
-                this.lastFrameTime = performance.now();
-                this.frameCount = 0;
-                this.fps = 60;
+
+                this.emojiTypes = ['👻', '🎃', '🕷️', '🦇', '💀', '😈'];
                 this.init();
             }
+
             init() {
-                try {
-                    this.bindEvents();
-                    this.setupResizeHandling();
-                    this.updateUIForAR();
-                    setTimeout(() => {
-                        if (!this.state.arStarted) {
-                            this.elements.instruction.style.display = 'block';
-                        }
-                    }, 1500);
-                } catch (error) {
-                    this.showError('Помилка ініціалізації', error);
+                this.setupEventListeners();
+                this.hideAllUI();
+                this.elements.loader.style.display = 'block';
+                this.elements.instruction.style.display = 'block';
+                
+                // Автоматичний запуск при знаходженні маркера
+                this.elements.target.addEventListener('targetFound', () => {
+                    this.onMarkerFound();
+                });
+
+                this.elements.target.addEventListener('targetLost', () => {
+                    this.onMarkerLost();
+                });
+            }
+
+            setupEventListeners() {
+                // Основні кнопки
+                this.elements.playBtn.addEventListener('click', () => this.startGame());
+                this.elements.resetBtn.addEventListener('click', () => this.restartGame());
+                this.elements.soundBtn.addEventListener('click', () => this.toggleSound());
+                this.elements.retryBtn.addEventListener('click', () => this.retry());
+
+                // Дитячі кнопки
+                this.elements.kidPauseBtn.addEventListener('click', () => this.togglePause());
+                this.elements.kidStopBtn.addEventListener('click', () => this.stopGame());
+                this.elements.kidSoundBtn.addEventListener('click', () => this.toggleSound());
+                this.elements.kidHomeBtn.addEventListener('click', () => this.goHome());
+
+                // Touch events для canvas
+                this.elements.gameCanvas.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.handleTouch(e.touches[0]);
+                });
+
+                this.elements.gameCanvas.addEventListener('click', (e) => {
+                    this.handleTouch(e);
+                });
+            }
+
+            onMarkerFound() {
+                console.log('🎯 Маркер знайдено!');
+                this.elements.loader.style.display = 'none';
+                this.elements.instruction.style.display = 'none';
+                this.elements.playBtn.style.display = 'block';
+                this.elements.soundBtn.style.display = 'block';
+                
+                if (this.elements.logo) {
+                    this.elements.logo.setAttribute('visible', 'true');
                 }
             }
-            bindEvents() {
-                const { playBtn, resetBtn, soundBtn, youtubeBtn, targetEntity } = this.elements;
-                const { pauseBtn, stopBtn, soundBtn: kidSoundBtn, homeBtn } = this.gameControls;
-                playBtn?.addEventListener('click', () => this.startCanvasGame());
-                resetBtn?.addEventListener('click', () => this.resetGame());
-                soundBtn?.addEventListener('click', () => this.enableAllAudio());
-                youtubeBtn?.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    window.open('https://www.youtube.com/@23smartlessa32?si=d3NhKDot8U8Mc2Hi', '_blank');
-                });
-                pauseBtn?.addEventListener('click', () => this.togglePause());
-                stopBtn?.addEventListener('click', () => this.stopGame());
-                kidSoundBtn?.addEventListener('click', () => this.toggleGameSound());
-                homeBtn?.addEventListener('click', () => this.goToHome());
-                this.elements.retryBtn?.addEventListener('click', () => this.retry());
-                targetEntity?.addEventListener('targetFound', () => this.onTargetFound());
-                targetEntity?.addEventListener('targetLost', () => this.onTargetLost());
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') this.stopAllAudio();
+
+            onMarkerLost() {
+                console.log('📵 Маркер втрачено!');
+                this.elements.playBtn.style.display = 'none';
+                this.elements.soundBtn.style.display = 'none';
+                this.hideGameControls();
+                
+                if (this.elements.logo) {
+                    this.elements.logo.setAttribute('visible', 'false');
+                }
+            }
+
+            startGame() {
+                this.state.isGameRunning = true;
+                this.state.score = 0;
+                this.state.timeLeft = 60;
+                
+                this.hideAllUI();
+                this.showGameUI();
+                this.setupCanvas();
+                this.startGameLoop();
+                this.playSound(this.elements.bgMusic);
+            }
+
+            setupCanvas() {
+                const canvas = this.elements.gameCanvas;
+                const ctx = canvas.getContext('2d');
+                
+                const resize = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                
+                resize();
+                window.addEventListener('resize', resize);
+                
+                // Створюємо стартові елементи
+                this.createInitialEmojis();
+            }
+
+            createInitialEmojis() {
+                this.state.emojis = [];
+                for (let i = 0; i < 6; i++) {
+                    this.state.emojis.push(this.createEmoji());
+                }
+                // Гарантуємо що є хоча б одна пара
+                this.state.emojis[0].type = this.state.emojis[1].type = this.emojiTypes[0];
+            }
+
+            createEmoji() {
+                const canvas = this.elements.gameCanvas;
+                const type = this.emojiTypes[Math.floor(Math.random() * this.emojiTypes.length)];
+                
+                return {
+                    x: Math.random() * (canvas.width - 100) + 50,
+                    y: Math.random() * (canvas.height - 100) + 50,
+                    size: 60 + Math.random() * 40,
+                    type: type,
+                    isClicked: false,
+                    alpha: 1,
+                    wiggle: Math.random() * Math.PI * 2
+                };
+            }
+
+            createParticle(x, y, color) {
+                return {
+                    x: x,
+                    y: y,
+                    size: 3 + Math.random() * 8,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    color: color,
+                    life: 1,
+                    decay: 0.02 + Math.random() * 0.02
+                };
+            }
+
+            handleTouch(touch) {
+                if (!this.state.isGameRunning || this.state.isGamePaused) return;
+
+                const rect = this.elements.gameCanvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+
+                // Перевіряємо клік по елементах
+                for (let i = this.state.emojis.length - 1; i >= 0; i--) {
+                    const emoji = this.state.emojis[i];
+                    if (emoji.isClicked) continue;
+
+                    const dx = x - emoji.x;
+                    const dy = y - emoji.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < emoji.size / 2) {
+                        this.handleEmojiClick(emoji, i);
+                        break;
+                    }
+                }
+            }
+
+            handleEmojiClick(emoji, index) {
+                emoji.isClicked = true;
+                this.state.selectedEmojis.push(emoji);
+                this.playSound(this.elements.clickSound);
+
+                if (this.state.selectedEmojis.length === 2) {
+                    this.checkMatch();
+                } else {
+                    this.showFeedback('ОБЕРИ ЩЕ ОДИН! 👆');
+                }
+            }
+
+            checkMatch() {
+                const [first, second] = this.state.selectedEmojis;
+                
+                if (first.type === second.type) {
+                    // Знайшли пару!
+                    this.state.score += 10;
+                    this.showFeedback('МОЛОДЕЦЬ! +10 БАЛІВ! 🎉');
+                    this.playSound(this.elements.successSound);
+
+                    // Створюємо частинки
+                    const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+                    for (let i = 0; i < 20; i++) {
+                        this.state.particles.push(this.createParticle(
+                            (first.x + second.x) / 2,
+                            (first.y + second.y) / 2,
+                            colors[Math.floor(Math.random() * colors.length)]
+                        ));
+                    }
+
+                    // Видаляємо знайдені елементи
+                    this.state.emojis = this.state.emojis.filter(e => !e.isClicked);
+                    
+                    // Додаємо нові елементи
+                    setTimeout(() => {
+                        this.addNewEmojis();
+                        this.state.selectedEmojis = [];
+                    }, 1000);
+                } else {
+                    // Не співпали
+                    this.showFeedback('СПРОБУЙ ЩЕ! 💪');
+                    setTimeout(() => {
+                        first.isClicked = false;
+                        second.isClicked = false;
+                        this.state.selectedEmojis = [];
+                    }, 1000);
+                }
+            }
+
+            addNewEmojis() {
+                const needed = 6 - this.state.emojis.length;
+                for (let i = 0; i < needed; i++) {
+                    this.state.emojis.push(this.createEmoji());
+                }
+            }
+
+            drawEmoji(ctx, emoji) {
+                ctx.save();
+                ctx.globalAlpha = emoji.alpha;
+                
+                // Анімація хитності
+                emoji.wiggle += 0.05;
+                const offsetY = Math.sin(emoji.wiggle) * 5;
+                
+                ctx.font = `bold ${emoji.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(emoji.type, emoji.x, emoji.y + offsetY);
+                
+                // Ефект виділення при кліку
+                if (emoji.isClicked) {
+                    ctx.strokeStyle = '#ff8c00';
+                    ctx.lineWidth = 3;
+                    ctx.strokeText(emoji.type, emoji.x, emoji.y + offsetY);
+                }
+                
+                ctx.restore();
+            }
+
+            drawParticles(ctx) {
+                this.state.particles = this.state.particles.filter(p => p.life > 0);
+                
+                this.state.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= p.decay;
+                    
+                    ctx.save();
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
                 });
             }
-            setupResizeHandling() {
-                const updateSize = () => {
-                    document.body.style.height = window.innerHeight + 'px';
-                    if (this.state.isGameRunning && this.elements.canvas) {
-                        this.elements.canvas.width = window.innerWidth;
-                        this.elements.canvas.height = window.innerHeight;
+
+            updateGame() {
+                if (!this.state.isGameRunning || this.state.isGamePaused) return;
+
+                // Оновлюємо таймер
+                this.state.timeLeft -= 1/60; // 60 FPS
+                
+                if (this.state.timeLeft <= 0) {
+                    this.endGame();
+                    return;
+                }
+
+                this.elements.timerText.textContent = `⏳ ЧАС: ${Math.ceil(this.state.timeLeft)}`;
+                this.elements.scoreText.textContent = `🎯 БАЛИ: ${this.state.score}`;
+            }
+
+            render() {
+                const canvas = this.elements.gameCanvas;
+                const ctx = canvas.getContext('2d');
+                
+                // Очищаємо canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Малюємо фон
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Малюємо елементи
+                this.state.emojis.forEach(emoji => this.drawEmoji(ctx, emoji));
+                
+                // Малюємо частинки
+                this.drawParticles(ctx);
+            }
+
+            startGameLoop() {
+                const gameLoop = () => {
+                    this.updateGame();
+                    this.render();
+                    
+                    if (this.state.isGameRunning && !this.state.isGamePaused) {
+                        this.state.gameLoopId = requestAnimationFrame(gameLoop);
                     }
                 };
-                updateSize();
-                this.resizeObserver = new ResizeObserver(() => {
-                    setTimeout(updateSize, 250);
-                });
-                this.resizeObserver.observe(document.body);
+                
+                this.state.gameLoopId = requestAnimationFrame(gameLoop);
             }
-            showError(message, error = null) {
-                console.error('❌ Помилка:', message, error);
-                this.elements.errorMessage.textContent = message;
-                this.elements.errorOverlay.style.display = 'flex';
+
+            stopGameLoop() {
+                if (this.state.gameLoopId) {
+                    cancelAnimationFrame(this.state.gameLoopId);
+                    this.state.gameLoopId = null;
+                }
             }
+
+            endGame() {
+                this.state.isGameRunning = false;
+                this.stopGameLoop();
+                this.stopSound(this.elements.bgMusic);
+                
+                this.elements.endMessage.innerHTML = `
+                    <div style="font-size: 24px; margin-bottom: 15px;">🎃 ГРА ЗАВЕРШЕНА! 👻</div>
+                    <div style="font-size: 20px;">ТВІЙ РАХУНОК: ${this.state.score}</div>
+                    <div style="font-size: 16px; margin-top: 10px;">ГРАТИ ЩЕ РАЗ?</div>
+                `;
+                this.elements.endMessage.style.display = 'block';
+                this.elements.resetBtn.style.display = 'block';
+                
+                this.hideGameUI();
+            }
+
+            restartGame() {
+                this.state.emojis = [];
+                this.state.selectedEmojis = [];
+                this.state.particles = [];
+                this.elements.endMessage.style.display = 'none';
+                this.elements.resetBtn.style.display = 'none';
+                this.startGame();
+            }
+
+            togglePause() {
+                this.state.isGamePaused = !this.state.isGamePaused;
+                this.elements.kidPauseBtn.textContent = this.state.isGamePaused ? '▶️' : '⏸️';
+                
+                if (this.state.isGamePaused) {
+                    this.stopSound(this.elements.bgMusic);
+                    this.showFeedback('⏸️ ГРА НА ПАУЗІ');
+                } else {
+                    this.playSound(this.elements.bgMusic);
+                    this.hideFeedback();
+                    this.startGameLoop();
+                }
+            }
+
+            stopGame() {
+                this.state.isGameRunning = false;
+                this.stopGameLoop();
+                this.stopAllSounds();
+                this.hideAllUI();
+                this.elements.playBtn.style.display = 'block';
+                this.elements.soundBtn.style.display = 'block';
+                this.hideGameControls();
+            }
+
+            goHome() {
+                this.stopGame();
+                this.elements.instruction.style.display = 'block';
+            }
+
+            toggleSound() {
+                const isMuted = this.elements.bgMusic.muted;
+                this.elements.bgMusic.muted = !isMuted;
+                this.elements.clickSound.muted = !isMuted;
+                this.elements.successSound.muted = !isMuted;
+                
+                this.elements.soundBtn.textContent = isMuted ? '🔊 УВІМКНУТИ ЗВУКИ!' : '🔇 ВИМКНУТИ ЗВУКИ!';
+                this.elements.kidSoundBtn.textContent = isMuted ? '🔊' : '🔇';
+            }
+
+            playSound(sound) {
+                if (sound && !sound.muted) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log('🔇 Не вдалося відтворити звук'));
+                }
+            }
+
+            stopSound(sound) {
+                if (sound) {
+                    sound.pause();
+                    sound.currentTime = 0;
+                }
+            }
+
+            stopAllSounds() {
+                this.stopSound(this.elements.bgMusic);
+                this.stopSound(this.elements.clickSound);
+                this.stopSound(this.elements.successSound);
+            }
+
+            showFeedback(message) {
+                this.elements.feedbackMessage.textContent = message;
+                this.elements.feedbackMessage.style.display = 'block';
+                setTimeout(() => this.hideFeedback(), 2000);
+            }
+
+            hideFeedback() {
+                this.elements.feedbackMessage.style.display = 'none';
+            }
+
+            showGameUI() {
+                this.elements.taskText.style.display = 'block';
+                this.elements.timerText.style.display = 'block';
+                this.elements.scoreText.style.display = 'block';
+                this.showGameControls();
+            }
+
+            hideGameUI() {
+                this.elements.taskText.style.display = 'none';
+                this.elements.timerText.style.display = 'none';
+                this.elements.scoreText.style.display = 'none';
+                this.hideGameControls();
+            }
+
+            showGameControls() {
+                this.elements.kidPauseBtn.style.display = 'flex';
+                this.elements.kidStopBtn.style.display = 'flex';
+                this.elements.kidSoundBtn.style.display = 'flex';
+                this.elements.kidHomeBtn.style.display = 'flex';
+            }
+
+            hideGameControls() {
+                this.elements.kidPauseBtn.style.display = 'none';
+                this.elements.kidStopBtn.style.display = 'none';
+                this.elements.kidSoundBtn.style.display = 'none';
+                this.elements.kidHomeBtn.style.display = 'none';
+            }
+
+            hideAllUI() {
+                this.hideGameUI();
+                this.elements.playBtn.style.display = 'none';
+                this.elements.soundBtn.style.display = 'none';
+                this.elements.resetBtn.style.display = 'none';
+                this.elements.endMessage.style.display = 'none';
+            }
+
             retry() {
                 this.elements.errorOverlay.style.display = 'none';
                 this.init();
             }
-            stopAllAudio() {
-                [this.elements.bgMusic, this.elements.logoSound, this.elements.clickSound,
-                 this.elements.booSound, this.elements.successSound].forEach(audio => {
-                    if (audio) {
-                        audio.pause();
-                        audio.currentTime = 0;
-                        audio.muted = true;
-                    }
-                });
-            }
-            playSound(soundElement) {
-                if (soundElement && !soundElement.muted) {
-                    soundElement.currentTime = 0;
-                    soundElement.play().catch(e => console.warn("🔇 Звук не запустився:", e));
-                }
-            }
-            enableAllAudio() {
-                [this.elements.bgMusic, this.elements.logoSound, this.elements.clickSound,
-                 this.elements.booSound, this.elements.successSound].forEach(audio => {
-                    if (audio) audio.muted = false;
-                });
-                this.elements.soundBtn.style.display = 'none';
-            }
-            toggleGameSound() {
-                const isMuted = this.elements.bgMusic.muted;
-                [this.elements.bgMusic, this.elements.clickSound, this.elements.successSound]
-                    .forEach(audio => { if (audio) audio.muted = !isMuted; });
-                this.gameControls.soundBtn.innerHTML = isMuted ? '🔊' : '🔇';
-                this.gameControls.soundBtn.title = isMuted ? "Вимкнути звук" : "Увімкнути звук";
-            }
-            onTargetFound() {
-                console.log("🎯 Маркер знайдено!");
-                this.state.arStarted = true;
-                this.elements.loader.style.display = 'none';
-                this.elements.instruction.style.display = 'none';
-                this.elements.aScene.style.display = 'block';
-                this.elements.aScene.style.animation = 'arSceneAppear 1s ease-in forwards';
-                this.showLogo();
-                this.playSound(this.elements.booSound);
-                if (!this.state.isGameRunning) this.updateUIForAR();
-            }
-            onTargetLost() {
-                this.hideLogo();
-                if (!this.state.isGameRunning) this.hideUIForAR();
-            }
-            showLogo() {
-                if (!this.elements.logoImage) return;
-                this.elements.logoImage.setAttribute('visible', 'false');
-                this.elements.logoImage.classList.remove('logo-appear', 'logo-float');
-                if (this.state.logoAppearTimeout) clearTimeout(this.state.logoAppearTimeout);
-                this.state.logoAppearTimeout = setTimeout(() => {
-                    this.elements.logoImage.setAttribute('visible', 'true');
-                    this.elements.logoImage.classList.add('logo-appear');
-                    this.playSound(this.elements.logoSound);
-                    setTimeout(() => {
-                        this.elements.logoImage.classList.remove('logo-appear');
-                        this.elements.logoImage.classList.add('logo-float');
-                    }, 3000);
-                }, 100);
-            }
-            hideLogo() {
-                if (!this.elements.logoImage) return;
-                this.elements.logoImage.setAttribute('visible', 'false');
-                this.elements.logoImage.classList.remove('logo-appear', 'logo-float');
-                if (this.state.logoAppearTimeout) clearTimeout(this.state.logoAppearTimeout);
-            }
-            updateUIForAR() {
-                if (!this.state.isGameRunning) {
-                    this.elements.playBtn.style.display = 'block';
-                    this.elements.soundBtn.style.display = 'block';
-                    this.elements.youtubeBtn.style.display = 'block';
-                    this.hideGameControls();
-                }
-            }
-            hideUIForAR() {
-                this.elements.playBtn.style.display = 'none';
-                this.elements.soundBtn.style.display = 'none';
-                this.elements.youtubeBtn.style.display = 'none';
-            }
-            showGameControls() {
-                Object.values(this.gameControls).forEach(btn => {
-                    if (btn) btn.style.display = 'flex';
-                });
-            }
-            hideGameControls() {
-                Object.values(this.gameControls).forEach(btn => {
-                    if (btn) btn.style.display = 'none';
-                });
-            }
-            startCanvasGame() {
-                try {
-                    this.state.isGameRunning = true;
-                    this.state.isGamePaused = false;
-                    this.hideUIForAR();
-                    this.showGameControls();
-                    this.hideLogo();
-                    this.elements.canvasGameContainer.style.display = 'block';
-                    this.initCanvasGame();
-                } catch (error) {
-                    this.showError('Не вдалося запустити гру', error);
-                }
-            }
-            stopGame() {
-                if (!this.state.isGameRunning) return;
-                this.state.isGameRunning = false;
-                this.state.isGamePaused = false;
-                this.hideGameControls();
-                this.elements.resetBtn.style.display = 'none';
-                this.updateUIForAR();
-                this.elements.canvasGameContainer.style.display = 'none';
-                this.elements.aScene.style.display = 'block';
-                this.elements.taskText.style.display = 'none';
-                this.elements.timerText.style.display = 'none';
-                this.elements.scoreText.style.display = 'none';
-                this.elements.feedbackMessage.style.display = 'none';
-                this.elements.endMessage.style.display = 'none';
-                this.stopAllAudio();
-                if (this.state.animationFrameId) {
-                    cancelAnimationFrame(this.state.animationFrameId);
-                    this.state.animationFrameId = null;
-                }
-                this.hidePauseMessage();
-                this.showLogo();
-            }
-            resetGame() {
-                this.stopGame();
-                this.state.score = 0;
-                this.state.emojis = [];
-                this.state.selectedEmojis = [];
-                this.state.particles = [];
-                this.state.startTime = null;
-                this.elements.scoreText.textContent = `🎯 БАЛИ: 0`;
-                this.elements.timerText.textContent = `⏳ ЧАС: 60`;
-                this.elements.taskText.textContent = `ЛОВИ ОДНАКОВИХ МОНСТРІВ! 👻`;
-                this.updateUIForAR();
-                this.elements.resetBtn.style.display = 'none';
-            }
-            goToHome() {
-                this.stopGame();
-                this.updateUIForAR();
-            }
-            async initCanvasGame() {
-                const { canvas } = this.elements;
-                if (!canvas) return this.showError("Canvas не знайдено");
-                const ctx = canvas.getContext('2d');
-                if (!ctx) return this.showError("Не вдалося отримати 2D контекст");
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                this.playSound(this.elements.bgMusic);
-                this.state.startTime = Date.now();
-                this.elements.taskText.style.display = 'block';
-                this.elements.timerText.style.display = 'block';
-                this.elements.scoreText.style.display = 'block';
-                this.elements.timerText.textContent = `⏳ ЧАС: 60`;
-                this.elements.scoreText.textContent = `🎯 БАЛИ: ${this.state.score}`;
-                this.setupInputHandler(canvas);
-                this.state.lastGeneration = Date.now();
-                this.state.emojis = [];
-                this.generateEmojis();
-                this.state.animationFrameId = requestAnimationFrame((time) => this.animate(time));
-            }
-            setupInputHandler(canvas) {
-                const handler = (e) => this.handleInput(e, canvas);
-                canvas.addEventListener('click', handler);
-                canvas.addEventListener('touchstart', handler, { passive: false });
-                this.inputHandler = handler;
-            }
-            handleInput(e, canvas) {
-                if (this.state.isGamePaused || !this.state.isGameRunning) return;
-                e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || (e.touches?.[0]?.clientX)) - rect.left;
-                const y = (e.clientY || (e.touches?.[0]?.clientY)) - rect.top;
-                for (let i = this.state.emojis.length - 1; i >= 0; i--) {
-                    const emoji = this.state.emojis[i];
-                    if (emoji.isClicked || emoji.fadeOut > 0 || emoji.shake > 0) continue;
-                    const dx = x - emoji.x;
-                    const dy = y - emoji.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < emoji.size / 1.5) {
-                        emoji.isClicked = true;
-                        this.state.selectedEmojis.push(emoji);
-                        this.playSound(this.elements.clickSound);
-                        this.processSelection();
-                        break;
-                    }
-                }
-            }
-            processSelection() {
-                const { selectedEmojis } = this.state;
-                if (selectedEmojis.length === 2) {
-                    if (selectedEmojis[0].value === selectedEmojis[1].value) {
-                        selectedEmojis.forEach(emoji => {
-                            emoji.fadeOut = 1;
-                            for (let i = 0; i < 15; i++) {
-                                this.state.particles.push(this.createParticle(emoji.x, emoji.y));
-                            }
-                        });
-                        this.state.score += 2;
-                        this.elements.scoreText.textContent = `🎯 БАЛИ: ${this.state.score}`;
-                        this.playSound(this.elements.successSound);
-                        this.showFeedback(`МОЛОДЕЦЬ! +2 БАЛИ! ${selectedEmojis[0].value}`);
-                        setTimeout(() => {
-                            this.hideFeedback();
-                            this.state.selectedEmojis = [];
-                            this.generateEmojis();
-                        }, 600);
-                    } else {
-                        selectedEmojis.forEach(emoji => {
-                            emoji.shake = 6;
-                            setTimeout(() => {
-                                emoji.isClicked = false;
-                                emoji.shake = 0;
-                            }, 600);
-                        });
-                        this.showFeedback(`ЛОВИ ОДНАКОВІ ЕЛЕМЕНТИ! 👻`);
-                        setTimeout(() => {
-                            this.hideFeedback();
-                            this.state.selectedEmojis = [];
-                        }, 1000);
-                    }
-                } else {
-                    this.showFeedback(`ОБЕРИ ЩЕ ОДИН ЕЛЕМЕНТ! 👻`);
-                    setTimeout(() => this.hideFeedback(), 600);
-                }
-            }
-            showFeedback(text) {
-                this.elements.feedbackMessage.textContent = text;
-                this.elements.feedbackMessage.style.display = 'block';
-            }
-            hideFeedback() {
-                this.elements.feedbackMessage.style.display = 'none';
-            }
-            showPauseMessage() {
-                const pauseMsg = document.createElement('div');
-                pauseMsg.id = 'pauseMessage';
-                pauseMsg.innerHTML = '⏸️ ГРА НА ПАУЗІ<br><span style="font-size: 0.8em;">Торкнись кнопки ▶️ щоб продовжити</span>';
-                pauseMsg.style.cssText = `
-                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    background: rgba(0, 0, 0, 0.9); color: #ff8c00; padding: 20px; border-radius: 20px;
-                    text-align: center; z-index: 1002; font-size: 1.5em;
-                    font-family: 'Comic Sans MS', cursive; border: 3px solid #ff8c00; backdrop-filter: blur(8px);
-                `;
-                document.body.appendChild(pauseMsg);
-            }
-            hidePauseMessage() {
-                const el = document.getElementById('pauseMessage');
-                if (el) el.remove();
-            }
-            togglePause() {
-                this.state.isGamePaused = !this.state.isGamePaused;
-                if (this.state.isGamePaused) {
-                    cancelAnimationFrame(this.state.animationFrameId);
-                    this.gameControls.pauseBtn.innerHTML = '▶️';
-                    this.gameControls.pauseBtn.title = "Продовжити";
-                    this.showPauseMessage();
-                } else {
-                    this.state.animationFrameId = requestAnimationFrame((time) => this.animate(time));
-                    this.gameControls.pauseBtn.innerHTML = '⏸️';
-                    this.gameControls.pauseBtn.title = "Пауза";
-                    this.hidePauseMessage();
-                }
-            }
-            createEmoji() {
-                return {
-                    x: Math.random() * this.elements.canvas.width,
-                    y: Math.random() * this.elements.canvas.height,
-                    size: 50 + Math.random() * 30,
-                    vx: (Math.random() - 0.5) * 3,
-                    vy: (Math.random() - 0.5) * 3,
-                    value: this.state.emojiTypes[Math.floor(Math.random() * this.state.emojiTypes.length)],
-                    isClicked: false,
-                    fadeOut: 0,
-                    shake: 0,
-                    wiggle: Math.random() * Math.PI * 2,
-                    creationTime: Date.now(),
-                    lifetime: 5000 + Math.random() * 3000
-                };
-            }
-            createParticle(x, y) {
-                return {
-                    x: x,
-                    y: y,
-                    size: 5 + Math.random() * 10,
-                    vx: (Math.random() - 0.5) * 10,
-                    vy: (Math.random() - 0.5) * 10,
-                    color: ['#ff4500', '#32cd32', '#ffd700', '#8b00ff'][Math.floor(Math.random() * 4)],
-                    alpha: 1,
-                    life: 30
-                };
-            }
-            generateEmojis() {
-                this.state.emojis = this.state.emojis.filter(emoji =>
-                    (emoji.fadeOut <= 0 && emoji.shake <= 0 && !emoji.isClicked) &&
-                    (Date.now() - emoji.creationTime < emoji.lifetime)
-                );
-                const needed = this.state.maxEmojisOnScreen - this.state.emojis.length;
-                for (let i = 0; i < needed; i++) {
-                    this.state.emojis.push(this.createEmoji());
-                }
-                const typesCount = {};
-                this.state.emojis.forEach(emoji => {
-                    typesCount[emoji.value] = (typesCount[emoji.value] || 0) + 1;
-                });
-                let hasPair = false;
-                for (const type in typesCount) {
-                    if (typesCount[type] >= 2) {
-                        hasPair = true;
-                        break;
-                    }
-                }
-                if (!hasPair && this.state.emojis.length >= 2) {
-                    this.state.emojis[0].value = this.state.emojis[1].value;
-                }
-            }
-            drawEmoji(ctx, emoji) {
-                if (emoji.fadeOut > 0) {
-                    emoji.fadeOut -= 0.2;
-                    ctx.globalAlpha = emoji.fadeOut;
-                } else if (emoji.shake > 0) {
-                    emoji.shake -= 1;
-                    emoji.x += (Math.random() - 0.5) * 3;
-                    emoji.y += (Math.random() - 0.5) * 3;
-                } else {
-                    emoji.x += emoji.vx;
-                    emoji.y += emoji.vy;
-                    if (emoji.x < 0 || emoji.x > ctx.canvas.width) emoji.vx *= -1;
-                    if (emoji.y < 0 || emoji.y > ctx.canvas.height) emoji.vy *= -1;
-                    emoji.wiggle += 0.1;
-                }
-                ctx.font = `bold ${emoji.size}px Arial`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                const colors = {
-                    '👻': '#FFFFFF',
-                    '🎃': '#FFA500',
-                    '🕷️': '#8B4513',
-                    '🦇': '#4B0082',
-                    '💀': '#808080',
-                    '😈': '#FF0000'
-                };
-                ctx.save();
-                ctx.translate(emoji.x, emoji.y);
-                ctx.rotate(Math.sin(emoji.wiggle) * 0.1);
-                ctx.fillStyle = emoji.isClicked ? '#ff8c00' : (colors[emoji.value] || '#ffffff');
-                ctx.fillText(emoji.value, 0, 0);
-                ctx.restore();
-                ctx.globalAlpha = 1;
-            }
-            drawParticles(ctx) {
-                this.state.particles = this.state.particles.filter(p => p.life > 0);
-                this.state.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life--;
-                    p.alpha = p.life / 30;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(${parseInt(p.color.slice(1, 3), 16)}, ${parseInt(p.color.slice(3, 5), 16)}, ${parseInt(p.color.slice(5, 7), 16)}, ${p.alpha})`;
-                    ctx.fill();
-                });
-            }
-            updateTimer() {
-                const elapsed = Math.floor((Date.now() - this.state.startTime) / 1000);
-                const remaining = 60 - elapsed;
-                if (remaining <= 0) {
-                    this.endCanvasGame();
-                    return false;
-                }
-                this.elements.timerText.textContent = `⏳ ЧАС: ${String(remaining).padStart(2, '0')}`;
-                return true;
-            }
-            animate(time) {
-                if (!this.state.isGameRunning || this.state.isGamePaused) return;
-                const ctx = this.elements.canvas?.getContext('2d');
-                if (!ctx) return;
-                this.frameCount++;
-                const now = performance.now();
-                if (now - this.lastFrameTime >= 1000) {
-                    this.fps = this.frameCount;
-                    this.frameCount = 0;
-                    this.lastFrameTime = now;
-                    const color = this.fps > 45 ? '#0f0' : this.fps > 30 ? '#ff0' : '#f00';
-                    this.elements.fpsCounter.textContent = `${Math.round(this.fps)} FPS`;
-                    this.elements.fpsCounter.style.color = color;
-                }
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                if (now - this.state.lastGeneration > this.state.generationInterval) {
-                    this.generateEmojis();
-                    this.state.lastGeneration = now;
-                }
-                this.drawParticles(ctx);
-                this.state.emojis.forEach(emoji => this.drawEmoji(ctx, emoji));
-                if (!this.updateTimer()) return;
-                this.state.animationFrameId = requestAnimationFrame((t) => this.animate(t));
-            }
-            endCanvasGame() {
-                this.state.isGameRunning = false;
-                this.hideGameControls();
-                this.elements.resetBtn.style.display = 'block';
-                this.elements.taskText.style.display = 'none';
-                this.elements.timerText.style.display = 'none';
-                this.elements.scoreText.style.display = 'none';
-                this.hideFeedback();
-                this.elements.endMessage.textContent = `СУПЕР! ТИ ЗЛАПАВ ${this.state.score / 2} ПАР МОНСТРІВ! 🎃 ГРАТИ ЩЕ? 👻`;
-                this.elements.endMessage.style.display = 'block';
-                this.elements.endMessage.classList.add('pulse');
-                this.stopAllAudio();
-                if (this.state.animationFrameId) {
-                    cancelAnimationFrame(this.state.animationFrameId);
-                    this.state.animationFrameId = null;
-                }
-                setTimeout(() => {
-                    this.elements.endMessage.style.display = 'none';
-                    this.elements.endMessage.classList.remove('pulse');
-                    this.stopGame();
-                }, 4000);
-            }
-            destroy() {
-                if (this.resizeObserver) {
-                    this.resizeObserver.disconnect();
-                }
-                if (this.inputHandler && this.elements.canvas) {
-                    this.elements.canvas.removeEventListener('click', this.inputHandler);
-                    this.elements.canvas.removeEventListener('touchstart', this.inputHandler);
-                }
-                if (this.state.animationFrameId) {
-                    cancelAnimationFrame(this.state.animationFrameId);
-                }
-                if (this.state.logoAppearTimeout) {
-                    clearTimeout(this.state.logoAppearTimeout);
-                }
+
+            showError(message) {
+                this.elements.errorMessage.textContent = message;
+                this.elements.errorOverlay.style.display = 'flex';
             }
         }
-        let game = null;
+
+        // Запуск гри при завантаженні сторінки
         window.addEventListener('load', () => {
-            game = new ARGame();
+            try {
+                window.game = new HalloweenGame();
+            } catch (error) {
+                console.error('❌ Помилка запуску гри:', error);
+                document.getElementById('errorMessage').textContent = 'Не вдалося запустити гру';
+                document.getElementById('errorOverlay').style.display = 'flex';
+            }
         });
-        window.addEventListener('beforeunload', () => {
-            if (game) game.destroy();
+
+        // Обробка помилок
+        window.addEventListener('error', (event) => {
+            console.error('🚨 Глобальна помилка:', event.error);
         });
     </script>
 </body>
